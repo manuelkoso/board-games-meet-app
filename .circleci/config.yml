@@ -30,7 +30,7 @@ jobs:
         default: system-images;android-30;google_apis;x86
     executor:
       name: android/android-machine
-      tag: "2023.07"
+      tag: "2023.07.1"
       resource-class: xlarge
     steps:
       - checkout
@@ -50,7 +50,7 @@ jobs:
   release-build:
     executor:
       name: android/android-machine
-      tag: "2023.07"
+      tag: "2023.07.1"
       resource-class: xlarge
     steps:
       - checkout
