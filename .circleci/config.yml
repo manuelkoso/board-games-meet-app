@@ -27,7 +27,7 @@ jobs:
     parameters:
       system-image:
         type: string
-        default: system-images;android-30;google_apis;x86
+        default: system-images;android-28;google_apis;x86
     executor:
       name: android/android-machine
       tag: 2022.09.1
