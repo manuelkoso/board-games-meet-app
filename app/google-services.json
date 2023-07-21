@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "278435510794",
+    "project_id": "board-games-meet-app",
+    "storage_bucket": "board-games-meet-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:278435510794:android:ef7ce46572ce8080ef7df3",
+        "android_client_info": {
+          "package_name": "it.units.boardgamesmeetapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "278435510794-2n8i05rm1gau9hcrfkqmc7o5uqnb246j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD16liTB-ONobERpNUvfzQe1fETjGFribo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "278435510794-2n8i05rm1gau9hcrfkqmc7o5uqnb246j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
