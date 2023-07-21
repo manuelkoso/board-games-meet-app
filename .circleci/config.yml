@@ -14,8 +14,6 @@ jobs:
       - run:
             command: |
               sudo apt-get update && sudo apt-get install openjdk-17-jdk
-              sudo update-alternatives --set java /usr/lib/jvm/java-17-openjdk-amd64
-              sudo update-alternatives --set javac /usr/lib/jvm/java-17-openjdk-amd64
       - android/run-tests:
           test-command: ./gradlew testDebug
       - run:
@@ -42,8 +40,6 @@ jobs:
       - run:
             command: |
               sudo apt-get update && sudo apt-get install openjdk-17-jdk
-              sudo update-alternatives --set java /usr/lib/jvm/java-17-openjdk-amd64
-              sudo update-alternatives --set javac /usr/lib/jvm/java-17-openjdk-amd64
       - android/start-emulator-and-run-tests:
           test-command: ./gradlew connectedDebugAndroidTest
           system-image: << parameters.system-image >>
