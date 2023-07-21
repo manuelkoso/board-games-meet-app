@@ -1,4 +1,4 @@
-package com.example.boardgamesmeetapp.ui.home;
+package it.units.boardgamesmeetapp.ui.home;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

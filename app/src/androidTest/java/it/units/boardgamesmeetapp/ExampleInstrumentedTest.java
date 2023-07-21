@@ -1,4 +1,4 @@
-package com.example.boardgamesmeetapp;
+package it.units.boardgamesmeetapp;
 
 import android.content.Context;
 

@@ -1,7 +1,8 @@
-package com.example.boardgamesmeetapp;
+package it.units.boardgamesmeetapp;
 
 import android.os.Bundle;
 
+import com.example.boardgamesmeetapp.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
