@@ -50,7 +50,7 @@ jobs:
     executor:
       name: android/android-machine
       tag: 2023.05.1
-      resource-class: xlarge
+      resource-class: large
     steps:
       - checkout
       - android/restore-gradle-cache
