@@ -4,6 +4,14 @@ orbs:
   android: circleci/android@2.2.0
 
 jobs:
+  install-jdk:
+    steps:
+      - checkout
+      - run:
+          command: |
+            sudo apt-get update && sudo apt-get install openjdk-17-jdk
+            sudo update-alternatives --set java /usr/lib/jvm/java-17-openjdk-amd64/bin/java
+            sudo update-alternatives --set javac /usr/lib/jvm/java-17-openjdk-amd64/bin/javac
   unit-test:
     executor:
       name: android/android-docker
@@ -66,12 +74,7 @@ jobs:
 workflows:
   test-and-build:
     jobs:
-      - checkout
-      - run:
-          command: |
-            sudo apt-get update && sudo apt-get install openjdk-17-jdk
-            sudo update-alternatives --set java /usr/lib/jvm/java-17-openjdk-amd64/bin/java
-            sudo update-alternatives --set javac /usr/lib/jvm/java-17-openjdk-amd64/bin/javac
+      - install-jdk
       - unit-test
       - android-test: # Commits to any branch - skip matrix of devices
           filters:
