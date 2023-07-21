@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.boardgamesmeetapp'
+    namespace 'it.units.boardgamesmeetapp'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.boardgamesmeetapp"
+        applicationId "it.units.boardgamesmeetapp"
         minSdk 24
         targetSdk 33
         versionCode 1

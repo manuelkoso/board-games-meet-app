@@ -2,7 +2,7 @@ package it.units.boardgamesmeetapp;
 
 import android.os.Bundle;
 
-import com.example.boardgamesmeetapp.R;
+import it.units.boardgamesmeetapp.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,7 +11,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import com.example.boardgamesmeetapp.databinding.ActivityMainBinding;
+import it.units.boardgamesmeetapp.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 

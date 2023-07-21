@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.boardgamesmeetapp.databinding.FragmentHomeBinding;
+import it.units.boardgamesmeetapp.databinding.FragmentHomeBinding;
 
 public class HomeFragment extends Fragment {
 
