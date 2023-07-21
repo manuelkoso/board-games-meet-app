@@ -65,10 +65,6 @@ workflows:
   test-and-build:
     jobs:
       - unit-test
-      - android-test: # Commits to any branch - skip matrix of devices
-          filters:
-            branches:
-              ignore: main
       - android-test: # Commits to main branch only - run full matrix
           matrix:
             alias: android-test-all
