@@ -11,7 +11,7 @@ jobs:
     steps:
       - checkout
       - android/restore-gradle-cache
-      - android/run-test:
+      - android/run-tests:
           test-command: ./gradlew testDebug
       - run:
           name: Save test results
