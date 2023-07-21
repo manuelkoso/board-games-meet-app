@@ -1,7 +1,7 @@
 # .circleci/config.yaml
 version: 2.1
 orbs:
-  android: circleci/android@2.2.0
+  android: circleci/android@2.3.0
 jobs:
   unit-test:
     executor:
@@ -10,9 +10,6 @@ jobs:
     steps:
       - checkout
       - android/restore-gradle-cache
-      - run:
-            command: |
-              sudo apt-get update && sudo apt-get install openjdk-17-jdk
       - android/run-tests:
           test-command: ./gradlew testDebug
       - run:
@@ -32,13 +29,10 @@ jobs:
         default: system-images;android-28;google_apis;x86
     executor:
       name: android/android-machine
-      tag: 2022.09.1
+      tag: 2023.05.1
       resource-class: large
     steps:
       - checkout
-      - run:
-            command: |
-              sudo apt-get update && sudo apt-get install openjdk-17-jdk
       - android/start-emulator-and-run-tests:
           test-command: ./gradlew connectedDebugAndroidTest
           system-image: << parameters.system-image >>
@@ -55,7 +49,7 @@ jobs:
   release-build:
     executor:
       name: android/android-machine
-      tag: 2022.09.1
+      tag: 2023.05.1
       resource-class: xlarge
     steps:
       - checkout
