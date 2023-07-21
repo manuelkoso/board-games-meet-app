@@ -2,12 +2,11 @@
 version: 2.1
 orbs:
   android: circleci/android@2.2.0
-
 jobs:
   unit-test:
-    executor:
+    executors:
       name: android/android-docker
-      tag: 2022.07.1
+      tag: 2023.05.1
     steps:
       - checkout
       - android/restore-gradle-cache
