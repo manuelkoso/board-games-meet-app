@@ -6,10 +6,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.transition.Fade;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,11 +52,15 @@ public class LoginFragment extends Fragment {
         final EditText usernameEditText = binding.username;
         final EditText passwordEditText = binding.password;
         final Button loginButton = binding.login;
+        final Button signupButton = binding.signup;
         final ProgressBar loadingProgressBar = binding.loading;
 
         loginViewModel.getLoginFormState().observe(getViewLifecycleOwner(), loginFormState -> {
             if (loginFormState == null) {
                 return;
+            }
+            if(loginFormState.isSignedIn()) {
+                Navigation.findNavController(view).navigate(R.id.navigation_home);
             }
             loginButton.setEnabled(loginFormState.isDataValid());
             if (loginFormState.getUsernameError() != null) {
@@ -74,7 +80,7 @@ public class LoginFragment extends Fragment {
                 showLoginFailed(loginResult.getError());
             }
             if (loginResult.getSuccess() != null) {
-                updateUiWithUser(loginResult.getSuccess());
+                Navigation.findNavController(view).navigate(R.id.navigation_home);
             }
         });
 
@@ -110,15 +116,24 @@ public class LoginFragment extends Fragment {
             loginViewModel.login(usernameEditText.getText().toString(),
                     passwordEditText.getText().toString());
         });
+
+        signupButton.setOnClickListener(v -> {
+            Navigation.findNavController(view).navigate(R.id.signupFragment);
+        });
+
+        // TODO
+        // take care about the lifecycle; the UI should not be observing the UI state when isn't being displayed
+
     }
 
-    private void updateUiWithUser(LoggedInUserView model) {
-        String welcome = getString(R.string.welcome) + model.getDisplayName();
-        // TODO : initiate successful logged in experience
-        if (getContext() != null && getContext().getApplicationContext() != null) {
-            Toast.makeText(getContext().getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
-        }
-    }
+//    private void updateUiWithUser(LoggedInUserView model) {
+//        String welcome = getString(R.string.welcome) + model.getDisplayName();
+//        // TODO : initiate successful logged in experience
+//        // the user is signed in, so it has to be displayed the home screen (freagment)
+//        if (getContext() != null && getContext().getApplicationContext() != null) {
+//            Toast.makeText(getContext().getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
+//        }
+//    }
 
     private void showLoginFailed(@StringRes Integer errorString) {
         if (getContext() != null && getContext().getApplicationContext() != null) {

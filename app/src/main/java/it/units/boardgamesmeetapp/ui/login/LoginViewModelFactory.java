@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.annotation.NonNull;
 
-import it.units.boardgamesmeetapp.data.LoginDataSource;
+import it.units.boardgamesmeetapp.data.LoginRemoteDataSource;
 import it.units.boardgamesmeetapp.data.LoginRepository;
 
 /**
@@ -18,7 +18,7 @@ public class LoginViewModelFactory implements ViewModelProvider.Factory {
     @SuppressWarnings("unchecked")
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if (modelClass.isAssignableFrom(LoginViewModel.class)) {
-            return (T) new LoginViewModel(LoginRepository.getInstance(new LoginDataSource()));
+            return (T) new LoginViewModel(LoginRepository.getInstance(new LoginRemoteDataSource()));
         } else {
             throw new IllegalArgumentException("Unknown ViewModel class");
         }
