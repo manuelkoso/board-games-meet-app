@@ -7,7 +7,9 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.ActionOnlyNavDirections;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -52,7 +54,7 @@ public class SignupFragment extends Fragment {
                 return;
             }
             if(loginFormState.isSignedIn()) {
-                Navigation.findNavController(view).navigate(R.id.navigation_home);
+                NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_signupFragment_to_navigation_home));
             }
             signupButton.setEnabled(loginFormState.isDataValid());
             if (loginFormState.getUsernameError() != null) {
@@ -71,7 +73,7 @@ public class SignupFragment extends Fragment {
                 showLoginFailed(loginResult.getError());
             }
             if (loginResult.getSuccess() != null) {
-                Navigation.findNavController(view).navigate(R.id.navigation_home);
+                NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_signupFragment_to_navigation_home));
             }
         });
 

@@ -63,7 +63,7 @@ public class LoginFragment extends Fragment {
                 return;
             }
             if(loginFormState.isSignedIn()) {
-                Navigation.findNavController(view).navigate(R.id.navigation_home);
+                NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_loginFragment_to_navigation_home));
             }
             loginButton.setEnabled(loginFormState.isDataValid());
             if (loginFormState.getUsernameError() != null) {
@@ -83,7 +83,7 @@ public class LoginFragment extends Fragment {
                 showLoginFailed(loginResult.getError());
             }
             if (loginResult.getSuccess() != null) {
-                Navigation.findNavController(view).navigate(R.id.navigation_home);
+                NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_loginFragment_to_navigation_home));
             }
         });
 
