@@ -27,6 +27,19 @@ public class LoginRemoteDataSource {
         }
     }
 
+    public Result<LoggedInUser> signup(String username, String password) {
+        try {
+            firebaseAuth = FirebaseAuth.getInstance();
+            if(firebaseAuth.createUserWithEmailAndPassword(username,password).isSuccessful()) {
+                LoggedInUser currentUser = new LoggedInUser(firebaseAuth.getUid(), username);
+                return new Result.Success<>(currentUser);
+            }
+            throw new IOException("Error signing up");
+        } catch (Exception e) {
+            return new Result.Error(e);
+        }
+    }
+
     public void logout() {
         FirebaseAuth.getInstance().signOut();
     }

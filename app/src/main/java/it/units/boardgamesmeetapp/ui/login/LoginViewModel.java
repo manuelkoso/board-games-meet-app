@@ -51,6 +51,17 @@ public class LoginViewModel extends ViewModel {
         }
     }
 
+    public void signup(String username, String password) {
+        Result<LoggedInUser> result = loginRepository.signup(username, password);
+
+        if (result instanceof Result.Success) {
+            LoggedInUser data = ((Result.Success<LoggedInUser>) result).getData();
+            loginResult.setValue(new LoginResult(new LoggedInUserView(data.getDisplayName())));
+        } else {
+            loginResult.setValue(new LoginResult(R.string.login_failed));
+        }
+    }
+
     // A placeholder username validation check
     private boolean isUserNameValid(String username) {
         if (username == null) {
