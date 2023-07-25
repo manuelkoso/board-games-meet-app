@@ -62,9 +62,6 @@ public class LoginFragment extends Fragment {
             if (loginFormState == null) {
                 return;
             }
-            if(loginFormState.isSignedIn()) {
-                NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_loginFragment_to_navigation_home));
-            }
             loginButton.setEnabled(loginFormState.isDataValid());
             if (loginFormState.getUsernameError() != null) {
                 usernameEditText.setError(getString(loginFormState.getUsernameError()));

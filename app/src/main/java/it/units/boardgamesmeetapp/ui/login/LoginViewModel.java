@@ -1,24 +1,27 @@
 package it.units.boardgamesmeetapp.ui.login;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import android.util.Log;
 import android.util.Patterns;
 
-import it.units.boardgamesmeetapp.data.LoginRepository;
-import it.units.boardgamesmeetapp.data.Result;
-import it.units.boardgamesmeetapp.data.model.LoggedInUser;
+import com.google.firebase.auth.FirebaseAuth;
+
+import it.units.boardgamesmeetapp.data.FirebaseConfig;
 import it.units.boardgamesmeetapp.R;
 
 public class LoginViewModel extends ViewModel {
 
-    private MutableLiveData<LoginState> loginFormState = new MutableLiveData<>();
-    private MutableLiveData<LoginResult> loginResult = new MutableLiveData<>();
-    private LoginRepository loginRepository;
+    @NonNull
+    private final FirebaseAuth firebaseAuth;
+    private final MutableLiveData<LoginState> loginFormState = new MutableLiveData<>();
+    private final MutableLiveData<LoginResult> loginResult = new MutableLiveData<>();
 
-    LoginViewModel(LoginRepository loginRepository) {
-        this.loginRepository = loginRepository;
+    LoginViewModel(@NonNull FirebaseAuth firebaseAuth) {
+        this.firebaseAuth = firebaseAuth;
     }
 
     LiveData<LoginState> getLoginFormState() {
@@ -30,15 +33,15 @@ public class LoginViewModel extends ViewModel {
     }
 
     public void login(String username, String password) {
-        // can be launched in a separate asynchronous job
-        Result<LoggedInUser> result = loginRepository.login(username, password);
-
-        if (result instanceof Result.Success) {
-            LoggedInUser data = ((Result.Success<LoggedInUser>) result).getData();
-            loginResult.setValue(new LoginResult(new LoggedInUserView(data.getDisplayName())));
-        } else {
-            loginResult.setValue(new LoginResult(R.string.login_failed));
-        }
+        firebaseAuth.signInWithEmailAndPassword(username, password).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Log.d(FirebaseConfig.AUTH_TAG, "Successful login");
+                loginResult.setValue(new LoginResult(new LoggedInUserView(username)));
+            } else {
+                Log.d(FirebaseConfig.AUTH_TAG, "Login error");
+                loginResult.setValue(new LoginResult(R.string.login_failed));
+            }
+        });
     }
 
     public void loginDataChanged(String username, String password) {
@@ -52,14 +55,15 @@ public class LoginViewModel extends ViewModel {
     }
 
     public void signup(String username, String password) {
-        Result<LoggedInUser> result = loginRepository.signup(username, password);
-
-        if (result instanceof Result.Success) {
-            LoggedInUser data = ((Result.Success<LoggedInUser>) result).getData();
-            loginResult.setValue(new LoginResult(new LoggedInUserView(data.getDisplayName())));
-        } else {
-            loginResult.setValue(new LoginResult(R.string.login_failed));
-        }
+        firebaseAuth.createUserWithEmailAndPassword(username, password).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Log.d(FirebaseConfig.AUTH_TAG, "Successful login");
+                loginResult.setValue(new LoginResult(new LoggedInUserView(username)));
+            } else {
+                Log.d(FirebaseConfig.AUTH_TAG, "Login error");
+                loginResult.setValue(new LoginResult(R.string.login_failed));
+            }
+        });
     }
 
     // A placeholder username validation check

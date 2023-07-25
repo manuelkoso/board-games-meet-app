@@ -53,9 +53,6 @@ public class SignupFragment extends Fragment {
             if (loginFormState == null) {
                 return;
             }
-            if(loginFormState.isSignedIn()) {
-                NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_signupFragment_to_navigation_home));
-            }
             signupButton.setEnabled(loginFormState.isDataValid());
             if (loginFormState.getUsernameError() != null) {
                 usernameEditText.setError(getString(loginFormState.getUsernameError()));
