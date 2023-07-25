@@ -7,10 +7,10 @@ import androidx.annotation.Nullable;
  */
 class LoginState {
     @Nullable
-    private Integer usernameError;
+    private final Integer usernameError;
     @Nullable
-    private Integer passwordError;
-    private boolean isDataValid;
+    private final Integer passwordError;
+    private final boolean isDataValid;
 
     LoginState(@Nullable Integer usernameError, @Nullable Integer passwordError) {
         this.usernameError = usernameError;
@@ -24,9 +24,6 @@ class LoginState {
         this.isDataValid = isDataValid;
     }
 
-    LoginState() {
-
-    }
     @Nullable
     Integer getUsernameError() {
         return usernameError;
