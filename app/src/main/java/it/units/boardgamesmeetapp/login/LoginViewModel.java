@@ -1,4 +1,4 @@
-package it.units.boardgamesmeetapp.ui.login;
+package it.units.boardgamesmeetapp.login;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -10,7 +10,7 @@ import android.util.Patterns;
 
 import com.google.firebase.auth.FirebaseAuth;
 
-import it.units.boardgamesmeetapp.data.FirebaseConfig;
+import it.units.boardgamesmeetapp.config.FirebaseConfig;
 import it.units.boardgamesmeetapp.R;
 
 public class LoginViewModel extends ViewModel {

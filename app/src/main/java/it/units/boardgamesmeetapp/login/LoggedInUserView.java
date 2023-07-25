@@ -1,4 +1,4 @@
-package it.units.boardgamesmeetapp.ui.login;
+package it.units.boardgamesmeetapp.login;
 
 /**
  * Class exposing authenticated user details to the UI.

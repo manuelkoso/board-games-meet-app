@@ -1,4 +1,4 @@
-package it.units.boardgamesmeetapp.ui.login;
+package it.units.boardgamesmeetapp.login;
 
 import androidx.annotation.Nullable;
 

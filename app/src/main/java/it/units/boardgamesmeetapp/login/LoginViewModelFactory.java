@@ -1,13 +1,10 @@
-package it.units.boardgamesmeetapp.ui.login;
+package it.units.boardgamesmeetapp.login;
 
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.annotation.NonNull;
 
 import com.google.firebase.auth.FirebaseAuth;
-
-import it.units.boardgamesmeetapp.data.LoginRemoteDataSource;
-import it.units.boardgamesmeetapp.data.LoginRepository;
 
 /**
  * ViewModel provider factory to instantiate LoginViewModel.

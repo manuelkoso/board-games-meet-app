@@ -1,4 +1,4 @@
-package it.units.boardgamesmeetapp.ui.notifications;
+package it.units.boardgamesmeetapp.notifications;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
