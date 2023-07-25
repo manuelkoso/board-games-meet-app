@@ -20,6 +20,8 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import java.util.Objects;
+
 import it.units.boardgamesmeetapp.databinding.FragmentLoginBinding;
 
 import it.units.boardgamesmeetapp.R;
@@ -74,7 +76,6 @@ public class LoginFragment extends Fragment {
                 showLoginFailed(loginResult.getError());
             }
             if (loginResult.getSuccess() != null) {
-                showLoginSuccess(loginResult.getSuccess());
                 NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_loginFragment_to_navigation_home));
             }
         });
@@ -107,22 +108,14 @@ public class LoginFragment extends Fragment {
         });
 
         loginButton.setOnClickListener(v -> {
+            hideKeyboard();
             loadingProgressBar.setVisibility(View.VISIBLE);
             loginViewModel.login(usernameEditText.getText().toString(),
                     passwordEditText.getText().toString());
         });
 
-        signupButton.setOnClickListener(v -> {
-            NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_loginFragment_to_signupFragment));
-        });
+        signupButton.setOnClickListener(v -> NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_loginFragment_to_signupFragment)));
 
-    }
-
-    private void showLoginSuccess(LoggedInUserView model) {
-        String welcome = getString(R.string.welcome) + model.getDisplayName();
-        if (getContext() != null && getContext().getApplicationContext() != null) {
-            Toast.makeText(getContext().getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
-        }
     }
 
     private void showLoginFailed(@StringRes Integer errorString) {
@@ -132,6 +125,13 @@ public class LoginFragment extends Fragment {
                     errorString,
                     Toast.LENGTH_LONG).show();
         }
+    }
+
+    private void hideKeyboard() {
+        binding.username.setEnabled(false);
+        binding.username.setEnabled(true);
+        binding.password.setEnabled(false);
+        binding.password.setEnabled(true);
     }
 
     @Override

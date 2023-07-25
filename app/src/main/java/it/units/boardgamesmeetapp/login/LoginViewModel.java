@@ -10,6 +10,8 @@ import android.util.Patterns;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.Objects;
+
 import it.units.boardgamesmeetapp.config.FirebaseConfig;
 import it.units.boardgamesmeetapp.R;
 
@@ -29,7 +31,19 @@ public class LoginViewModel extends ViewModel {
     }
 
     LiveData<LoginResult> getLoginResult() {
+        if (isAlreadyLoggedIn()) {
+            updateLoginResult();
+        }
         return loginResult;
+    }
+
+    private void updateLoginResult() {
+        if (loginResult.getValue() == null)
+            loginResult.setValue(new LoginResult(new LoggedInUserView(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getDisplayName())));
+    }
+
+    private boolean isAlreadyLoggedIn() {
+        return firebaseAuth.getCurrentUser() != null;
     }
 
     public void login(String username, String password) {
@@ -64,6 +78,10 @@ public class LoginViewModel extends ViewModel {
                 loginResult.setValue(new LoginResult(R.string.login_failed));
             }
         });
+    }
+
+    public void logout() {
+        FirebaseAuth.getInstance().signOut();
     }
 
     // A placeholder username validation check
