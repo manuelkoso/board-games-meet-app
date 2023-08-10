@@ -1,4 +1,4 @@
-package it.units.boardgamesmeetapp.ui.dashboard;
+package it.units.boardgamesmeetapp.dashboard;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
