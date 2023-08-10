@@ -21,6 +21,8 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.android.material.textfield.TextInputLayout;
+
 import it.units.boardgamesmeetapp.R;
 import it.units.boardgamesmeetapp.databinding.FragmentSignupBinding;
 
@@ -40,12 +42,13 @@ public class SignupFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory())
                 .get(LoginViewModel.class);
 
-        final EditText usernameEditText = binding.username;
-        final EditText passwordEditText = binding.password;
+        final TextInputLayout usernameLayout = binding.username;
+        final TextInputLayout passwordLayout = binding.password;
+        final EditText username = usernameLayout.getEditText();
+        final EditText password = passwordLayout.getEditText();
         final Button signupButton = binding.signup;
         final ProgressBar loadingProgressBar = binding.loading;
 
@@ -55,10 +58,14 @@ public class SignupFragment extends Fragment {
             }
             signupButton.setEnabled(loginFormState.isDataValid());
             if (loginFormState.getUsernameError() != null) {
-                usernameEditText.setError(getString(loginFormState.getUsernameError()));
+                usernameLayout.setError(getString(loginFormState.getUsernameError()));
+            } else {
+                usernameLayout.setError(null);
             }
             if (loginFormState.getPasswordError() != null) {
-                passwordEditText.setError(getString(loginFormState.getPasswordError()));
+                passwordLayout.setError(getString(loginFormState.getPasswordError()));
+            } else {
+                passwordLayout.setError(null);
             }
         });
 
@@ -71,7 +78,7 @@ public class SignupFragment extends Fragment {
                 showLoginFailed(loginResult.getError());
             }
             if (loginResult.getSuccess() != null) {
-                showLoginSuccess(loginResult.getSuccess());
+                // showLoginSuccess(loginResult.getSuccess());
                 NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_signupFragment_to_navigation_home));
             }
         });
@@ -89,24 +96,24 @@ public class SignupFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                loginViewModel.loginDataChanged(usernameEditText.getText().toString(),
-                        passwordEditText.getText().toString());
+                loginViewModel.loginDataChanged(username.getText().toString(),
+                        password.getText().toString());
             }
         };
-        usernameEditText.addTextChangedListener(afterTextChangedListener);
-        passwordEditText.addTextChangedListener(afterTextChangedListener);
-        passwordEditText.setOnEditorActionListener((v, actionId, event) -> {
+        username.addTextChangedListener(afterTextChangedListener);
+        password.addTextChangedListener(afterTextChangedListener);
+        password.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                loginViewModel.login(usernameEditText.getText().toString(),
-                        passwordEditText.getText().toString());
+                loginViewModel.login(username.getText().toString(),
+                        password.getText().toString());
             }
             return false;
         });
 
         signupButton.setOnClickListener(v -> {
             loadingProgressBar.setVisibility(View.VISIBLE);
-            loginViewModel.signup(usernameEditText.getText().toString(),
-                    passwordEditText.getText().toString());
+            loginViewModel.signup(username.getText().toString(),
+                    password.getText().toString());
         });
 
     }

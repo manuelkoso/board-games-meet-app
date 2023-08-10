@@ -61,23 +61,6 @@ public class LoginFragment extends Fragment {
         final Button signupButton = binding.signup;
         final ProgressBar loadingProgressBar = binding.loading;
 
-        loginViewModel.getLoginFormState().observe(getViewLifecycleOwner(), loginFormState -> {
-            if (loginFormState == null) {
-                return;
-            }
-            loginButton.setEnabled(loginFormState.isDataValid());
-            if (loginFormState.getUsernameError() != null) {
-                usernameLayout.setError(getString(loginFormState.getUsernameError()));
-            } else {
-                usernameLayout.setError(null);
-            }
-            if (loginFormState.getPasswordError() != null) {
-                passwordLayout.setError(getString(loginFormState.getPasswordError()));
-            } else {
-                passwordLayout.setError(null);
-            }
-        });
-
         loginViewModel.getLoginResult().observe(getViewLifecycleOwner(), loginResult -> {
             if (loginResult == null) {
                 return;
@@ -89,33 +72,6 @@ public class LoginFragment extends Fragment {
             if (loginResult.getSuccess() != null) {
                 NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_loginFragment_to_navigation_home));
             }
-        });
-
-        TextWatcher afterTextChangedListener = new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // ignore
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // ignore
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                loginViewModel.loginDataChanged(username.getText().toString(),
-                        password.getText().toString());
-            }
-        };
-        username.addTextChangedListener(afterTextChangedListener);
-        password.addTextChangedListener(afterTextChangedListener);
-        password.setOnEditorActionListener((v, actionId, event) -> {
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                loginViewModel.login(username.getText().toString(),
-                        password.getText().toString());
-            }
-            return false;
         });
 
         loginButton.setOnClickListener(v -> {
