@@ -9,7 +9,7 @@
         android:id="@+id/navigation_home"
         android:name="it.units.boardgamesmeetapp.home.HomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" >
+        tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_navigation_home_to_addNewActivityFragment"
             app:destination="@id/navigation_add_new_activity" />
@@ -30,7 +30,7 @@
         android:id="@+id/navigation_login"
         android:name="it.units.boardgamesmeetapp.login.LoginFragment"
         android:label="fragment_login"
-        tools:layout="@layout/fragment_login" >
+        tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_loginFragment_to_navigation_home"
             app:destination="@id/navigation_home"
@@ -49,7 +49,7 @@
         android:id="@+id/navigation_signup"
         android:name="it.units.boardgamesmeetapp.login.SignupFragment"
         android:label="fragment_signup"
-        tools:layout="@layout/fragment_signup" >
+        tools:layout="@layout/fragment_signup">
         <action
             android:id="@+id/action_signupFragment_to_navigation_home"
             app:destination="@id/navigation_home"
