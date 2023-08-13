@@ -9,23 +9,15 @@ import androidx.navigation.ActionOnlyNavDirections;
 import androidx.navigation.fragment.NavHostFragment;
 
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-
-import java.util.Objects;
 
 import it.units.boardgamesmeetapp.databinding.FragmentLoginBinding;
 
@@ -70,7 +62,7 @@ public class LoginFragment extends Fragment {
                 showLoginFailed(loginResult.getError());
             }
             if (loginResult.getSuccess() != null) {
-                NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_loginFragment_to_navigation_home));
+                NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_navigation_login_to_navigation_home));
             }
         });
 
@@ -80,7 +72,7 @@ public class LoginFragment extends Fragment {
                     password.getText().toString());
         });
 
-        signupButton.setOnClickListener(v -> NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_loginFragment_to_signupFragment)));
+        signupButton.setOnClickListener(v -> NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_navigation_login_to_navigation_signup)));
 
     }
 

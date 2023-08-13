@@ -79,7 +79,7 @@ public class SignupFragment extends Fragment {
             }
             if (loginResult.getSuccess() != null) {
                 // showLoginSuccess(loginResult.getSuccess());
-                NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_signupFragment_to_navigation_home));
+                NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_navigation_signup_to_navigation_home));
             }
         });
 

@@ -11,7 +11,7 @@
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home">
         <action
-            android:id="@+id/action_navigation_home_to_addNewActivityFragment"
+            android:id="@+id/action_navigation_home_to_navigation_add_new_activity"
             app:destination="@id/navigation_add_new_activity" />
     </fragment>
 
@@ -32,12 +32,12 @@
         android:label="fragment_login"
         tools:layout="@layout/fragment_login">
         <action
-            android:id="@+id/action_loginFragment_to_navigation_home"
+            android:id="@+id/action_navigation_login_to_navigation_home"
             app:destination="@id/navigation_home"
             app:popUpTo="@id/mobile_navigation"
             app:popUpToInclusive="true" />
         <action
-            android:id="@+id/action_loginFragment_to_signupFragment"
+            android:id="@+id/action_navigation_login_to_navigation_signup"
             app:destination="@id/navigation_signup" />
     </fragment>
     <action
@@ -51,7 +51,7 @@
         android:label="fragment_signup"
         tools:layout="@layout/fragment_signup">
         <action
-            android:id="@+id/action_signupFragment_to_navigation_home"
+            android:id="@+id/action_navigation_signup_to_navigation_home"
             app:destination="@id/navigation_home"
             app:popUpTo="@id/mobile_navigation"
             app:popUpToInclusive="true" />
