@@ -15,4 +15,11 @@
     <string name="sign_up">Sign up</string>
     <string name="signup_failed">"Username already exists"</string>
     <string name="add_new_event">Add new event</string>
+    <string name="add_activity">Add activity</string>
+    <string name="game">Game</string>
+    <string name="number_of_players">Number of players</string>
+    <string name="date">Date</string>
+    <string name="time">Time</string>
+    <string name="where">Where</string>
+    <string name="submit">Submit</string>
 </resources>
