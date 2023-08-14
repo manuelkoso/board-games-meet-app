@@ -11,12 +11,15 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import it.units.boardgamesmeetapp.R;
+import it.units.boardgamesmeetapp.databinding.FragmentAddNewActivityBinding;
 
 public class AddNewActivityFragment extends Fragment {
 
-    private AddNewActivityViewModel mViewModel;
+    private AddNewActivityViewModel viewModel;
+    private FragmentAddNewActivityBinding binding;
 
     public static AddNewActivityFragment newInstance() {
         return new AddNewActivityFragment();
@@ -25,14 +28,22 @@ public class AddNewActivityFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_add_new_activity, container, false);
+        binding = FragmentAddNewActivityBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(AddNewActivityViewModel.class);
-        // TODO: Use the ViewModel
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        viewModel = new ViewModelProvider(this, new AddNewActivityViewModelFactory()).get(AddNewActivityViewModel.class);
+
+        final Button submitButton = binding.button;
+
+        submitButton.setOnClickListener(v -> {
+            viewModel.addNewActivity();
+        });
+
     }
+
 
 }
