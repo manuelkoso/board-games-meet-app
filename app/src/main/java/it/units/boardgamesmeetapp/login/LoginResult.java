@@ -1,31 +1,36 @@
 package it.units.boardgamesmeetapp.login;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import it.units.boardgamesmeetapp.utils.Result;
 
 /**
  * Authentication result : success (user details) or error message.
  */
 class LoginResult {
     @Nullable
-    private LoggedInUserView success;
-    @Nullable
-    private Integer error;
+    private final Integer message;
+    @NonNull
+    private final Result result;
 
-    LoginResult(@Nullable Integer error) {
-        this.error = error;
+    LoginResult(@NonNull Result result) {
+        this.message = null;
+        this.result = result;
     }
 
-    LoginResult(@Nullable LoggedInUserView success) {
-        this.success = success;
-    }
-
-    @Nullable
-    LoggedInUserView getSuccess() {
-        return success;
+    LoginResult(@NonNull Result result, @NonNull Integer error) {
+        this.message = error;
+        this.result = result;
     }
 
     @Nullable
-    Integer getError() {
-        return error;
+    Integer getMessage() {
+        return message;
+    }
+
+    @NonNull
+    public Result getResult() {
+        return result;
     }
 }

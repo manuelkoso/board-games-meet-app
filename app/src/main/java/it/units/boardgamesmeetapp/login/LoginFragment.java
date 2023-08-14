@@ -22,10 +22,9 @@ import com.google.android.material.textfield.TextInputLayout;
 import it.units.boardgamesmeetapp.databinding.FragmentLoginBinding;
 
 import it.units.boardgamesmeetapp.R;
+import it.units.boardgamesmeetapp.utils.Result;
 
 public class LoginFragment extends Fragment {
-
-    private LoginViewModel loginViewModel;
     private FragmentLoginBinding binding;
 
     @Nullable
@@ -42,7 +41,7 @@ public class LoginFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory())
+        LoginViewModel loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory())
                 .get(LoginViewModel.class);
 
         final TextInputLayout usernameLayout = binding.username;
@@ -58,10 +57,9 @@ public class LoginFragment extends Fragment {
                 return;
             }
             loadingProgressBar.setVisibility(View.GONE);
-            if (loginResult.getError() != null) {
-                showLoginFailed(loginResult.getError());
-            }
-            if (loginResult.getSuccess() != null) {
+            if (loginResult.getResult() == Result.FAILURE) {
+                showLoginFailed(loginResult.getMessage());
+            } else {
                 NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_navigation_login_to_navigation_home));
             }
         });
@@ -83,13 +81,6 @@ public class LoginFragment extends Fragment {
                     errorString,
                     Toast.LENGTH_LONG).show();
         }
-    }
-
-    private void hideKeyboard() {
-        binding.username.setEnabled(false);
-        binding.username.setEnabled(true);
-        binding.password.setEnabled(false);
-        binding.password.setEnabled(true);
     }
 
     @Override

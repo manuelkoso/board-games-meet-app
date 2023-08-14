@@ -25,6 +25,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import it.units.boardgamesmeetapp.R;
 import it.units.boardgamesmeetapp.databinding.FragmentSignupBinding;
+import it.units.boardgamesmeetapp.utils.Result;
 
 public class SignupFragment extends Fragment {
 
@@ -47,7 +48,7 @@ public class SignupFragment extends Fragment {
 
         final TextInputLayout usernameLayout = binding.username;
         final TextInputLayout passwordLayout = binding.password;
-        final EditText username = usernameLayout.getEditText();
+       final EditText username = usernameLayout.getEditText();
         final EditText password = passwordLayout.getEditText();
         final Button signupButton = binding.signup;
         final ProgressBar loadingProgressBar = binding.loading;
@@ -74,11 +75,9 @@ public class SignupFragment extends Fragment {
                 return;
             }
             loadingProgressBar.setVisibility(View.GONE);
-            if (loginResult.getError() != null) {
-                showLoginFailed(loginResult.getError());
-            }
-            if (loginResult.getSuccess() != null) {
-                // showLoginSuccess(loginResult.getSuccess());
+            if (loginResult.getResult() == Result.FAILURE) {
+                showLoginFailed(loginResult.getMessage());
+            } else {
                 NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_navigation_signup_to_navigation_home));
             }
         });
@@ -116,13 +115,6 @@ public class SignupFragment extends Fragment {
                     password.getText().toString());
         });
 
-    }
-
-    private void showLoginSuccess(LoggedInUserView model) {
-        String welcome = getString(R.string.welcome) + model.getDisplayName();
-        if (getContext() != null && getContext().getApplicationContext() != null) {
-            Toast.makeText(getContext().getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
-        }
     }
 
     private void showLoginFailed(@StringRes Integer errorString) {
