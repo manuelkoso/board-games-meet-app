@@ -12,9 +12,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 import it.units.boardgamesmeetapp.R;
 import it.units.boardgamesmeetapp.databinding.FragmentAddNewActivityBinding;
+import it.units.boardgamesmeetapp.models.Activity;
 
 public class AddNewActivityFragment extends Fragment {
 
@@ -38,10 +43,13 @@ public class AddNewActivityFragment extends Fragment {
         viewModel = new ViewModelProvider(this, new AddNewActivityViewModelFactory()).get(AddNewActivityViewModel.class);
 
         final Button submitButton = binding.button;
+        final EditText game = binding.game.getEditText();
+        final EditText date = binding.date.getEditText();
+        final EditText time = binding.time.getEditText();
+        final EditText place = binding.place.getEditText();
+        final EditText numberOfPlayers = binding.numberOfPlayers.getEditText();
 
-        submitButton.setOnClickListener(v -> {
-            viewModel.addNewActivity();
-        });
+        submitButton.setOnClickListener(v -> viewModel.addNewActivity(game.getText().toString(), date.getText().toString(), time.getText().toString(), Integer.parseInt(numberOfPlayers.getText().toString()), place.getText().toString()));
 
     }
 

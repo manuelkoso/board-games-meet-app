@@ -1,7 +1,6 @@
 package it.units.boardgamesmeetapp.login;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -49,16 +48,16 @@ public class LoginViewModel extends ViewModel {
 
     public void login(String username, String password) {
         if(username.isEmpty() || password.isEmpty()) {
-            Log.d(FirebaseConfig.AUTH_TAG, "Login error");
+            Log.d(FirebaseConfig.TAG, "Login error");
             loginResult.setValue(new LoginResult(R.string.login_failed));
             return;
         }
         firebaseAuth.signInWithEmailAndPassword(username, password).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                Log.d(FirebaseConfig.AUTH_TAG, "Successful login");
+                Log.d(FirebaseConfig.TAG, "Successful login");
                 loginResult.setValue(new LoginResult(new LoggedInUserView(username)));
             } else {
-                Log.d(FirebaseConfig.AUTH_TAG, "Login error");
+                Log.d(FirebaseConfig.TAG, "Login error");
                 loginResult.setValue(new LoginResult(R.string.login_failed));
             }
         });
@@ -77,10 +76,10 @@ public class LoginViewModel extends ViewModel {
     public void signup(String username, String password) {
         firebaseAuth.createUserWithEmailAndPassword(username, password).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                Log.d(FirebaseConfig.AUTH_TAG, "Successful login");
+                Log.d(FirebaseConfig.TAG, "Successful login");
                 loginResult.setValue(new LoginResult(new LoggedInUserView(username)));
             } else {
-                Log.d(FirebaseConfig.AUTH_TAG, "Login error");
+                Log.d(FirebaseConfig.TAG, "Login error");
                 loginResult.setValue(new LoginResult(R.string.signup_failed));
             }
         });
