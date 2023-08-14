@@ -5,3 +5,10 @@ plugins {
     id "org.sonarqube" version "4.2.1.3168"
     id 'com.google.gms.google-services' version '4.3.15' apply false
 }
+
+sonar {
+    properties {
+        property "sonar.projectKey", "boardgame"
+        property "sonar.host.url", "http://localhost:9000"
+    }
+}
