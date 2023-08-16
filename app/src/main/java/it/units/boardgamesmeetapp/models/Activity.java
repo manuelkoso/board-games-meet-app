@@ -1,37 +1,44 @@
 package it.units.boardgamesmeetapp.models;
 
+import androidx.annotation.NonNull;
+
 import com.google.firebase.database.IgnoreExtraProperties;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @IgnoreExtraProperties
 public class Activity {
 
-    public String ownerUsername;
-    public String game;
-    public int numberOfPlayers;
-    public List<String> players;
-    public String place;
-    public String date;
-    public String time;
+    public final String ownerUsername;
+    public final Game game;
+    public final List<String> players;
+    public final Location location;
+    public final LocalDateTime time;
 
-    public Activity() {
-
-    }
-
-    public Activity(String ownerUsername, int numberOfPlayers, String game, String place, String date, String time) {
+    public Activity(@NonNull String ownerUsername, @NonNull Game game, @NonNull Location location, @NonNull LocalDateTime time) {
         this.ownerUsername = ownerUsername;
         this.game = game;
-        this.numberOfPlayers = numberOfPlayers;
-        this.place = place;
-        this.date = date;
         this.time = time;
-        players = new ArrayList<>(numberOfPlayers);
+        this.location = location;
+        players = new ArrayList<>(game.getNumberOfPlayers());
         players.add(ownerUsername);
     }
 
+    public String getOwnerUsername() {
+        return ownerUsername;
+    }
 
+    public Game getGame() {
+        return game;
+    }
+
+    public List<String> getPlayers() {
+        return players;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
 }

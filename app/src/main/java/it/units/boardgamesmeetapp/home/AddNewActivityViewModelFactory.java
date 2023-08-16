@@ -8,7 +8,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
 import it.units.boardgamesmeetapp.config.FirebaseConfig;
-import it.units.boardgamesmeetapp.login.LoginViewModel;
 
 public class AddNewActivityViewModelFactory implements ViewModelProvider.Factory {
 

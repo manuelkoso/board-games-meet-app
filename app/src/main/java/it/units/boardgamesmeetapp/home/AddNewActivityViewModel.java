@@ -2,7 +2,6 @@ package it.units.boardgamesmeetapp.home;
 
 import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -11,10 +10,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import it.units.boardgamesmeetapp.config.FirebaseConfig;
 import it.units.boardgamesmeetapp.models.Activity;
+import it.units.boardgamesmeetapp.models.Game;
+import it.units.boardgamesmeetapp.models.Location;
 
 public class AddNewActivityViewModel extends ViewModel {
 
@@ -26,9 +28,10 @@ public class AddNewActivityViewModel extends ViewModel {
         this.firebaseAuth = firebaseAuth;
     }
 
-    public void addNewActivity(String game, String date, String time, int number_of_players, String place) {
+    public void addNewActivity(String game, String date, String time, int numberOfPlayers, String place) {
         FirebaseUser user = firebaseAuth.getCurrentUser();
-        Activity activity = new Activity(user.getEmail(), number_of_players, game, place, date, time);
+        LocalDateTime localDateTime = LocalDateTime.of(LocalDate.parse(date), LocalTime.parse(time));
+        Activity activity = new Activity(user.getEmail(), new Game(game, numberOfPlayers), new Location(place), localDateTime);
         DatabaseReference databaseReference = database.getReference("activities");
         databaseReference.push().setValue(activity).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {

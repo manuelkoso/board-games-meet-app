@@ -14,21 +14,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 
-import it.units.boardgamesmeetapp.R;
 import it.units.boardgamesmeetapp.databinding.FragmentAddNewActivityBinding;
-import it.units.boardgamesmeetapp.models.Activity;
+
 
 public class AddNewActivityFragment extends Fragment {
 
     private AddNewActivityViewModel viewModel;
     private FragmentAddNewActivityBinding binding;
-
-    public static AddNewActivityFragment newInstance() {
-        return new AddNewActivityFragment();
-    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
