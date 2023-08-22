@@ -18,8 +18,8 @@
     <string name="add_activity">Add activity</string>
     <string name="game">Game</string>
     <string name="number_of_players">Number of players</string>
-    <string name="date">Date</string>
-    <string name="time">Time</string>
+    <string name="date">Date (yyyy-mm-dd)</string>
+    <string name="time">Time (hh-mm)</string>
     <string name="where">Where</string>
     <string name="submit">Submit</string>
 </resources>

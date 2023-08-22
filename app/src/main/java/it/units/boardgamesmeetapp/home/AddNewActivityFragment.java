@@ -8,12 +8,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+
+import com.google.android.material.datepicker.MaterialDatePicker;
 
 import it.units.boardgamesmeetapp.databinding.FragmentAddNewActivityBinding;
 
@@ -43,6 +46,8 @@ public class AddNewActivityFragment extends Fragment {
         final EditText numberOfPlayers = binding.numberOfPlayers.getEditText();
 
         submitButton.setOnClickListener(v -> viewModel.addNewActivity(game.getText().toString(), date.getText().toString(), time.getText().toString(), Integer.parseInt(numberOfPlayers.getText().toString()), place.getText().toString()));
+
+        // TODO: Implement a data picker and a time picker (use material design 3 elements)
 
     }
 
