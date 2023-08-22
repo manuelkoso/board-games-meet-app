@@ -26,7 +26,7 @@ public class ProfileFragment extends Fragment {
         View root = binding.getRoot();
 
         final TextView textView = binding.textProfile;
-        notificationsViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        // notificationsViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
 
