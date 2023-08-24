@@ -11,13 +11,13 @@ import java.util.List;
 @IgnoreExtraProperties
 public class Activity {
 
-    public final String ownerUsername;
-    public final Game game;
-    public final List<String> players;
-    public final Location location;
-    public final LocalDateTime time;
+    private String ownerUsername;
+    private Game game;
+    private List<String> players;
+    private Location location;
+    private String time;
 
-    public Activity(@NonNull String ownerUsername, @NonNull Game game, @NonNull Location location, @NonNull LocalDateTime time) {
+    public Activity(@NonNull String ownerUsername, @NonNull Game game, @NonNull Location location, @NonNull String time) {
         this.ownerUsername = ownerUsername;
         this.game = game;
         this.time = time;
@@ -25,6 +25,9 @@ public class Activity {
         players = new ArrayList<>(game.getNumberOfPlayers());
         players.add(ownerUsername);
     }
+
+    // needed for Firebase
+    public Activity() {}
 
     public String getOwnerUsername() {
         return ownerUsername;
@@ -41,4 +44,8 @@ public class Activity {
     public Location getLocation() {
         return location;
     }
+    public String getTime() {
+        return time;
+    }
+
 }

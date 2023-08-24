@@ -4,8 +4,11 @@ import androidx.annotation.NonNull;
 
 public class Game {
 
-    private final String name;
-    private final int numberOfPlayers;
+    public String name;
+    public int numberOfPlayers;
+
+    // Needed for Firebase
+    public Game() {}
 
     public Game(String name, int numberOfPlayers) {
         this.name = name;

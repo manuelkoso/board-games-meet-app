@@ -30,8 +30,7 @@ public class AddNewActivityViewModel extends ViewModel {
 
     public void addNewActivity(String game, String date, String time, int numberOfPlayers, String place) {
         FirebaseUser user = firebaseAuth.getCurrentUser();
-        LocalDateTime localDateTime = LocalDateTime.of(LocalDate.parse(date), LocalTime.parse(time));
-        Activity activity = new Activity(user.getEmail(), new Game(game, numberOfPlayers), new Location(place), localDateTime);
+        Activity activity = new Activity(user.getEmail(), new Game(game, numberOfPlayers), new Location(place), date);
         DatabaseReference databaseReference = database.getReference("activities");
         databaseReference.push().setValue(activity).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
