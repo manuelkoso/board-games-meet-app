@@ -1,5 +1,7 @@
 package it.units.boardgamesmeetapp.models;
 
+import androidx.annotation.NonNull;
+
 public class Game {
 
     private final String name;
@@ -17,4 +19,10 @@ public class Game {
     public int getNumberOfPlayers() {
         return numberOfPlayers;
     }
+    @NonNull
+    @Override
+    public String toString() {
+        return name;
+    }
+
 }
