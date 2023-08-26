@@ -1,6 +1,5 @@
 package it.units.boardgamesmeetapp.dashboard;
 
-import android.app.DownloadManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 
 import java.util.Collections;
 import java.util.List;
@@ -25,14 +23,14 @@ import java.util.List;
 import it.units.boardgamesmeetapp.config.FirebaseConfig;
 import it.units.boardgamesmeetapp.databinding.FragmentDashboardBinding;
 import it.units.boardgamesmeetapp.databinding.SingleActivityBinding;
-import it.units.boardgamesmeetapp.models.Activity;
+import it.units.boardgamesmeetapp.models.Event;
 
 public class DashboardFragment extends Fragment {
 
     private FragmentDashboardBinding binding;
     private DashboardViewModel viewModel;
 
-    private List<Activity> userActivities = Collections.emptyList();
+    private List<Event> userActivities = Collections.emptyList();
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -46,8 +44,8 @@ public class DashboardFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         viewModel = new ViewModelProvider(this, new DashboardViewModelFactory()).get(DashboardViewModel.class);
 
-        FirebaseRecyclerOptions<Activity> options = new FirebaseRecyclerOptions.Builder<Activity>().setQuery(FirebaseDatabase.getInstance(FirebaseConfig.DB_URL).getReference().child("activities"), Activity.class).build();
-        FirebaseRecyclerAdapter<Activity, ActivityViewHolder> adapter = new FirebaseRecyclerAdapter<Activity, ActivityViewHolder>(options) {
+        FirebaseRecyclerOptions<Event> options = new FirebaseRecyclerOptions.Builder<Event>().setQuery(FirebaseDatabase.getInstance(FirebaseConfig.DB_URL).getReference().child("activities"), Event.class).build();
+        FirebaseRecyclerAdapter<Event, ActivityViewHolder> adapter = new FirebaseRecyclerAdapter<Event, ActivityViewHolder>(options) {
             @NonNull
             @Override
             public ActivityViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -55,7 +53,7 @@ public class DashboardFragment extends Fragment {
             }
 
             @Override
-            protected void onBindViewHolder(@NonNull ActivityViewHolder holder, int position, @NonNull Activity model) {
+            protected void onBindViewHolder(@NonNull ActivityViewHolder holder, int position, @NonNull Event model) {
                 SingleActivityBinding activityBinding = holder.getBinding();
                 TextView textView = activityBinding.gameTitle;
                 textView.setText(model.getGame().toString());

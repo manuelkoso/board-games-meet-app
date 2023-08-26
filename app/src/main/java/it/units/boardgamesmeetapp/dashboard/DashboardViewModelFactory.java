@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.firebase.database.FirebaseDatabase;
 
 import it.units.boardgamesmeetapp.config.FirebaseConfig;
-import it.units.boardgamesmeetapp.home.AddNewActivityViewModel;
 
 public class DashboardViewModelFactory implements ViewModelProvider.Factory {
 
