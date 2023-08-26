@@ -4,30 +4,30 @@ import androidx.annotation.NonNull;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @IgnoreExtraProperties
-public class Activity {
+public class Event {
 
     private String ownerUsername;
     private Game game;
     private List<String> players;
     private Location location;
-    private String time;
+    private long timestamp;
 
-    public Activity(@NonNull String ownerUsername, @NonNull Game game, @NonNull Location location, @NonNull String time) {
+    public Event(@NonNull String ownerUsername, @NonNull Game game, @NonNull Location location, long timestamp) {
         this.ownerUsername = ownerUsername;
         this.game = game;
-        this.time = time;
+        this.timestamp = timestamp;
         this.location = location;
         players = new ArrayList<>(game.getNumberOfPlayers());
         players.add(ownerUsername);
     }
 
     // needed for Firebase
-    public Activity() {}
+    public Event() {
+    }
 
     public String getOwnerUsername() {
         return ownerUsername;
@@ -44,8 +44,9 @@ public class Activity {
     public Location getLocation() {
         return location;
     }
-    public String getTime() {
-        return time;
+
+    public long getTime() {
+        return timestamp;
     }
 
 }

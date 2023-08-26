@@ -40,7 +40,7 @@ public class HomeFragment extends Fragment {
 
         homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
 
-        newActivityButton.setOnClickListener(v -> NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_navigation_home_to_navigation_add_new_activity)));
+        newActivityButton.setOnClickListener(v -> NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_navigation_home_to_navigation_new_event)));
 
     }
 

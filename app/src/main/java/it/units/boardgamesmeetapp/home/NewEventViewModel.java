@@ -9,30 +9,26 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-
 import it.units.boardgamesmeetapp.config.FirebaseConfig;
-import it.units.boardgamesmeetapp.models.Activity;
+import it.units.boardgamesmeetapp.models.Event;
 import it.units.boardgamesmeetapp.models.Game;
 import it.units.boardgamesmeetapp.models.Location;
 
-public class AddNewActivityViewModel extends ViewModel {
+public class NewEventViewModel extends ViewModel {
 
     private final FirebaseDatabase database;
     private final FirebaseAuth firebaseAuth;
 
-    AddNewActivityViewModel(FirebaseAuth firebaseAuth, FirebaseDatabase database) {
+    NewEventViewModel(FirebaseAuth firebaseAuth, FirebaseDatabase database) {
         this.database = database;
         this.firebaseAuth = firebaseAuth;
     }
 
-    public void addNewActivity(String game, String date, String time, int numberOfPlayers, String place) {
+    public void addNewActivity(String game, String date, long timestamp, int numberOfPlayers, String place) {
         FirebaseUser user = firebaseAuth.getCurrentUser();
-        Activity activity = new Activity(user.getEmail(), new Game(game, numberOfPlayers), new Location(place), date);
+        Event event = new Event(user.getEmail(), new Game(game, numberOfPlayers), new Location(place), timestamp);
         DatabaseReference databaseReference = database.getReference("activities");
-        databaseReference.push().setValue(activity).addOnCompleteListener(task -> {
+        databaseReference.push().setValue(event).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Log.d(FirebaseConfig.TAG, "Data successfully written.");
             } else {
