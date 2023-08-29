@@ -13,5 +13,9 @@ public class Location {
     public String getPlace() {
         return place;
     }
-
+    @NonNull
+    @Override
+    public String toString() {
+        return place;
+    }
 }
