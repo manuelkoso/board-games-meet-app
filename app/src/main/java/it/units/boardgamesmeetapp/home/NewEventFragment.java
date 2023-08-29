@@ -23,6 +23,10 @@ import android.widget.Toast;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.timepicker.MaterialTimePicker;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+
 import it.units.boardgamesmeetapp.R;
 import it.units.boardgamesmeetapp.databinding.FragmentNewEventBinding;
 import it.units.boardgamesmeetapp.utils.Result;
@@ -55,12 +59,12 @@ public class NewEventFragment extends Fragment {
 
         MaterialDatePicker<Long> materialDatePicker = MaterialDatePicker.Builder.datePicker().setTitleText("Select date").build();
         date.setOnClickListener(v -> materialDatePicker.show(requireActivity().getSupportFragmentManager(), "MATERIAL_DATE_PICKER"));
-        materialDatePicker.addOnPositiveButtonClickListener(selection -> date.setText(materialDatePicker.getHeaderText()));
+        materialDatePicker.addOnPositiveButtonClickListener(selection -> {
+            date.setText(materialDatePicker.getHeaderText().toString());
+        });
 
         MaterialTimePicker timePicker = new MaterialTimePicker.Builder().setTitleText("Select time").build();
-        time.setOnClickListener(v -> {
-            timePicker.show(requireActivity().getSupportFragmentManager(), "MATERIAL_TIME_PICKER");
-        });
+        time.setOnClickListener(v -> timePicker.show(requireActivity().getSupportFragmentManager(), "MATERIAL_TIME_PICKER"));
         timePicker.addOnPositiveButtonClickListener(selection -> time.setText(String.format("%02d:%02d", timePicker.getHour(), timePicker.getMinute())));
         submitButton.setOnClickListener(v -> {
             loadingProgressBar.setVisibility(View.VISIBLE);
@@ -69,19 +73,23 @@ public class NewEventFragment extends Fragment {
 
         viewModel.getSubmissionResult().observe(getViewLifecycleOwner(), submissionResult -> {
             if (submissionResult == Result.NONE) return;
-            if (submissionResult == Result.FAILURE) showLoginFailed(R.string.new_event_failed);
+            if (submissionResult == Result.FAILURE) {
+                loadingProgressBar.setVisibility(View.GONE);
+                showLoginResult(R.string.new_event_failed);
+            };
             if(submissionResult == Result.SUCCESS) {
+                showLoginResult(R.string.new_event_success);
                 NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_navigation_new_event_to_navigation_dashboard));
             }
         });
 
     }
 
-    private void showLoginFailed(@StringRes Integer errorString) {
+    private void showLoginResult(@StringRes Integer message) {
         if (getContext() != null && getContext().getApplicationContext() != null) {
             Toast.makeText(
                     getContext().getApplicationContext(),
-                    errorString,
+                    message,
                     Toast.LENGTH_LONG).show();
         }
     }

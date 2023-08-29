@@ -10,6 +10,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import it.units.boardgamesmeetapp.R;
 import it.units.boardgamesmeetapp.config.FirebaseConfig;
 import it.units.boardgamesmeetapp.models.Event;
 import it.units.boardgamesmeetapp.models.Game;
@@ -31,7 +32,7 @@ public class NewEventViewModel extends ViewModel {
 
     public void addNewActivity(String game, String numberOfPlayers, String place, String date, String time) {
         FirebaseUser user = firebaseAuth.getCurrentUser();
-        if(user == null || !isInputStringValid(game, numberOfPlayers, place, date, time)) {
+        if(date.equals("Date") || time.equals("Time") || user == null || !isInputStringValid(game, numberOfPlayers, place, date, time)) {
             submissionResult.setValue(Result.FAILURE);
             return;
         }
