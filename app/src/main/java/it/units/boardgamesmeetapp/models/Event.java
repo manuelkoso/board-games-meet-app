@@ -1,7 +1,5 @@
 package it.units.boardgamesmeetapp.models;
 
-import androidx.annotation.NonNull;
-
 import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.util.ArrayList;
@@ -14,12 +12,14 @@ public class Event {
     private Game game;
     private List<String> players;
     private Location location;
-    private long timestamp;
+    private String date;
+    private String time;
 
-    public Event(@NonNull String ownerUsername, @NonNull Game game, @NonNull Location location, long timestamp) {
+    public Event(String ownerUsername, Game game, Location location, String date, String time) {
         this.ownerUsername = ownerUsername;
         this.game = game;
-        this.timestamp = timestamp;
+        this.date = date;
+        this.time = time;
         this.location = location;
         players = new ArrayList<>(game.getNumberOfPlayers());
         players.add(ownerUsername);
@@ -45,8 +45,11 @@ public class Event {
         return location;
     }
 
-    public long getTime() {
-        return timestamp;
+    public String getDate() {
+        return date;
     }
 
+    public String getTime() {
+        return time;
+    }
 }

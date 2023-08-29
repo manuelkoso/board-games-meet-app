@@ -60,5 +60,9 @@
         android:id="@+id/navigation_new_event"
         android:name="it.units.boardgamesmeetapp.home.NewEventFragment"
         android:label="fragment_add_new_activity"
-        tools:layout="@layout/fragment_new_event" />
+        tools:layout="@layout/fragment_new_event" >
+        <action
+            android:id="@+id/action_navigation_new_event_to_navigation_dashboard"
+            app:destination="@id/navigation_dashboard" />
+    </fragment>
 </navigation>
