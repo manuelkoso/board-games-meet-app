@@ -48,7 +48,7 @@ public class SignupFragment extends Fragment {
 
         final TextInputLayout usernameLayout = binding.username;
         final TextInputLayout passwordLayout = binding.password;
-       final EditText username = usernameLayout.getEditText();
+        final EditText username = usernameLayout.getEditText();
         final EditText password = passwordLayout.getEditText();
         final Button signupButton = binding.signup;
         final ProgressBar loadingProgressBar = binding.loading;
