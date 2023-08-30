@@ -2,7 +2,7 @@
     <string name="app_name">BoardGamesMeetApp</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
-    <string name="title_profile">Profile</string>
+    <string name="title_profile">Profile information</string>
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
@@ -28,4 +28,12 @@
     <string name="statistics">Statistics</string>
     <string name="my_activity">My activities</string>
     <string name="my_activities">My activities</string>
+    <string name="profile_hint_description">Provide some personal information helping other users to know you better</string>
+    <string name="modify">Modify</string>
+    <string name="favourite_games">Favourite games</string>
+    <string name="favourite_places">Favourite places where to play boardgames</string>
+    <string name="age">Age</string>
+    <string name="username">Username</string>
+    <string name="surname">Surname</string>
+    <string name="name">Name</string>
 </resources>
