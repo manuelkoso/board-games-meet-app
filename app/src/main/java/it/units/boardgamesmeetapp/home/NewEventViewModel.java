@@ -10,11 +10,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import it.units.boardgamesmeetapp.R;
 import it.units.boardgamesmeetapp.config.FirebaseConfig;
 import it.units.boardgamesmeetapp.models.Event;
-import it.units.boardgamesmeetapp.models.Game;
-import it.units.boardgamesmeetapp.models.Location;
 import it.units.boardgamesmeetapp.utils.Result;
 
 public class NewEventViewModel extends ViewModel {
@@ -36,7 +33,7 @@ public class NewEventViewModel extends ViewModel {
             submissionResult.setValue(Result.FAILURE);
             return;
         }
-        Event event = new Event(user.getEmail(), new Game(game, Integer.parseInt(numberOfPlayers)), new Location(place), date, time);
+        Event event = new Event(user.getEmail(), game, Integer.parseInt(numberOfPlayers), place, date, time);
         DatabaseReference databaseReference = database.getReference("activities");
         databaseReference.push().setValue(event).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {

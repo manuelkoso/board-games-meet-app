@@ -9,19 +9,20 @@ import java.util.List;
 public class Event {
 
     private String ownerUsername;
-    private Game game;
+    private String game;
+    private int maxNumberOfPlayers;
     private List<String> players;
-    private Location location;
+    private String location;
     private String date;
     private String time;
 
-    public Event(String ownerUsername, Game game, Location location, String date, String time) {
+    public Event(String ownerUsername, String game, int maxNumberOfPlayers, String location, String date, String time) {
         this.ownerUsername = ownerUsername;
         this.game = game;
         this.date = date;
         this.time = time;
         this.location = location;
-        players = new ArrayList<>(game.getNumberOfPlayers());
+        players = new ArrayList<>(maxNumberOfPlayers);
         players.add(ownerUsername);
     }
 
@@ -33,15 +34,19 @@ public class Event {
         return ownerUsername;
     }
 
-    public Game getGame() {
+    public String getGame() {
         return game;
+    }
+
+    public int getMaxNumberOfPlayers() {
+        return maxNumberOfPlayers;
     }
 
     public List<String> getPlayers() {
         return players;
     }
 
-    public Location getLocation() {
+    public String getLocation() {
         return location;
     }
 
