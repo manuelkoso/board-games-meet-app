@@ -13,6 +13,7 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="sign_up">Sign up</string>
+    <string name="sign_up_success">Sign up done!</string>
     <string name="signup_failed">"Username already exists"</string>
     <string name="add_new_event">Add new event</string>
     <string name="new_event_failed">Fill all the fields!</string>
@@ -29,7 +30,7 @@
     <string name="my_activity">My activities</string>
     <string name="my_activities">My activities</string>
     <string name="profile_hint_description">Provide some personal information helping other users to know you better</string>
-    <string name="modify">Modify</string>
+    <string name="confirm">Confirm</string>
     <string name="favourite_games">Favourite games</string>
     <string name="favourite_places">Favourite places where to play boardgames</string>
     <string name="age">Age</string>

@@ -76,9 +76,10 @@ public class SignupFragment extends Fragment {
             }
             loadingProgressBar.setVisibility(View.GONE);
             if (loginResult.getResult() == Result.FAILURE) {
-                showLoginFailed(loginResult.getMessage());
+                showLoginResult(loginResult.getMessage());
             } else {
-                NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_navigation_signup_to_navigation_home));
+                showLoginResult(R.string.sign_up_success);
+                NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_navigation_signup_to_navigation_profile));
             }
         });
 
@@ -117,7 +118,7 @@ public class SignupFragment extends Fragment {
 
     }
 
-    private void showLoginFailed(@StringRes Integer errorString) {
+    private void showLoginResult(@StringRes Integer errorString) {
         if (getContext() != null && getContext().getApplicationContext() != null) {
             Toast.makeText(
                     getContext().getApplicationContext(),

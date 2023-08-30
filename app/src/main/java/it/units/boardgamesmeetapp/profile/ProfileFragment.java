@@ -25,8 +25,6 @@ public class ProfileFragment extends Fragment {
         View root = binding.getRoot();
 
         final EditText name = binding.name.getEditText();
-        final EditText username = binding.username.getEditText();
-        username.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
         return root;
     }
 
