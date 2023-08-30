@@ -22,7 +22,7 @@ import java.util.List;
 
 import it.units.boardgamesmeetapp.config.FirebaseConfig;
 import it.units.boardgamesmeetapp.databinding.FragmentDashboardBinding;
-import it.units.boardgamesmeetapp.databinding.SingleActivityBinding;
+import it.units.boardgamesmeetapp.databinding.SingleEventBinding;
 import it.units.boardgamesmeetapp.models.Event;
 
 public class DashboardFragment extends Fragment {
@@ -45,16 +45,16 @@ public class DashboardFragment extends Fragment {
         viewModel = new ViewModelProvider(this, new DashboardViewModelFactory()).get(DashboardViewModel.class);
 
         FirebaseRecyclerOptions<Event> options = new FirebaseRecyclerOptions.Builder<Event>().setQuery(FirebaseDatabase.getInstance(FirebaseConfig.DB_URL).getReference().child("activities"), Event.class).build();
-        FirebaseRecyclerAdapter<Event, ActivityViewHolder> adapter = new FirebaseRecyclerAdapter<Event, ActivityViewHolder>(options) {
+        FirebaseRecyclerAdapter<Event, EventViewHolder> adapter = new FirebaseRecyclerAdapter<Event, EventViewHolder>(options) {
             @NonNull
             @Override
-            public ActivityViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                return new ActivityViewHolder(SingleActivityBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
+            public EventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                return new EventViewHolder(SingleEventBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
             }
 
             @Override
-            protected void onBindViewHolder(@NonNull ActivityViewHolder holder, int position, @NonNull Event model) {
-                SingleActivityBinding activityBinding = holder.getBinding();
+            protected void onBindViewHolder(@NonNull EventViewHolder holder, int position, @NonNull Event model) {
+                SingleEventBinding activityBinding = holder.getBinding();
                 TextView gameTitle = activityBinding.gameTitle;
                 TextView place = activityBinding.place;
                 TextView date = activityBinding.date;
