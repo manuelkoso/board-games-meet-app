@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 
 import it.units.boardgamesmeetapp.databinding.FragmentLoginBinding;
@@ -49,7 +50,7 @@ public class LoginFragment extends Fragment {
         final EditText username = usernameLayout.getEditText();
         final EditText password = passwordLayout.getEditText();
         final Button loginButton = binding.login;
-        final Button signupButton = binding.signup;
+        final FloatingActionButton signupButton = binding.floatingActionButton;
         final ProgressBar loadingProgressBar = binding.loading;
 
         loginViewModel.getLoginResult().observe(getViewLifecycleOwner(), loginResult -> {
