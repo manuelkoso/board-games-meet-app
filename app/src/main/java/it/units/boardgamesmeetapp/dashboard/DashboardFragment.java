@@ -55,8 +55,16 @@ public class DashboardFragment extends Fragment {
             @Override
             protected void onBindViewHolder(@NonNull ActivityViewHolder holder, int position, @NonNull Event model) {
                 SingleActivityBinding activityBinding = holder.getBinding();
-                TextView textView = activityBinding.gameTitle;
-                textView.setText(model.getGame().toString());
+                TextView gameTitle = activityBinding.gameTitle;
+                TextView place = activityBinding.place;
+                TextView date = activityBinding.date;
+                TextView time = activityBinding.time;
+                TextView people = activityBinding.people;
+                place.setText(model.getLocation().toString());
+                date.setText(model.getDate());
+                time.setText(model.getTime());
+                gameTitle.setText(model.getGame().toString());
+                // people.setText(model.getPlayers().size());
             }
         };
         RecyclerView recyclerView = binding.activitiesRecycler;
