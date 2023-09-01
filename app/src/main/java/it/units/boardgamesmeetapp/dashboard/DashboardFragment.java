@@ -60,10 +60,10 @@ public class DashboardFragment extends Fragment {
                 TextView date = activityBinding.date;
                 TextView time = activityBinding.time;
                 TextView people = activityBinding.people;
-                place.setText(model.getLocation().toString());
+                place.setText(model.getLocation());
                 date.setText(model.getDate());
                 time.setText(model.getTime());
-                gameTitle.setText(model.getGame().toString());
+                gameTitle.setText(model.getGame());
                 // people.setText(model.getPlayers().size());
             }
         };
