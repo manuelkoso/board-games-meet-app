@@ -31,8 +31,8 @@
     <string name="my_activities">My activities</string>
     <string name="profile_hint_description">Provide some personal information helping other users to know you better</string>
     <string name="confirm">Confirm</string>
-    <string name="favourite_games">Favourite games</string>
-    <string name="favourite_places">Favourite places where to play boardgames</string>
+    <string name="favourite_games">Favourite game</string>
+    <string name="favourite_places">Favourite place where to play boardgames</string>
     <string name="age">Age</string>
     <string name="username">Username</string>
     <string name="surname">Surname</string>

@@ -1,10 +1,13 @@
 package it.units.boardgamesmeetapp.models;
 
+import com.google.firebase.database.Exclude;
+import com.google.firebase.database.IgnoreExtraProperties;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
-
+@IgnoreExtraProperties
 public class UserInfo {
-
-    private String email;
 
     private String name;
 
@@ -19,8 +22,7 @@ public class UserInfo {
     public UserInfo() {
     }
 
-    public UserInfo(String email, String name, String surname, int age, String favouritePlace, String favouriteGame) {
-        this.email = email;
+    public UserInfo(String name, String surname, int age, String favouritePlace, String favouriteGame) {
         this.name = name;
         this.surname = surname;
         this.age = age;
@@ -46,14 +48,6 @@ public class UserInfo {
 
     public String getFavouriteGame() {
         return favouriteGame;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public void setName(String name) {
@@ -87,6 +81,17 @@ public class UserInfo {
     @Override
     public int hashCode() {
         return Objects.hash(name, surname, age, favouritePlace, favouriteGame);
+    }
+
+    @Exclude
+    public Map<String, Object> toMap() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("name", name);
+        result.put("surname", surname);
+        result.put("age", age);
+        result.put("favouritePlace", favouritePlace);
+        result.put("favouriteGame", favouriteGame);
+        return result;
     }
 
 }

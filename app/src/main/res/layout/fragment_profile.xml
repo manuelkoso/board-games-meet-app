@@ -76,7 +76,7 @@
         android:layout_marginHorizontal="20dp"
         android:layout_marginTop="16dp"
         android:hint="@string/age"
-        app:layout_constraintBottom_toTopOf="@+id/places"
+        app:layout_constraintBottom_toTopOf="@+id/place"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/surname"
@@ -89,14 +89,14 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/places"
+        android:id="@+id/place"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
         android:layout_marginTop="16dp"
         android:hint="@string/favourite_places"
-        app:layout_constraintBottom_toTopOf="@+id/games"
+        app:layout_constraintBottom_toTopOf="@+id/game"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/age"
@@ -109,7 +109,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/games"
+        android:id="@+id/game"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -119,7 +119,7 @@
         app:layout_constraintBottom_toTopOf="@+id/modify_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/places"
+        app:layout_constraintTop_toBottomOf="@+id/place"
         tools:layout_editor_absoluteX="20dp">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -138,6 +138,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/games" />
+        app:layout_constraintTop_toBottomOf="@+id/game" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
