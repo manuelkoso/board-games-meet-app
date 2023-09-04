@@ -21,6 +21,7 @@ public class Event {
         this.game = game;
         this.date = date;
         this.time = time;
+        this.maxNumberOfPlayers = maxNumberOfPlayers;
         this.location = location;
         players = new ArrayList<>(maxNumberOfPlayers);
         players.add(ownerUsername);
