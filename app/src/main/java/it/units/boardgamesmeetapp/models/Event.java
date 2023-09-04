@@ -8,6 +8,7 @@ import java.util.List;
 @IgnoreExtraProperties
 public class Event {
 
+    private String key;
     private String ownerUsername;
     private String game;
     private int maxNumberOfPlayers;
@@ -21,6 +22,7 @@ public class Event {
         this.game = game;
         this.date = date;
         this.time = time;
+        this.key = null;
         this.maxNumberOfPlayers = maxNumberOfPlayers;
         this.location = location;
         players = new ArrayList<>(maxNumberOfPlayers);
@@ -57,5 +59,13 @@ public class Event {
 
     public String getTime() {
         return time;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public String getKey() {
+        return key;
     }
 }

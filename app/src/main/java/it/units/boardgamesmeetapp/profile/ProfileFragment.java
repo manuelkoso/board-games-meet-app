@@ -36,6 +36,7 @@ public class ProfileFragment extends Fragment {
         ProfileViewModel viewModel = new ViewModelProvider(this, new ProfileViewModelFactory()).get(ProfileViewModel.class);
 
         viewModel.getInitialUserInfo().observe(getViewLifecycleOwner(), initialUserInfo -> {
+            if(initialUserInfo == null) return;
             name.setText(initialUserInfo.getName());
             surname.setText(initialUserInfo.getSurname());
             ageEditText.setText(String.valueOf(initialUserInfo.getAge()));

@@ -34,8 +34,9 @@ public class NewEventViewModel extends ViewModel {
             return;
         }
         Event event = new Event(user.getEmail(), game, Integer.parseInt(numberOfPlayers), place, date, time);
-        DatabaseReference databaseReference = database.getReference("activities");
-        databaseReference.push().setValue(event).addOnCompleteListener(task -> {
+        DatabaseReference databaseReference = database.getReference("activities").push();
+        event.setKey(databaseReference.getKey());
+        databaseReference.setValue(event).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Log.d(FirebaseConfig.TAG, "Data successfully written.");
                 submissionResult.setValue(Result.SUCCESS);

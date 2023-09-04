@@ -15,7 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 
 import java.util.Collections;
 import java.util.List;
@@ -44,7 +46,9 @@ public class DashboardFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         viewModel = new ViewModelProvider(this, new DashboardViewModelFactory()).get(DashboardViewModel.class);
 
-        FirebaseRecyclerOptions<Event> options = new FirebaseRecyclerOptions.Builder<Event>().setQuery(FirebaseDatabase.getInstance(FirebaseConfig.DB_URL).getReference().child("activities"), Event.class).build();
+        Query query = FirebaseDatabase.getInstance(FirebaseConfig.DB_URL).getReference().child("activities").orderByChild("ownerUsername").equalTo(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+
+        FirebaseRecyclerOptions<Event> options = new FirebaseRecyclerOptions.Builder<Event>().setQuery(query, Event.class).build();
         FirebaseRecyclerAdapter<Event, EventViewHolder> adapter = new FirebaseRecyclerAdapter<Event, EventViewHolder>(options) {
             @NonNull
             @Override
@@ -64,7 +68,10 @@ public class DashboardFragment extends Fragment {
                 date.setText(model.getDate());
                 time.setText(model.getTime());
                 gameTitle.setText(model.getGame());
-                // people.setText(model.getPlayers().size());
+                people.setText(String.valueOf(model.getPlayers().size() + "/" + model.getMaxNumberOfPlayers()));
+                activityBinding.deleteButton.setOnClickListener(v -> {
+                    viewModel.deleteEvent(model);
+                });
             }
         };
         RecyclerView recyclerView = binding.activitiesRecycler;
