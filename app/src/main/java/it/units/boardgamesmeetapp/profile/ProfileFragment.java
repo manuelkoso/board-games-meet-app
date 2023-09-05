@@ -46,7 +46,14 @@ public class ProfileFragment extends Fragment {
 
         viewModel.getCurrentUserInfo().observe(getViewLifecycleOwner(), currentUserInfo -> button.setEnabled(!currentUserInfo.equals(viewModel.getInitialUserInfo().getValue())));
 
-        button.setOnClickListener(v -> viewModel.modifyUserInformation());
+        button.setOnClickListener(v -> {
+            viewModel.modifyUserInformation();
+            name.clearFocus();
+            surname.clearFocus();
+            ageEditText.clearFocus();
+            favouritePlace.clearFocus();
+            favouriteGame.clearFocus();
+        });
 
         TextWatcher afterTextChangedListener = new TextWatcher() {
             @Override

@@ -6,8 +6,11 @@ import com.google.firebase.database.IgnoreExtraProperties;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+
 @IgnoreExtraProperties
 public class UserInfo {
+
+    private String userId;
 
     private String name;
 
@@ -20,9 +23,16 @@ public class UserInfo {
     private String favouriteGame;
 
     public UserInfo() {
+        this.userId = "";
+        this.name = "";
+        this.surname = "";
+        this.age = 0;
+        this.favouriteGame = "";
+        this.favouritePlace = "";
     }
 
     public UserInfo(String name, String surname, int age, String favouritePlace, String favouriteGame) {
+        this.userId = null;
         this.name = name;
         this.surname = surname;
         this.age = age;
@@ -36,6 +46,10 @@ public class UserInfo {
 
     public String getSurname() {
         return surname;
+    }
+
+    public String getUserId() {
+        return userId;
     }
 
     public int getAge() {
@@ -52,6 +66,10 @@ public class UserInfo {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public void setSurname(String surname) {
@@ -86,6 +104,7 @@ public class UserInfo {
     @Exclude
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
+        result.put("id", userId);
         result.put("name", name);
         result.put("surname", surname);
         result.put("age", age);

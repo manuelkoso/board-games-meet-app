@@ -5,6 +5,9 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.annotation.NonNull;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
+
+import it.units.boardgamesmeetapp.config.FirebaseConfig;
 
 /**
  * ViewModel provider factory to instantiate LoginViewModel.
@@ -17,7 +20,7 @@ public class LoginViewModelFactory implements ViewModelProvider.Factory {
     @SuppressWarnings("unchecked")
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if (modelClass.isAssignableFrom(LoginViewModel.class)) {
-            return (T) new LoginViewModel(FirebaseAuth.getInstance());
+            return (T) new LoginViewModel(FirebaseAuth.getInstance(), FirebaseDatabase.getInstance(FirebaseConfig.DB_URL));
         } else {
             throw new IllegalArgumentException("Unknown ViewModel class");
         }

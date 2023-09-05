@@ -10,19 +10,26 @@ import android.util.Log;
 import android.util.Patterns;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import it.units.boardgamesmeetapp.config.FirebaseConfig;
 import it.units.boardgamesmeetapp.R;
+import it.units.boardgamesmeetapp.models.UserInfo;
 import it.units.boardgamesmeetapp.utils.Result;
 
 public class LoginViewModel extends ViewModel {
 
     @NonNull
     private final FirebaseAuth firebaseAuth;
+    @NonNull
+    private final FirebaseDatabase firebaseDatabase;
     private final MutableLiveData<LoginState> loginFormState = new MutableLiveData<>();
     private final MutableLiveData<LoginResult> loginResult = new MutableLiveData<>();
 
-    LoginViewModel(@NonNull FirebaseAuth firebaseAuth) {
+    LoginViewModel(@NonNull FirebaseAuth firebaseAuth, @NonNull FirebaseDatabase firebaseDatabase) {
+        this.firebaseDatabase = firebaseDatabase;
         this.firebaseAuth = firebaseAuth;
     }
 
@@ -78,6 +85,11 @@ public class LoginViewModel extends ViewModel {
             if (task.isSuccessful()) {
                 Log.d(FirebaseConfig.TAG, FirebaseConfig.SUCCESSFUL_LOGIN_MESSAGE);
                 loginResult.setValue(new LoginResult(Result.SUCCESS));
+                FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+                UserInfo userInfo = new UserInfo();
+                userInfo.setUserId(firebaseUser.getUid());
+                DatabaseReference databaseReference = firebaseDatabase.getReference("users");
+                databaseReference.child(userInfo.getUserId()).updateChildren(new UserInfo().toMap());
             } else {
                 Log.d(FirebaseConfig.TAG, FirebaseConfig.LOGIN_ERROR_MESSAGE);
                 loginResult.setValue(new LoginResult(Result.FAILURE, R.string.signup_failed));
