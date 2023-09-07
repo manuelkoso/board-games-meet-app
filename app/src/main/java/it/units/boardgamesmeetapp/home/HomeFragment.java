@@ -72,7 +72,8 @@ public class HomeFragment extends Fragment {
         newEventViewModel = new ViewModelProvider(this, new NewEventViewModelFactory()).get(NewEventViewModel.class);
         binding.newActivityButton.setOnClickListener(v -> dialogSetUp());
         RecyclerView recyclerView = binding.activitiesRecycler;
-        Query query = FirebaseFirestore.getInstance().collection("activities").orderBy("ownerId").whereNotIn("ownerId", Collections.singletonList(FirebaseAuth.getInstance().getUid()));
+        Query query = FirebaseFirestore.getInstance().collection("activities");
+        query = query.where(Filter.greaterThan("timestamp", new Date().getTime()));
         FirestoreRecyclerOptions<Event> options = new FirestoreRecyclerOptions.Builder<Event>().setQuery(query, Event.class).build();
         FirestoreRecyclerAdapter<Event, EventViewHolder> adapter = new FirestoreRecyclerAdapter<Event, EventViewHolder>(options) {
             @NonNull
@@ -86,12 +87,11 @@ public class HomeFragment extends Fragment {
                 SingleEventBinding activityBinding = holder.getBinding();
                 TextView gameTitle = activityBinding.gameTitle;
                 TextView place = activityBinding.place;
-                TextView date = activityBinding.date;
-                TextView time = activityBinding.time;
                 TextView people = activityBinding.people;
                 place.setText(model.getLocation());
-                date.setText(model.getDate());
-                time.setText(model.getTime());
+                Date d = new Date(model.getTimestamp());
+                SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy - HH:mm", Locale.getDefault());
+                activityBinding.date.setText(dateFormat.format(d));
                 gameTitle.setText(model.getGame());
                 people.setText(String.valueOf(model.getPlayers().size() + "/" + model.getMaxNumberOfPlayers()));
                 activityBinding.eventButton.setText("Submit");

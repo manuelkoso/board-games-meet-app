@@ -1,5 +1,6 @@
 package it.units.boardgamesmeetapp.models;
 
+import com.google.firebase.Timestamp;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 
@@ -17,14 +18,12 @@ public class Event {
     private int maxNumberOfPlayers;
     private List<String> players;
     private String location;
-    private String date;
-    private String time;
+    private long timestamp;
 
-    public Event(String ownerId, String game, int maxNumberOfPlayers, String location, String date, String time) {
+    public Event(String ownerId, String game, int maxNumberOfPlayers, String location, long timestamp) {
         this.ownerId = ownerId;
         this.game = game;
-        this.date = date;
-        this.time = time;
+        this.timestamp = timestamp;
         this.key = null;
         this.maxNumberOfPlayers = maxNumberOfPlayers;
         this.location = location;
@@ -44,6 +43,10 @@ public class Event {
         return game;
     }
 
+    public long getTimestamp() {
+        return timestamp;
+    }
+
     public int getMaxNumberOfPlayers() {
         return maxNumberOfPlayers;
     }
@@ -54,14 +57,6 @@ public class Event {
 
     public String getLocation() {
         return location;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public String getTime() {
-        return time;
     }
 
     public void setKey(String key) {
@@ -86,8 +81,7 @@ public class Event {
         result.put("maxNumberOfPlayers", maxNumberOfPlayers);
         result.put("players", players);
         result.put("location", location);
-        result.put("date", date);
-        result.put("time", time);
+        result.put("timestamp", timestamp);
         return result;
     }
 

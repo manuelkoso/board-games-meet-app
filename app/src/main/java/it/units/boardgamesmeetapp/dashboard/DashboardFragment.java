@@ -19,11 +19,15 @@ import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
+import java.text.SimpleDateFormat;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import it.units.boardgamesmeetapp.config.FirebaseConfig;
@@ -51,6 +55,7 @@ public class DashboardFragment extends Fragment {
         viewModel = new ViewModelProvider(this, new DashboardViewModelFactory()).get(DashboardViewModel.class);
 
         Query query = FirebaseFirestore.getInstance().collection("activities").whereArrayContains("players", FirebaseAuth.getInstance().getUid());
+        query = query.where(Filter.greaterThan("timestamp", new Date().getTime()));
         FirestoreRecyclerOptions<Event> options = new FirestoreRecyclerOptions.Builder<Event>().setQuery(query, Event.class).build();
         FirestoreRecyclerAdapter<Event, EventViewHolder> adapter = new FirestoreRecyclerAdapter<Event, EventViewHolder>(options) {
             @NonNull
@@ -65,11 +70,11 @@ public class DashboardFragment extends Fragment {
                 TextView gameTitle = activityBinding.gameTitle;
                 TextView place = activityBinding.place;
                 TextView date = activityBinding.date;
-                TextView time = activityBinding.time;
                 TextView people = activityBinding.people;
                 place.setText(model.getLocation());
-                date.setText(model.getDate());
-                time.setText(model.getTime());
+                Date d = new Date(model.getTimestamp());
+                SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy - HH:mm", Locale.getDefault());
+                date.setText(dateFormat.format(d));
                 gameTitle.setText(model.getGame());
                 people.setText(String.valueOf(model.getPlayers().size() + "/" + model.getMaxNumberOfPlayers()));
                 if(Objects.equals(model.getOwnerId(), FirebaseAuth.getInstance().getUid())) {

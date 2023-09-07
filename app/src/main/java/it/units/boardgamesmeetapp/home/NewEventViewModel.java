@@ -5,11 +5,17 @@ import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import it.units.boardgamesmeetapp.config.FirebaseConfig;
 import it.units.boardgamesmeetapp.models.Event;
@@ -34,8 +40,15 @@ public class NewEventViewModel extends ViewModel {
             submissionResult.setValue(Result.FAILURE);
             return;
         }
+        String timestamp = date + " " + time;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy HH:mm", Locale.getDefault());
+        Date d = null;
+        try {
+            d = dateFormat.parse(timestamp);
+        } catch (ParseException ignored) {
+        }
         String key = database.collection("activities").document().getId();
-        Event event = new Event(user.getUid(), game, Integer.parseInt(numberOfPlayers), place, date, time);
+        Event event = new Event(user.getUid(), game, Integer.parseInt(numberOfPlayers), place, d.getTime());
         event.setKey(key);
         database.collection("activities").document(key).set(event).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
