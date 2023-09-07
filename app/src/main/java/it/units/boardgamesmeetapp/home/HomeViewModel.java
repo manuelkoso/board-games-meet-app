@@ -1,19 +1,26 @@
 package it.units.boardgamesmeetapp.home;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import it.units.boardgamesmeetapp.models.Event;
 
 public class HomeViewModel extends ViewModel {
 
-    private final MutableLiveData<String> mText;
+    private final FirebaseAuth firebaseAuth;
+    private final FirebaseFirestore firebaseDatabase;
 
-    public HomeViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("This is home fragment");
+    public HomeViewModel(FirebaseAuth firebaseAuth, FirebaseFirestore firebaseDatabase) {
+        this.firebaseDatabase = firebaseDatabase;
+        this.firebaseAuth = firebaseAuth;
     }
 
-    public LiveData<String> getText() {
-        return mText;
+    public void submit(Event event) {
+        event.addPlayer(firebaseAuth.getUid());
+        firebaseDatabase.collection("activities").document(event.getKey()).update(event.toMap());
     }
+
+
 }

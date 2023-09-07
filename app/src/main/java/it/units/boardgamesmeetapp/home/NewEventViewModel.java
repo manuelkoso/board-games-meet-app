@@ -9,6 +9,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import it.units.boardgamesmeetapp.config.FirebaseConfig;
 import it.units.boardgamesmeetapp.models.Event;
@@ -16,12 +17,12 @@ import it.units.boardgamesmeetapp.utils.Result;
 
 public class NewEventViewModel extends ViewModel {
 
-    private final FirebaseDatabase database;
+    private final FirebaseFirestore database;
     private final FirebaseAuth firebaseAuth;
 
     private final MutableLiveData<Result> submissionResult = new MutableLiveData<>();
 
-    NewEventViewModel(FirebaseAuth firebaseAuth, FirebaseDatabase database) {
+    NewEventViewModel(FirebaseAuth firebaseAuth, FirebaseFirestore database) {
         this.database = database;
         this.firebaseAuth = firebaseAuth;
         this.submissionResult.setValue(Result.NONE);
@@ -33,10 +34,10 @@ public class NewEventViewModel extends ViewModel {
             submissionResult.setValue(Result.FAILURE);
             return;
         }
-        Event event = new Event(user.getEmail(), game, Integer.parseInt(numberOfPlayers), place, date, time);
-        DatabaseReference databaseReference = database.getReference("activities").push();
-        event.setKey(databaseReference.getKey());
-        databaseReference.setValue(event).addOnCompleteListener(task -> {
+        String key = database.collection("activities").document().getId();
+        Event event = new Event(user.getUid(), game, Integer.parseInt(numberOfPlayers), place, date, time);
+        event.setKey(key);
+        database.collection("activities").document(key).set(event).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Log.d(FirebaseConfig.TAG, "Data successfully written.");
                 submissionResult.setValue(Result.SUCCESS);

@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import it.units.boardgamesmeetapp.config.FirebaseConfig;
 
@@ -15,7 +16,7 @@ public class DashboardViewModelFactory implements ViewModelProvider.Factory {
     @SuppressWarnings("unchecked")
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if (modelClass.isAssignableFrom(DashboardViewModel.class)) {
-            return (T) new DashboardViewModel(FirebaseDatabase.getInstance(FirebaseConfig.DB_URL));
+            return (T) new DashboardViewModel(FirebaseFirestore.getInstance());
         } else {
             throw new IllegalArgumentException("Unknown ViewModel class");
         }

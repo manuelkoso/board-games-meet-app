@@ -13,6 +13,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import it.units.boardgamesmeetapp.config.FirebaseConfig;
 import it.units.boardgamesmeetapp.R;
@@ -24,11 +26,11 @@ public class LoginViewModel extends ViewModel {
     @NonNull
     private final FirebaseAuth firebaseAuth;
     @NonNull
-    private final FirebaseDatabase firebaseDatabase;
+    private final FirebaseFirestore firebaseDatabase;
     private final MutableLiveData<LoginState> loginFormState = new MutableLiveData<>();
     private final MutableLiveData<LoginResult> loginResult = new MutableLiveData<>();
 
-    LoginViewModel(@NonNull FirebaseAuth firebaseAuth, @NonNull FirebaseDatabase firebaseDatabase) {
+    LoginViewModel(@NonNull FirebaseAuth firebaseAuth, @NonNull FirebaseFirestore firebaseDatabase) {
         this.firebaseDatabase = firebaseDatabase;
         this.firebaseAuth = firebaseAuth;
     }
@@ -88,8 +90,8 @@ public class LoginViewModel extends ViewModel {
                 FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
                 UserInfo userInfo = new UserInfo();
                 userInfo.setUserId(firebaseUser.getUid());
-                DatabaseReference databaseReference = firebaseDatabase.getReference("users");
-                databaseReference.child(userInfo.getUserId()).updateChildren(new UserInfo().toMap());
+                DocumentReference reference = firebaseDatabase.collection("users").document(userInfo.getUserId());
+                reference.set(userInfo);
             } else {
                 Log.d(FirebaseConfig.TAG, FirebaseConfig.LOGIN_ERROR_MESSAGE);
                 loginResult.setValue(new LoginResult(Result.FAILURE, R.string.signup_failed));

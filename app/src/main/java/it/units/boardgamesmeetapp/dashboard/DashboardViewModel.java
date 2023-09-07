@@ -2,23 +2,20 @@ package it.units.boardgamesmeetapp.dashboard;
 
 import androidx.lifecycle.ViewModel;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import it.units.boardgamesmeetapp.models.Event;
 
 public class DashboardViewModel extends ViewModel {
 
-    private final FirebaseDatabase database;
+    private final FirebaseFirestore database;
 
-    public DashboardViewModel(FirebaseDatabase database) {
+    public DashboardViewModel(FirebaseFirestore database) {
         this.database = database;
     }
 
     public void deleteEvent(Event event) {
-        DatabaseReference databaseReference = database.getReference("activities").child(event.getKey());
-        databaseReference.removeValue();
+        database.collection("activities").document(event.getKey()).delete();
     }
 
 }

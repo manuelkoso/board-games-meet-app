@@ -104,7 +104,7 @@ public class UserInfo {
     @Exclude
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
-        result.put("id", userId);
+        result.put("userId", userId);
         result.put("name", name);
         result.put("surname", surname);
         result.put("age", age);

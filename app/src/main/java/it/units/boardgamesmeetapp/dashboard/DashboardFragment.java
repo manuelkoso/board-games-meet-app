@@ -1,6 +1,7 @@
 package it.units.boardgamesmeetapp.dashboard;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,11 +14,12 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
 import java.util.Collections;
 import java.util.List;
@@ -46,10 +48,9 @@ public class DashboardFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         viewModel = new ViewModelProvider(this, new DashboardViewModelFactory()).get(DashboardViewModel.class);
 
-        Query query = FirebaseDatabase.getInstance(FirebaseConfig.DB_URL).getReference().child("activities").orderByChild("ownerUsername").equalTo(FirebaseAuth.getInstance().getCurrentUser().getEmail());
-
-        FirebaseRecyclerOptions<Event> options = new FirebaseRecyclerOptions.Builder<Event>().setQuery(query, Event.class).build();
-        FirebaseRecyclerAdapter<Event, EventViewHolder> adapter = new FirebaseRecyclerAdapter<Event, EventViewHolder>(options) {
+        Query query = FirebaseFirestore.getInstance().collection("activities").whereArrayContains("players", FirebaseAuth.getInstance().getUid());
+        FirestoreRecyclerOptions<Event> options = new FirestoreRecyclerOptions.Builder<Event>().setQuery(query, Event.class).build();
+        FirestoreRecyclerAdapter<Event, EventViewHolder> adapter = new FirestoreRecyclerAdapter<Event, EventViewHolder>(options) {
             @NonNull
             @Override
             public EventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -69,14 +70,15 @@ public class DashboardFragment extends Fragment {
                 time.setText(model.getTime());
                 gameTitle.setText(model.getGame());
                 people.setText(String.valueOf(model.getPlayers().size() + "/" + model.getMaxNumberOfPlayers()));
-                activityBinding.deleteButton.setOnClickListener(v -> {
+                activityBinding.eventButton.setText("Remove");
+                activityBinding.eventButton.setOnClickListener(v -> {
                     viewModel.deleteEvent(model);
                 });
             }
         };
         RecyclerView recyclerView = binding.activitiesRecycler;
-        adapter.startListening();
         recyclerView.setAdapter(adapter);
+        adapter.startListening();
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
     }

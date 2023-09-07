@@ -10,17 +10,18 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import it.units.boardgamesmeetapp.config.FirebaseConfig;
 
-public class NewEventViewModelFactory implements ViewModelProvider.Factory {
+public class HomeViewModelFactory implements ViewModelProvider.Factory {
 
     @NonNull
     @Override
     @SuppressWarnings("unchecked")
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        if (modelClass.isAssignableFrom(NewEventViewModel.class)) {
-            return (T) new NewEventViewModel(FirebaseAuth.getInstance(), FirebaseFirestore.getInstance());
+        if (modelClass.isAssignableFrom(HomeViewModel.class)) {
+            return (T) new HomeViewModel(FirebaseAuth.getInstance(), FirebaseFirestore.getInstance());
         } else {
             throw new IllegalArgumentException("Unknown ViewModel class");
         }
     }
+
 
 }
