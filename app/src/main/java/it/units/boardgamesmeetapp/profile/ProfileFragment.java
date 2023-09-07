@@ -12,7 +12,10 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.ActionOnlyNavDirections;
+import androidx.navigation.fragment.NavHostFragment;
 
+import it.units.boardgamesmeetapp.R;
 import it.units.boardgamesmeetapp.databinding.FragmentProfileBinding;
 import it.units.boardgamesmeetapp.models.UserInfo;
 
@@ -55,6 +58,11 @@ public class ProfileFragment extends Fragment {
             favouriteGame.clearFocus();
         });
 
+        binding.logout.setOnClickListener(v -> {
+                    viewModel.logout();
+                    NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_global_loginFragment));
+                }
+        );
         TextWatcher afterTextChangedListener = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {

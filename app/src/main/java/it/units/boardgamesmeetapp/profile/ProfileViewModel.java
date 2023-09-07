@@ -48,4 +48,8 @@ public class ProfileViewModel extends ViewModel {
     public MutableLiveData<UserInfo> getInitialUserInfo() {
         return initialUserInfo;
     }
+
+    public void logout() {
+        firebaseAuth.signOut();
+    }
 }

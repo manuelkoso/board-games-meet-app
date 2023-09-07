@@ -1,5 +1,6 @@
 package it.units.boardgamesmeetapp.home;
 
+import android.icu.util.LocaleData;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,9 +32,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import it.units.boardgamesmeetapp.R;
@@ -68,8 +72,7 @@ public class HomeFragment extends Fragment {
         newEventViewModel = new ViewModelProvider(this, new NewEventViewModelFactory()).get(NewEventViewModel.class);
         binding.newActivityButton.setOnClickListener(v -> dialogSetUp());
         RecyclerView recyclerView = binding.activitiesRecycler;
-        Query query = FirebaseFirestore.getInstance().collection("activities");
-        Query firstQuery = query.orderBy("ownerId").whereNotIn("ownerId", Collections.singletonList(FirebaseAuth.getInstance().getUid()));
+        Query query = FirebaseFirestore.getInstance().collection("activities").orderBy("ownerId").whereNotIn("ownerId", Collections.singletonList(FirebaseAuth.getInstance().getUid()));
         FirestoreRecyclerOptions<Event> options = new FirestoreRecyclerOptions.Builder<Event>().setQuery(query, Event.class).build();
         FirestoreRecyclerAdapter<Event, EventViewHolder> adapter = new FirestoreRecyclerAdapter<Event, EventViewHolder>(options) {
             @NonNull
@@ -95,7 +98,7 @@ public class HomeFragment extends Fragment {
                 activityBinding.eventButton.setOnClickListener(v -> {
                     homeViewModel.submit(model);
                 });
-                if(model.getPlayers().contains(FirebaseAuth.getInstance().getUid()))
+                if(model.getPlayers().contains(FirebaseAuth.getInstance().getUid()) || model.getMaxNumberOfPlayers() == model.getPlayers().size())
                     activityBinding.eventButton.setEnabled(false);
                 activityBinding.people.setOnClickListener(v -> {
                     dialogCardSetUp(model);

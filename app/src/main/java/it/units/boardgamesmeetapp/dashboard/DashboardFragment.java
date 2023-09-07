@@ -1,5 +1,6 @@
 package it.units.boardgamesmeetapp.dashboard;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,6 +24,7 @@ import com.google.firebase.firestore.Query;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import it.units.boardgamesmeetapp.config.FirebaseConfig;
 import it.units.boardgamesmeetapp.databinding.FragmentDashboardBinding;
@@ -70,10 +72,19 @@ public class DashboardFragment extends Fragment {
                 time.setText(model.getTime());
                 gameTitle.setText(model.getGame());
                 people.setText(String.valueOf(model.getPlayers().size() + "/" + model.getMaxNumberOfPlayers()));
-                activityBinding.eventButton.setText("Remove");
-                activityBinding.eventButton.setOnClickListener(v -> {
-                    viewModel.deleteEvent(model);
-                });
+                if(Objects.equals(model.getOwnerId(), FirebaseAuth.getInstance().getUid())) {
+                    activityBinding.eventButton.setText("Cancel the event");
+                    activityBinding.card.setStrokeColor(Color.BLUE);
+                    activityBinding.eventButton.setOnClickListener(v -> {
+                        viewModel.deleteEvent(model);
+                    });
+                } else {
+                    activityBinding.eventButton.setText("Unsubscribe");
+                    activityBinding.eventButton.setOnClickListener(v -> {
+                        viewModel.unsubscribe(model);
+                    });
+                }
+
             }
         };
         RecyclerView recyclerView = binding.activitiesRecycler;
