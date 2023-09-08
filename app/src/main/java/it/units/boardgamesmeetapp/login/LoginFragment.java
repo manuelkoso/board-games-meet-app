@@ -12,13 +12,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Objects;
 
@@ -53,9 +48,8 @@ public class LoginFragment extends Fragment {
             }
             binding.loading.setVisibility(View.GONE);
             if (loginResult.getResult() == Result.FAILURE) {
+                setFieldsErrors(loginResult);
                 showLoginFailed(loginResult.getMessage());
-                binding.email.setError(null);
-                binding.password.setError(null);
             } else {
                 NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_navigation_login_to_navigation_home));
             }
@@ -63,14 +57,35 @@ public class LoginFragment extends Fragment {
 
         binding.login.setOnClickListener(v -> {
             binding.loading.setVisibility(View.VISIBLE);
+            removeFieldErrors();
             EditText email = binding.email.getEditText();
             EditText password = binding.password.getEditText();
             loginViewModel.login(Objects.requireNonNull(email).getText().toString(),
                     Objects.requireNonNull(password).getText().toString());
         });
 
-        binding.gotoSignupButton.setOnClickListener(v -> NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_navigation_login_to_navigation_signup)));
+        binding.gotoSignupButton.setOnClickListener(v -> {
+            loginViewModel.resetLoginResult();
+            removeFieldErrors();
+            NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_navigation_login_to_navigation_signup));
+        });
 
+    }
+
+    private void setFieldsErrors(LoginResult loginResult) {
+        if (loginResult.getMessage() == R.string.email_empty) {
+            binding.email.setError(getResources().getString(loginResult.getMessage()));
+        } else if (loginResult.getMessage() == R.string.password_empty) {
+            binding.password.setError(getResources().getString(loginResult.getMessage()));
+        } else {
+            binding.email.setError(getResources().getString(loginResult.getMessage()));
+            binding.password.setError(getResources().getString(loginResult.getMessage()));
+        }
+    }
+
+    private void removeFieldErrors() {
+        binding.email.setError(null);
+        binding.password.setError(null);
     }
 
     private void showLoginFailed(@StringRes Integer errorString) {

@@ -5,9 +5,6 @@ import androidx.annotation.Nullable;
 
 import it.units.boardgamesmeetapp.utils.Result;
 
-/**
- * Authentication result : success (user details) or error message.
- */
 class LoginResult {
     @Nullable
     private final Integer message;

@@ -41,4 +41,6 @@
     <string name="board_games">Board Games</string>
     <string name="app_logo">App logo</string>
     <string name="go_to_signup_button_description">Go to signup page</string>
+    <string name="password_empty">Password field empty!</string>
+    <string name="email_empty">Email field empty!</string>
 </resources>

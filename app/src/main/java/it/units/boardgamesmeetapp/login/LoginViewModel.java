@@ -1,5 +1,8 @@
 package it.units.boardgamesmeetapp.login;
 
+import static it.units.boardgamesmeetapp.utils.Result.FAILURE;
+import static it.units.boardgamesmeetapp.utils.Result.SUCCESS;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
@@ -49,26 +52,35 @@ public class LoginViewModel extends ViewModel {
 
     private void updateLoginResult() {
         if (loginResult.getValue() == null)
-            loginResult.setValue(new LoginResult(Result.SUCCESS));
+            loginResult.setValue(new LoginResult(SUCCESS));
     }
 
     private boolean isAlreadyLoggedIn() {
         return firebaseAuth.getCurrentUser() != null;
     }
 
+    public void resetLoginResult() {
+        loginResult.setValue(null);
+    }
+
     public void login(@NonNull String username, @NonNull String password) {
-        if (username.isEmpty() || password.isEmpty()) {
+        if (username.isEmpty()) {
             Log.w(FirebaseConfig.TAG, LOGIN_FAILED_MESSAGE);
-            loginResult.setValue(new LoginResult(Result.FAILURE, R.string.login_failed));
+            loginResult.setValue(new LoginResult(FAILURE, R.string.email_empty));
+            return;
+        } else if (password.isEmpty()) {
+            Log.w(FirebaseConfig.TAG, LOGIN_FAILED_MESSAGE);
+            loginResult.setValue(new LoginResult(FAILURE, R.string.password_empty));
             return;
         }
+
         firebaseAuth.signInWithEmailAndPassword(username, password).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Log.d(FirebaseConfig.TAG, LOGIN_SUCCESS_MESSAGE);
-                loginResult.setValue(new LoginResult(Result.SUCCESS));
+                loginResult.setValue(new LoginResult(SUCCESS));
             } else {
                 Log.w(FirebaseConfig.TAG, task.getException());
-                loginResult.setValue(new LoginResult(Result.FAILURE, R.string.login_failed));
+                loginResult.setValue(new LoginResult(FAILURE, R.string.login_failed));
             }
         });
     }
@@ -87,7 +99,7 @@ public class LoginViewModel extends ViewModel {
         firebaseAuth.createUserWithEmailAndPassword(username, password).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Log.d(FirebaseConfig.TAG, LOGIN_SUCCESS_MESSAGE);
-                loginResult.setValue(new LoginResult(Result.SUCCESS));
+                loginResult.setValue(new LoginResult(SUCCESS));
                 FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
                 User user = new User(Objects.requireNonNull(firebaseUser).getUid());
                 DocumentReference reference = firebaseFirestore.collection(FirebaseConfig.USERS).document(user.getId());
