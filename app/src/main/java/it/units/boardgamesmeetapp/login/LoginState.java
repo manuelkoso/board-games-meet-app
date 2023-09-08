@@ -2,9 +2,6 @@ package it.units.boardgamesmeetapp.login;
 
 import androidx.annotation.Nullable;
 
-/**
- * Data validation state of the login form. This is the UI state 
- */
 class LoginState {
     @Nullable
     private final Integer usernameError;

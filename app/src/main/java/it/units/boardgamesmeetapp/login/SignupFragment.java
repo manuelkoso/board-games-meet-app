@@ -15,13 +15,12 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputLayout;
+
+import java.util.Objects;
 
 import it.units.boardgamesmeetapp.R;
 import it.units.boardgamesmeetapp.databinding.FragmentSignupBinding;
@@ -50,35 +49,24 @@ public class SignupFragment extends Fragment {
         final TextInputLayout passwordLayout = binding.password;
         final EditText username = usernameLayout.getEditText();
         final EditText password = passwordLayout.getEditText();
-        final Button signupButton = binding.signup;
-        final ProgressBar loadingProgressBar = binding.loading;
 
         loginViewModel.getLoginFormState().observe(getViewLifecycleOwner(), loginFormState -> {
             if (loginFormState == null) {
                 return;
             }
-            signupButton.setEnabled(loginFormState.isDataValid());
-            if (loginFormState.getUsernameError() != null) {
-                usernameLayout.setError(getString(loginFormState.getUsernameError()));
-            } else {
-                usernameLayout.setError(null);
-            }
-            if (loginFormState.getPasswordError() != null) {
-                passwordLayout.setError(getString(loginFormState.getPasswordError()));
-            } else {
-                passwordLayout.setError(null);
-            }
+            binding.signup.setEnabled(loginFormState.isDataValid());
+            setFieldErrors(loginFormState);
         });
 
         loginViewModel.getLoginResult().observe(getViewLifecycleOwner(), loginResult -> {
             if (loginResult == null) {
                 return;
             }
-            loadingProgressBar.setVisibility(View.GONE);
+            binding.loading.setVisibility(View.GONE);
+            showLoginResult(loginResult.getMessage());
             if (loginResult.getResult() == Result.FAILURE) {
-                showLoginResult(loginResult.getMessage());
+                usernameLayout.setError(getString(loginResult.getMessage()));
             } else {
-                showLoginResult(R.string.sign_up_success);
                 NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_navigation_signup_to_navigation_profile));
             }
         });
@@ -96,30 +84,35 @@ public class SignupFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                loginViewModel.loginDataChanged(username.getText().toString(),
-                        password.getText().toString());
+                loginViewModel.loginDataChanged(Objects.requireNonNull(username).getText().toString(),
+                        Objects.requireNonNull(password).getText().toString());
             }
         };
-        username.addTextChangedListener(afterTextChangedListener);
-        password.addTextChangedListener(afterTextChangedListener);
-        password.setOnEditorActionListener((v, actionId, event) -> {
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                loginViewModel.login(username.getText().toString(),
-                        password.getText().toString());
-            }
-            return false;
-        });
 
-        signupButton.setOnClickListener(v -> {
-            loadingProgressBar.setVisibility(View.VISIBLE);
+        Objects.requireNonNull(username).addTextChangedListener(afterTextChangedListener);
+        Objects.requireNonNull(password).addTextChangedListener(afterTextChangedListener);
+
+        binding.signup.setOnClickListener(v -> {
+            binding.loading.setVisibility(View.VISIBLE);
             loginViewModel.signup(username.getText().toString(),
                     password.getText().toString());
         });
 
-        binding.gotoSignupButton.setOnClickListener(v-> {
-            NavHostFragment.findNavController(this).navigateUp();
-        });
+        binding.gotoSignupButton.setOnClickListener(v-> NavHostFragment.findNavController(this).navigateUp());
 
+    }
+
+    private void setFieldErrors(@NonNull LoginState loginFormState) {
+        if (loginFormState.getUsernameError() != null) {
+            binding.email.setError(getString(loginFormState.getUsernameError()));
+        } else {
+            binding.email.setError(null);
+        }
+        if (loginFormState.getPasswordError() != null) {
+            binding.password.setError(getString(loginFormState.getPasswordError()));
+        } else {
+            binding.password.setError(null);
+        }
     }
 
     private void showLoginResult(@StringRes Integer errorString) {

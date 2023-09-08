@@ -13,7 +13,6 @@ import android.util.Log;
 import android.util.Patterns;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -22,11 +21,11 @@ import java.util.Objects;
 import it.units.boardgamesmeetapp.R;
 import it.units.boardgamesmeetapp.database.FirebaseConfig;
 import it.units.boardgamesmeetapp.models.User;
-import it.units.boardgamesmeetapp.utils.Result;
 
 public class LoginViewModel extends ViewModel {
     private static final String LOGIN_FAILED_MESSAGE = "Login failed!";
     private static final String LOGIN_SUCCESS_MESSAGE = "Login success!";
+    public static final int MINIMUM_PASSWORD_LENGTH = 6;
     @NonNull
     private final FirebaseAuth firebaseAuth;
     @NonNull
@@ -63,18 +62,9 @@ public class LoginViewModel extends ViewModel {
         loginResult.setValue(null);
     }
 
-    public void login(@NonNull String username, @NonNull String password) {
-        if (username.isEmpty()) {
-            Log.w(FirebaseConfig.TAG, LOGIN_FAILED_MESSAGE);
-            loginResult.setValue(new LoginResult(FAILURE, R.string.email_empty));
-            return;
-        } else if (password.isEmpty()) {
-            Log.w(FirebaseConfig.TAG, LOGIN_FAILED_MESSAGE);
-            loginResult.setValue(new LoginResult(FAILURE, R.string.password_empty));
-            return;
-        }
-
-        firebaseAuth.signInWithEmailAndPassword(username, password).addOnCompleteListener(task -> {
+    public void login(@NonNull String email, @NonNull String password) {
+        if (isInputEmpty(email, password)) return;
+        firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Log.d(FirebaseConfig.TAG, LOGIN_SUCCESS_MESSAGE);
                 loginResult.setValue(new LoginResult(SUCCESS));
@@ -85,8 +75,21 @@ public class LoginViewModel extends ViewModel {
         });
     }
 
-    public void loginDataChanged(@NonNull String username, @NonNull String password) {
-        if (!isUserNameValid(username)) {
+    private boolean isInputEmpty(@NonNull String email, @NonNull String password) {
+        if (email.isEmpty()) {
+            Log.w(FirebaseConfig.TAG, LOGIN_FAILED_MESSAGE);
+            loginResult.setValue(new LoginResult(FAILURE, R.string.email_empty));
+            return true;
+        } else if (password.isEmpty()) {
+            Log.w(FirebaseConfig.TAG, LOGIN_FAILED_MESSAGE);
+            loginResult.setValue(new LoginResult(FAILURE, R.string.password_empty));
+            return true;
+        }
+        return false;
+    }
+
+    public void loginDataChanged(@NonNull String email, @NonNull String password) {
+        if (!isEmailNameValid(email)) {
             loginFormState.setValue(new LoginState(R.string.invalid_username, null));
         } else if (!isPasswordValid(password)) {
             loginFormState.setValue(new LoginState(null, R.string.invalid_password));
@@ -95,30 +98,29 @@ public class LoginViewModel extends ViewModel {
         }
     }
 
-    public void signup(@NonNull String username, @NonNull String password) {
-        firebaseAuth.createUserWithEmailAndPassword(username, password).addOnCompleteListener(task -> {
+    public void signup(@NonNull String email, @NonNull String password) {
+        firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Log.d(FirebaseConfig.TAG, LOGIN_SUCCESS_MESSAGE);
-                loginResult.setValue(new LoginResult(SUCCESS));
-                FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-                User user = new User(Objects.requireNonNull(firebaseUser).getUid());
+                loginResult.setValue(new LoginResult(SUCCESS, R.string.signup_success));
+                User user = new User(Objects.requireNonNull(firebaseAuth.getUid()));
                 DocumentReference reference = firebaseFirestore.collection(FirebaseConfig.USERS).document(user.getId());
                 reference.set(user);
             } else {
-                Log.d(FirebaseConfig.TAG, "Signup failed");
-                loginResult.setValue(new LoginResult(Result.FAILURE, R.string.signup_failed));
+                Log.w(FirebaseConfig.TAG, task.getException());
+                loginResult.setValue(new LoginResult(FAILURE, R.string.signup_failed));
             }
         });
     }
 
-    private boolean isUserNameValid(@Nullable String username) {
-        if (username == null) {
+    private boolean isEmailNameValid(@Nullable String email) {
+        if (email == null) {
             return false;
         }
-        return Patterns.EMAIL_ADDRESS.matcher(username).matches();
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
     private boolean isPasswordValid(@Nullable String password) {
-        return password != null && password.trim().length() > 5;
+        return password != null && password.trim().length() >= MINIMUM_PASSWORD_LENGTH;
     }
 }
