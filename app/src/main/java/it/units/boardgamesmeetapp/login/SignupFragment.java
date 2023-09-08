@@ -50,7 +50,7 @@ public class SignupFragment extends Fragment {
         final TextInputLayout passwordLayout = binding.password;
         final EditText username = usernameLayout.getEditText();
         final EditText password = passwordLayout.getEditText();
-        final Button signupButton = binding.signupButton;
+        final Button signupButton = binding.signup;
         final ProgressBar loadingProgressBar = binding.loading;
 
         loginViewModel.getLoginFormState().observe(getViewLifecycleOwner(), loginFormState -> {
@@ -116,7 +116,7 @@ public class SignupFragment extends Fragment {
                     password.getText().toString());
         });
 
-        binding.backLogin.setOnClickListener(v-> {
+        binding.gotoSignupButton.setOnClickListener(v-> {
             NavHostFragment.findNavController(this).navigateUp();
         });
 
