@@ -1,5 +1,7 @@
 package it.units.boardgamesmeetapp.models;
 
+import androidx.annotation.NonNull;
+
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 
@@ -9,21 +11,17 @@ import java.util.Objects;
 
 @IgnoreExtraProperties
 public class UserInfo {
-
-    private String userId;
-
+    @NonNull
     private String name;
-
+    @NonNull
     private String surname;
-
     private int age;
-
+    @NonNull
     private String favouritePlace;
-
+    @NonNull
     private String favouriteGame;
 
     public UserInfo() {
-        this.userId = "";
         this.name = "";
         this.surname = "";
         this.age = 0;
@@ -31,8 +29,7 @@ public class UserInfo {
         this.favouritePlace = "";
     }
 
-    public UserInfo(String name, String surname, int age, String favouritePlace, String favouriteGame) {
-        this.userId = null;
+    public UserInfo(@NonNull String name, @NonNull String surname, int age, @NonNull String favouritePlace, @NonNull String favouriteGame) {
         this.name = name;
         this.surname = surname;
         this.age = age;
@@ -40,39 +37,35 @@ public class UserInfo {
         this.favouriteGame = favouriteGame;
     }
 
+    @NonNull
     public String getName() {
         return name;
     }
 
+    @NonNull
     public String getSurname() {
         return surname;
-    }
-
-    public String getUserId() {
-        return userId;
     }
 
     public int getAge() {
         return age;
     }
 
+    @NonNull
     public String getFavouritePlace() {
         return favouritePlace;
     }
 
+    @NonNull
     public String getFavouriteGame() {
         return favouriteGame;
     }
 
-    public void setName(String name) {
+    public void setName(@NonNull String name) {
         this.name = name;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public void setSurname(String surname) {
+    public void setSurname(@NonNull String surname) {
         this.surname = surname;
     }
 
@@ -80,11 +73,11 @@ public class UserInfo {
         this.age = age;
     }
 
-    public void setFavouritePlace(String favouritePlace) {
+    public void setFavouritePlace(@NonNull String favouritePlace) {
         this.favouritePlace = favouritePlace;
     }
 
-    public void setFavouriteGame(String favouriteGame) {
+    public void setFavouriteGame(@NonNull String favouriteGame) {
         this.favouriteGame = favouriteGame;
     }
 
@@ -104,7 +97,6 @@ public class UserInfo {
     @Exclude
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
-        result.put("userId", userId);
         result.put("name", name);
         result.put("surname", surname);
         result.put("age", age);

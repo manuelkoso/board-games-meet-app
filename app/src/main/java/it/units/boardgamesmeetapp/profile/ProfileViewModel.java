@@ -8,6 +8,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import it.units.boardgamesmeetapp.models.User;
 import it.units.boardgamesmeetapp.models.UserInfo;
 
 public class ProfileViewModel extends ViewModel {
@@ -24,8 +25,8 @@ public class ProfileViewModel extends ViewModel {
         DocumentReference reference = database.collection("users").document(firebaseUser.getUid());
         reference.addSnapshotListener(
                 (value, exception) -> {
-                    UserInfo userInfo = value.toObject(UserInfo.class);
-                    initialUserInfo.setValue(userInfo);
+                    User user = value.toObject(User.class);
+                    initialUserInfo.setValue(user.getInfo());
                 }
         );
     }
@@ -37,11 +38,10 @@ public class ProfileViewModel extends ViewModel {
     public void modifyUserInformation() {
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         DocumentReference reference = database.collection("users").document(firebaseUser.getUid());
-        reference.update(currentUserInfo.getValue().toMap());
+        reference.update("info", currentUserInfo.getValue().toMap());
     }
 
     public void updateCurrentInfoUser(UserInfo userInfo) {
-        userInfo.setUserId(firebaseAuth.getUid());
         this.currentUserInfo.setValue(userInfo);
     }
 

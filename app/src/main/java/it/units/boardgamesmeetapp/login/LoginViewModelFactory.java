@@ -5,10 +5,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.annotation.NonNull;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import it.units.boardgamesmeetapp.config.FirebaseConfig;
 
 /**
  * ViewModel provider factory to instantiate LoginViewModel.

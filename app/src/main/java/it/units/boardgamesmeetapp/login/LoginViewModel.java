@@ -11,27 +11,28 @@ import android.util.Patterns;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import it.units.boardgamesmeetapp.config.FirebaseConfig;
+import java.util.Objects;
+
 import it.units.boardgamesmeetapp.R;
-import it.units.boardgamesmeetapp.models.UserInfo;
+import it.units.boardgamesmeetapp.database.FirebaseConfig;
+import it.units.boardgamesmeetapp.models.User;
 import it.units.boardgamesmeetapp.utils.Result;
 
 public class LoginViewModel extends ViewModel {
-
+    private static final String LOGIN_FAILED_MESSAGE = "Login failed!";
+    private static final String LOGIN_SUCCESS_MESSAGE = "Login success!";
     @NonNull
     private final FirebaseAuth firebaseAuth;
     @NonNull
-    private final FirebaseFirestore firebaseDatabase;
+    private final FirebaseFirestore firebaseFirestore;
     private final MutableLiveData<LoginState> loginFormState = new MutableLiveData<>();
     private final MutableLiveData<LoginResult> loginResult = new MutableLiveData<>();
 
-    LoginViewModel(@NonNull FirebaseAuth firebaseAuth, @NonNull FirebaseFirestore firebaseDatabase) {
-        this.firebaseDatabase = firebaseDatabase;
+    LoginViewModel(@NonNull FirebaseAuth firebaseAuth, @NonNull FirebaseFirestore firebaseFirestore) {
+        this.firebaseFirestore = firebaseFirestore;
         this.firebaseAuth = firebaseAuth;
     }
 
@@ -57,16 +58,16 @@ public class LoginViewModel extends ViewModel {
 
     public void login(@NonNull String username, @NonNull String password) {
         if (username.isEmpty() || password.isEmpty()) {
-            Log.d(FirebaseConfig.TAG, FirebaseConfig.LOGIN_ERROR_MESSAGE);
+            Log.w(FirebaseConfig.TAG, LOGIN_FAILED_MESSAGE);
             loginResult.setValue(new LoginResult(Result.FAILURE, R.string.login_failed));
             return;
         }
         firebaseAuth.signInWithEmailAndPassword(username, password).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                Log.d(FirebaseConfig.TAG, FirebaseConfig.SUCCESSFUL_LOGIN_MESSAGE);
+                Log.d(FirebaseConfig.TAG, LOGIN_SUCCESS_MESSAGE);
                 loginResult.setValue(new LoginResult(Result.SUCCESS));
             } else {
-                Log.d(FirebaseConfig.TAG, FirebaseConfig.LOGIN_ERROR_MESSAGE);
+                Log.w(FirebaseConfig.TAG, task.getException());
                 loginResult.setValue(new LoginResult(Result.FAILURE, R.string.login_failed));
             }
         });
@@ -85,15 +86,14 @@ public class LoginViewModel extends ViewModel {
     public void signup(@NonNull String username, @NonNull String password) {
         firebaseAuth.createUserWithEmailAndPassword(username, password).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                Log.d(FirebaseConfig.TAG, FirebaseConfig.SUCCESSFUL_LOGIN_MESSAGE);
+                Log.d(FirebaseConfig.TAG, LOGIN_SUCCESS_MESSAGE);
                 loginResult.setValue(new LoginResult(Result.SUCCESS));
                 FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-                UserInfo userInfo = new UserInfo();
-                userInfo.setUserId(firebaseUser.getUid());
-                DocumentReference reference = firebaseDatabase.collection("users").document(userInfo.getUserId());
-                reference.set(userInfo);
+                User user = new User(Objects.requireNonNull(firebaseUser).getUid());
+                DocumentReference reference = firebaseFirestore.collection(FirebaseConfig.USERS).document(user.getId());
+                reference.set(user);
             } else {
-                Log.d(FirebaseConfig.TAG, FirebaseConfig.LOGIN_ERROR_MESSAGE);
+                Log.d(FirebaseConfig.TAG, "Signup failed");
                 loginResult.setValue(new LoginResult(Result.FAILURE, R.string.signup_failed));
             }
         });

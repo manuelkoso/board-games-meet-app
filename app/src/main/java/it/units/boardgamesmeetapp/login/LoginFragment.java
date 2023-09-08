@@ -20,6 +20,8 @@ import android.widget.Toast;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.Objects;
+
 import it.units.boardgamesmeetapp.databinding.FragmentLoginBinding;
 
 import it.units.boardgamesmeetapp.R;
@@ -45,33 +47,29 @@ public class LoginFragment extends Fragment {
         LoginViewModel loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory())
                 .get(LoginViewModel.class);
 
-        final TextInputLayout usernameLayout = binding.email;
-        final TextInputLayout passwordLayout = binding.password;
-        final EditText username = usernameLayout.getEditText();
-        final EditText password = passwordLayout.getEditText();
-        final Button loginButton = binding.login;
-        final FloatingActionButton signupButton = binding.gotoSignupButton;
-        final ProgressBar loadingProgressBar = binding.loading;
-
         loginViewModel.getLoginResult().observe(getViewLifecycleOwner(), loginResult -> {
             if (loginResult == null) {
                 return;
             }
-            loadingProgressBar.setVisibility(View.GONE);
+            binding.loading.setVisibility(View.GONE);
             if (loginResult.getResult() == Result.FAILURE) {
                 showLoginFailed(loginResult.getMessage());
+                binding.email.setError(null);
+                binding.password.setError(null);
             } else {
                 NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_navigation_login_to_navigation_home));
             }
         });
 
-        loginButton.setOnClickListener(v -> {
-            loadingProgressBar.setVisibility(View.VISIBLE);
-            loginViewModel.login(username.getText().toString(),
-                    password.getText().toString());
+        binding.login.setOnClickListener(v -> {
+            binding.loading.setVisibility(View.VISIBLE);
+            EditText email = binding.email.getEditText();
+            EditText password = binding.password.getEditText();
+            loginViewModel.login(Objects.requireNonNull(email).getText().toString(),
+                    Objects.requireNonNull(password).getText().toString());
         });
 
-        signupButton.setOnClickListener(v -> NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_navigation_login_to_navigation_signup)));
+        binding.gotoSignupButton.setOnClickListener(v -> NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_navigation_login_to_navigation_signup)));
 
     }
 
