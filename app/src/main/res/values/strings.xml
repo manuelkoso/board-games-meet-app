@@ -6,7 +6,7 @@
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
-    <string name="action_sign_in">Sign in</string>
+    <string name="login">Login</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="welcome">"Welcome!"</string>
     <string name="invalid_username">Not a valid username</string>
@@ -38,4 +38,7 @@
     <string name="surname">Surname</string>
     <string name="name">Name</string>
     <string name="signup_hint">Don\'t you have an account? Signup!</string>
+    <string name="board_games">Board Games</string>
+    <string name="app_logo">App logo</string>
+    <string name="go_to_signup_button_description">Go to signup page</string>
 </resources>
