@@ -3,7 +3,6 @@ package it.units.boardgamesmeetapp;
 import android.os.Bundle;
 import android.view.View;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
@@ -21,7 +20,6 @@ public class MainActivity extends AppCompatActivity {
 
         ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        hideUpperActionBar();
 
         NavHostFragment navHostFragment =
                 (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
@@ -37,10 +35,5 @@ public class MainActivity extends AppCompatActivity {
 
         NavigationUI.setupWithNavController(binding.navView, navController);
 
-    }
-
-    private void hideUpperActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-        // Objects.requireNonNull(actionBar).hide();
     }
 }
