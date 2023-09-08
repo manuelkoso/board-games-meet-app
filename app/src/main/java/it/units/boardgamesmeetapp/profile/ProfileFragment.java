@@ -41,7 +41,6 @@ public class ProfileFragment extends Fragment {
         viewModel = new ViewModelProvider(this, new ProfileViewModelFactory()).get(ProfileViewModel.class);
 
         binding.informationButton.setOnClickListener(v -> setupDialog());
-
         binding.logout.setOnClickListener(v -> {
                     viewModel.logout();
                     NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_global_loginFragment));
@@ -60,8 +59,6 @@ public class ProfileFragment extends Fragment {
         final EditText favouritePlace = informationBinding.place.getEditText();
         final EditText favouriteGame = informationBinding.game.getEditText();
         final Button button = informationBinding.modifyButton;
-
-
 
         viewModel.getInitialUserInfo().observe(getViewLifecycleOwner(), initialUserInfo -> {
             if(initialUserInfo == null) return;
