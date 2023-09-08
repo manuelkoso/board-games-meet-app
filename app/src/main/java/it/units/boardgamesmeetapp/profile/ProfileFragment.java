@@ -10,33 +10,58 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.ActionOnlyNavDirections;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 import it.units.boardgamesmeetapp.R;
+import it.units.boardgamesmeetapp.databinding.DialogProfileInformationBinding;
 import it.units.boardgamesmeetapp.databinding.FragmentProfileBinding;
 import it.units.boardgamesmeetapp.models.UserInfo;
 
 public class ProfileFragment extends Fragment {
-
     private FragmentProfileBinding binding;
+    private ProfileViewModel viewModel;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentProfileBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
+        return binding.getRoot();
+    }
 
-        final EditText name = binding.name.getEditText();
-        final EditText surname = binding.surname.getEditText();
-        final EditText ageEditText = binding.age.getEditText();
-        final EditText favouritePlace = binding.place.getEditText();
-        final EditText favouriteGame = binding.game.getEditText();
-        final Button button = binding.modifyButton;
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        viewModel = new ViewModelProvider(this, new ProfileViewModelFactory()).get(ProfileViewModel.class);
 
-        ProfileViewModel viewModel = new ViewModelProvider(this, new ProfileViewModelFactory()).get(ProfileViewModel.class);
+        binding.informationButton.setOnClickListener(v -> setupDialog());
+
+        binding.logout.setOnClickListener(v -> {
+                    viewModel.logout();
+                    NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_global_loginFragment));
+                }
+        );
+
+    }
+
+    public void setupDialog() {
+        DialogProfileInformationBinding informationBinding = DialogProfileInformationBinding.inflate(LayoutInflater.from(getContext()));
+        AlertDialog dialog = new MaterialAlertDialogBuilder(requireContext()).create();
+
+        final EditText name = informationBinding.name.getEditText();
+        final EditText surname = informationBinding.surname.getEditText();
+        final EditText ageEditText = informationBinding.age.getEditText();
+        final EditText favouritePlace = informationBinding.place.getEditText();
+        final EditText favouriteGame = informationBinding.game.getEditText();
+        final Button button = informationBinding.modifyButton;
+
+
 
         viewModel.getInitialUserInfo().observe(getViewLifecycleOwner(), initialUserInfo -> {
             if(initialUserInfo == null) return;
@@ -58,11 +83,6 @@ public class ProfileFragment extends Fragment {
             favouriteGame.clearFocus();
         });
 
-        binding.logout.setOnClickListener(v -> {
-                    viewModel.logout();
-                    NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_global_loginFragment));
-                }
-        );
         TextWatcher afterTextChangedListener = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -88,13 +108,15 @@ public class ProfileFragment extends Fragment {
             }
         };
 
+        informationBinding.backButton.setOnClickListener(v -> dialog.hide());
+
         name.addTextChangedListener(afterTextChangedListener);
         surname.addTextChangedListener(afterTextChangedListener);
         ageEditText.addTextChangedListener(afterTextChangedListener);
         favouritePlace.addTextChangedListener(afterTextChangedListener);
         favouriteGame.addTextChangedListener(afterTextChangedListener);
-
-        return root;
+        dialog.setView(informationBinding.getRoot());
+        dialog.show();
     }
 
     @Override

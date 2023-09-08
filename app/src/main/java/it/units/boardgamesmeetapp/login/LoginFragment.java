@@ -33,7 +33,6 @@ public class LoginFragment extends Fragment {
 
         binding = FragmentLoginBinding.inflate(inflater, container, false);
         return binding.getRoot();
-
     }
 
     @Override

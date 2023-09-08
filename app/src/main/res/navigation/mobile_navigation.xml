@@ -25,7 +25,7 @@
         android:id="@+id/navigation_profile"
         android:name="it.units.boardgamesmeetapp.profile.ProfileFragment"
         android:label="@string/title_profile"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/dialog_profile_information" />
     <fragment
         android:id="@+id/navigation_login"
         android:name="it.units.boardgamesmeetapp.login.LoginFragment"

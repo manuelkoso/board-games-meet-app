@@ -45,4 +45,9 @@
     <string name="password_empty">Password field empty!</string>
     <string name="email_empty">Email field empty!</string>
     <string name="login_hint">Do you have an account? Login!</string>
+    <string name="profile">Profile</string>
+    <string name="modify_information">Modify information</string>
+    <string name="history">History</string>
+    <string name="logout">Logout</string>
+    <string name="go_back_to_profile">Go back to profile</string>
 </resources>

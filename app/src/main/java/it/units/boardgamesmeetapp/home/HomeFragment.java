@@ -146,7 +146,7 @@ public class HomeFragment extends Fragment {
 
     private void dialogSetUp() {
         DialogNewEventBinding binding = DialogNewEventBinding.inflate(LayoutInflater.from(getContext()));
-        AlertDialog dialog = new MaterialAlertDialogBuilder(getContext()).create();
+        AlertDialog dialog = new MaterialAlertDialogBuilder(requireContext()).create();
         MaterialDatePicker<Long> materialDatePicker = MaterialDatePicker.Builder.datePicker().setTitleText("Select date").build();
         binding.date.setOnClickListener(view1 -> materialDatePicker.show(requireActivity().getSupportFragmentManager(), "MATERIAL_DATE_PICKER"));
         materialDatePicker.addOnPositiveButtonClickListener(selection -> binding.date.setText(materialDatePicker.getHeaderText().toString()));
