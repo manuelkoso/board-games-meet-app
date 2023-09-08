@@ -46,7 +46,7 @@ public class SignupFragment extends Fragment {
         loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory())
                 .get(LoginViewModel.class);
 
-        final TextInputLayout usernameLayout = binding.username;
+        final TextInputLayout usernameLayout = binding.email;
         final TextInputLayout passwordLayout = binding.password;
         final EditText username = usernameLayout.getEditText();
         final EditText password = passwordLayout.getEditText();
