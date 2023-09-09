@@ -1,6 +1,7 @@
 package it.units.boardgamesmeetapp.models;
 
-import com.google.firebase.Timestamp;
+import androidx.annotation.NonNull;
+
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 
@@ -20,11 +21,11 @@ public class Event {
     private String location;
     private long timestamp;
 
-    public Event(String ownerId, String game, int maxNumberOfPlayers, String location, long timestamp) {
+    public Event(@NonNull String key, @NonNull String ownerId, @NonNull String game, int maxNumberOfPlayers, @NonNull String location, long timestamp) {
         this.ownerId = ownerId;
         this.game = game;
         this.timestamp = timestamp;
-        this.key = null;
+        this.key = key;
         this.maxNumberOfPlayers = maxNumberOfPlayers;
         this.location = location;
         players = new ArrayList<>(maxNumberOfPlayers);
@@ -35,10 +36,12 @@ public class Event {
     public Event() {
     }
 
+    @NonNull
     public String getOwnerId() {
         return ownerId;
     }
 
+    @NonNull
     public String getGame() {
         return game;
     }
@@ -51,24 +54,23 @@ public class Event {
         return maxNumberOfPlayers;
     }
 
+    @NonNull
     public List<String> getPlayers() {
         return players;
     }
 
+    @NonNull
     public String getLocation() {
         return location;
     }
 
-    public void setKey(String key) {
-        this.key = key;
-    }
-
+    @NonNull
     public String getKey() {
         return key;
     }
 
     public void addPlayer(String playerId) {
-        if(!players.contains(playerId) && players.size() < maxNumberOfPlayers)
+        if (!players.contains(playerId) && players.size() < maxNumberOfPlayers)
             this.players.add(playerId);
     }
 

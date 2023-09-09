@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="it.units.boardgamesmeetapp.home.HomeFragment">
+    tools:context="it.units.boardgamesmeetapp.dashboard.DashboardFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/activities_recycler"
@@ -15,18 +15,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/new_activity_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="44dp"
-        android:clickable="true"
-        android:src="@android:drawable/ic_input_add"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.929"
-        app:layout_constraintStart_toStartOf="parent"
-        android:focusable="true"
-        android:contentDescription="@string/add_new_event" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

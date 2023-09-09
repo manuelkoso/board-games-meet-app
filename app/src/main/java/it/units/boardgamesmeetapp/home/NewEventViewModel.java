@@ -2,17 +2,18 @@ package it.units.boardgamesmeetapp.home;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 import it.units.boardgamesmeetapp.database.FirebaseConfig;
 import it.units.boardgamesmeetapp.models.Event;
@@ -31,38 +32,35 @@ public class NewEventViewModel extends ViewModel {
         this.submissionResult.setValue(Result.NONE);
     }
 
-    public void addNewActivity(String game, String numberOfPlayers, String place, String date, String time) {
-        FirebaseUser user = firebaseAuth.getCurrentUser();
-        if(date.equals("Date") || time.equals("Time") || user == null || !isInputStringValid(game, numberOfPlayers, place, date, time)) {
+    public void addNewEvent(@NonNull String game, @NonNull String numberOfPlayers, @NonNull String place, @NonNull String date, @NonNull String time) {
+        if (Stream.of(game, numberOfPlayers, place, date, time).anyMatch(String::isEmpty)) {
             submissionResult.setValue(Result.FAILURE);
             return;
         }
-        String timestamp = date + " " + time;
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy HH:mm", Locale.getDefault());
-        Date d = null;
         try {
-            d = dateFormat.parse(timestamp);
-        } catch (ParseException ignored) {
+            String key = database.collection(FirebaseConfig.EVENTS).document().getId();
+            Event event = new Event(key, Objects.requireNonNull(firebaseAuth.getUid()), game, Integer.parseInt(numberOfPlayers), place, fromDateTimeStringToTimestamp(date, time));
+
+            database.collection(FirebaseConfig.EVENTS).document(key).set(event).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    Log.d(FirebaseConfig.TAG, "Data successfully written.");
+                    submissionResult.setValue(Result.SUCCESS);
+                } else {
+                    Log.w(FirebaseConfig.TAG, task.getException());
+                    submissionResult.setValue(Result.FAILURE);
+                }
+            });
+
+        } catch (ParseException e) {
+            Log.w(FirebaseConfig.TAG, e);
+            submissionResult.setValue(Result.FAILURE);
         }
-        String key = database.collection("activities").document().getId();
-        Event event = new Event(user.getUid(), game, Integer.parseInt(numberOfPlayers), place, d.getTime());
-        event.setKey(key);
-        database.collection("activities").document(key).set(event).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Log.d(FirebaseConfig.TAG, "Data successfully written.");
-                submissionResult.setValue(Result.SUCCESS);
-            } else {
-                Log.d(FirebaseConfig.TAG, task.getException().getMessage());
-                submissionResult.setValue(Result.FAILURE);
-            }
-        });
+
     }
 
-    private boolean isInputStringValid(String... inputs) {
-        for(String current : inputs) {
-            if(current == null || current.isEmpty()) return false;
-        }
-        return true;
+    private long fromDateTimeStringToTimestamp(@NonNull String date, @NonNull String time) throws ParseException {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy HH:mm", Locale.getDefault());
+        return Objects.requireNonNull(dateFormat.parse(date + " " + time)).getTime();
     }
 
     public MutableLiveData<Result> getSubmissionResult() {

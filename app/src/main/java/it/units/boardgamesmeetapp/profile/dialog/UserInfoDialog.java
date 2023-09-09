@@ -1,6 +1,5 @@
 package it.units.boardgamesmeetapp.profile.dialog;
 
-import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -8,9 +7,8 @@ import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.lifecycle.LifecycleOwner;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelStoreOwner;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -36,11 +34,11 @@ public class UserInfoDialog {
     @NonNull
     final EditText favouriteGame;
 
-    private UserInfoDialog(@NonNull Context context, @NonNull ViewModelStoreOwner viewModelStoreOwner, @NonNull LifecycleOwner lifecycleOwner) {
-        this.dialog = new MaterialAlertDialogBuilder(context).create();
+    private UserInfoDialog(@NonNull Fragment fragment) {
+        this.dialog = new MaterialAlertDialogBuilder(fragment.requireContext()).create();
 
-        DialogProfileInformationBinding binding = DialogProfileInformationBinding.inflate(LayoutInflater.from(context));
-        ProfileViewModel viewModel = new ViewModelProvider(viewModelStoreOwner, new ProfileViewModelFactory()).get(ProfileViewModel.class);
+        DialogProfileInformationBinding binding = DialogProfileInformationBinding.inflate(LayoutInflater.from(fragment.requireContext()));
+        ProfileViewModel viewModel = new ViewModelProvider(fragment.getViewModelStore(), new ProfileViewModelFactory()).get(ProfileViewModel.class);
 
         name = Objects.requireNonNull(binding.name.getEditText());
         surname = Objects.requireNonNull(binding.surname.getEditText());
@@ -48,11 +46,11 @@ public class UserInfoDialog {
         favouritePlace = Objects.requireNonNull(binding.place.getEditText());
         favouriteGame = Objects.requireNonNull(binding.game.getEditText());
 
-        viewModel.getInitialUserInfo().observe(lifecycleOwner, initialUserInfo -> {
+        viewModel.getInitialUserInfo().observe(fragment.getViewLifecycleOwner(), initialUserInfo -> {
             if (initialUserInfo == null) return;
             setTextFieldWith(initialUserInfo);
         });
-        viewModel.getCurrentUserInfo().observe(lifecycleOwner, currentUserInfo -> binding.modifyButton.setEnabled(!currentUserInfo.equals(viewModel.getInitialUserInfo().getValue())));
+        viewModel.getCurrentUserInfo().observe(fragment.getViewLifecycleOwner(), currentUserInfo -> binding.modifyButton.setEnabled(!currentUserInfo.equals(viewModel.getInitialUserInfo().getValue())));
 
         binding.modifyButton.setOnClickListener(v -> {
             viewModel.modifyUserInformation();
@@ -112,8 +110,8 @@ public class UserInfoDialog {
         }
     }
 
-    public static @NonNull AlertDialog getInstance(@NonNull Context context, @NonNull ViewModelStoreOwner viewModelStoreOwner, @NonNull LifecycleOwner lifecycleOwner) {
-        UserInfoDialog userInfoDialog = new UserInfoDialog(context, viewModelStoreOwner, lifecycleOwner);
+    public static @NonNull AlertDialog getInstance(@NonNull Fragment fragment) {
+        UserInfoDialog userInfoDialog = new UserInfoDialog(fragment);
         return userInfoDialog.dialog;
     }
 

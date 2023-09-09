@@ -32,7 +32,7 @@ public class ProfileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ProfileViewModel viewModel = new ViewModelProvider(this, new ProfileViewModelFactory()).get(ProfileViewModel.class);
 
-        binding.informationButton.setOnClickListener(v -> UserInfoDialog.getInstance(requireContext(), this, getViewLifecycleOwner()).show());
+        binding.informationButton.setOnClickListener(v -> UserInfoDialog.getInstance(this).show());
         binding.logout.setOnClickListener(v -> {
                     viewModel.logout();
                     NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_global_loginFragment));

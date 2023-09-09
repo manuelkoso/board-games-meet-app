@@ -5,24 +5,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.ActionOnlyNavDirections;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.android.material.datepicker.MaterialDatePicker;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -32,22 +24,16 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import it.units.boardgamesmeetapp.R;
 import it.units.boardgamesmeetapp.dashboard.EventViewHolder;
-import it.units.boardgamesmeetapp.databinding.DialogEventPlayersBinding;
-import it.units.boardgamesmeetapp.databinding.DialogNewEventBinding;
+import it.units.boardgamesmeetapp.dashboard.dialog.EventDialog;
 import it.units.boardgamesmeetapp.databinding.FragmentHomeBinding;
 import it.units.boardgamesmeetapp.databinding.SingleEventBinding;
-import it.units.boardgamesmeetapp.databinding.SinglePlayerBinding;
 import it.units.boardgamesmeetapp.models.Event;
-import it.units.boardgamesmeetapp.models.UserInfo;
-import it.units.boardgamesmeetapp.utils.Result;
 
 public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
     private HomeViewModel homeViewModel;
-    private NewEventViewModel newEventViewModel;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -60,8 +46,7 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         homeViewModel = new ViewModelProvider(this, new HomeViewModelFactory()).get(HomeViewModel.class);
-        newEventViewModel = new ViewModelProvider(this, new NewEventViewModelFactory()).get(NewEventViewModel.class);
-        binding.newActivityButton.setOnClickListener(v -> dialogSetUp());
+
         RecyclerView recyclerView = binding.activitiesRecycler;
         Query query = FirebaseFirestore.getInstance().collection("activities");
         query = query.where(Filter.greaterThan("timestamp", new Date().getTime()));
@@ -91,9 +76,7 @@ public class HomeFragment extends Fragment {
                 });
                 if(model.getPlayers().contains(FirebaseAuth.getInstance().getUid()) || model.getMaxNumberOfPlayers() == model.getPlayers().size())
                     activityBinding.eventButton.setEnabled(false);
-                activityBinding.people.setOnClickListener(v -> {
-                    dialogCardSetUp(model);
-                });
+                activityBinding.people.setOnClickListener(v -> EventDialog.getInstance(HomeFragment.this, model).show());
             }
         };
 
@@ -101,81 +84,6 @@ public class HomeFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
         adapter.startListening();
-    }
-
-    private void dialogCardSetUp(Event event) {
-        DialogEventPlayersBinding dialogEventPlayersBinding = DialogEventPlayersBinding.inflate(LayoutInflater.from(getContext()));
-        AlertDialog dialog = new MaterialAlertDialogBuilder(getContext()).create();
-        RecyclerView recyclerView = dialogEventPlayersBinding.players;
-        Query query = FirebaseFirestore.getInstance().collection("users").whereIn("userId", event.getPlayers());
-
-        FirestoreRecyclerOptions<UserInfo> options = new FirestoreRecyclerOptions.Builder<UserInfo>().setQuery(query, UserInfo.class).build();
-        FirestoreRecyclerAdapter<UserInfo, PlayersViewHolder> adapter = new FirestoreRecyclerAdapter<UserInfo, PlayersViewHolder>(options) {
-            @NonNull
-            @Override
-            public PlayersViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                return new PlayersViewHolder(SinglePlayerBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
-            }
-
-            @Override
-            protected void onBindViewHolder(@NonNull PlayersViewHolder holder, int position, @NonNull UserInfo model) {
-                SinglePlayerBinding binding = holder.getBinding();
-                binding.name.append(model.getName());
-                binding.surname.append(model.getSurname());
-                binding.age.append(String.valueOf(model.getAge()));
-                binding.game.append(model.getFavouriteGame());
-                binding.place.append(model.getFavouritePlace());
-            }
-        };
-        recyclerView.setAdapter(adapter);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        recyclerView.setLayoutManager(layoutManager);
-        adapter.startListening();
-        dialog.setView(dialogEventPlayersBinding.getRoot());
-        dialog.show();
-    }
-
-    private void showLoginResult(@StringRes Integer message) {
-        if (getContext() != null && getContext().getApplicationContext() != null) {
-            Toast.makeText(
-                    getContext().getApplicationContext(),
-                    message,
-                    Toast.LENGTH_LONG).show();
-        }
-    }
-
-    private void dialogSetUp() {
-        DialogNewEventBinding binding = DialogNewEventBinding.inflate(LayoutInflater.from(getContext()));
-        AlertDialog dialog = new MaterialAlertDialogBuilder(requireContext()).create();
-        MaterialDatePicker<Long> materialDatePicker = MaterialDatePicker.Builder.datePicker().setTitleText("Select date").build();
-        binding.date.setOnClickListener(view1 -> materialDatePicker.show(requireActivity().getSupportFragmentManager(), "MATERIAL_DATE_PICKER"));
-        materialDatePicker.addOnPositiveButtonClickListener(selection -> binding.date.setText(materialDatePicker.getHeaderText().toString()));
-        MaterialTimePicker timePicker = new MaterialTimePicker.Builder().setTitleText("Select time").build();
-        binding.time.setOnClickListener(view1 -> timePicker.show(requireActivity().getSupportFragmentManager(), "MATERIAL_TIME_PICKER"));
-        timePicker.addOnPositiveButtonClickListener(selection -> binding.time.setText(String.format("%02d:%02d", timePicker.getHour(), timePicker.getMinute())));
-        binding.button.setOnClickListener(view1 -> {
-            binding.loading.setVisibility(View.VISIBLE);
-            String game = binding.game.getEditText().getText().toString();
-            String numberOfPlayers = binding.numberOfPlayers.getEditText().getText().toString();
-            String place = binding.place.getEditText().getText().toString();
-            String date = binding.date.getText().toString();
-            String time = binding.time.getText().toString();
-            newEventViewModel.addNewActivity(game, numberOfPlayers, place, date, time);
-        });
-        newEventViewModel.getSubmissionResult().observe(getViewLifecycleOwner(), submissionResult -> {
-            if (submissionResult == Result.NONE) return;
-            if (submissionResult == Result.FAILURE) {
-                binding.loading.setVisibility(View.GONE);
-                showLoginResult(R.string.new_event_failed);
-            };
-            if(submissionResult == Result.SUCCESS) {
-                showLoginResult(R.string.new_event_success);
-                NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_navigation_home_to_navigation_dashboard));
-                dialog.hide();
-            }
-        });
-        dialog.setView(binding.getRoot());
-        dialog.show();
     }
 
     @Override

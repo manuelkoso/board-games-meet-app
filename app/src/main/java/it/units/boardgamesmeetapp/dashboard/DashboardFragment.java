@@ -28,6 +28,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
+import it.units.boardgamesmeetapp.dashboard.dialog.EventDialog;
+import it.units.boardgamesmeetapp.dashboard.dialog.NewEventDialog;
 import it.units.boardgamesmeetapp.databinding.FragmentDashboardBinding;
 import it.units.boardgamesmeetapp.databinding.SingleEventBinding;
 import it.units.boardgamesmeetapp.models.Event;
@@ -50,6 +52,8 @@ public class DashboardFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         viewModel = new ViewModelProvider(this, new DashboardViewModelFactory()).get(DashboardViewModel.class);
+
+        binding.newActivityButton.setOnClickListener(v -> NewEventDialog.getInstance(this).show());
 
         Query query = FirebaseFirestore.getInstance().collection("activities").whereArrayContains("players", FirebaseAuth.getInstance().getUid());
         query = query.where(Filter.greaterThan("timestamp", new Date().getTime()));
@@ -74,6 +78,7 @@ public class DashboardFragment extends Fragment {
                 date.setText(dateFormat.format(d));
                 gameTitle.setText(model.getGame());
                 people.setText(String.valueOf(model.getPlayers().size() + "/" + model.getMaxNumberOfPlayers()));
+                activityBinding.people.setOnClickListener(v -> EventDialog.getInstance(DashboardFragment.this, model).show());
                 if(Objects.equals(model.getOwnerId(), FirebaseAuth.getInstance().getUid())) {
                     activityBinding.eventButton.setText("Cancel the event");
                     activityBinding.card.setStrokeColor(Color.BLUE);
