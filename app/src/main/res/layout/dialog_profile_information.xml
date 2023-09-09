@@ -18,7 +18,7 @@
         app:layout_constraintBottom_toTopOf="@+id/surname"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView">
+        app:layout_constraintTop_toBottomOf="@+id/title_profile">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
@@ -122,12 +122,12 @@
         android:clickable="true"
         android:contentDescription="@string/go_back_to_profile"
         android:src="@android:drawable/ic_menu_more"
-        app:layout_constraintBottom_toBottomOf="@+id/textView"
+        app:layout_constraintBottom_toBottomOf="@+id/title_profile"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView" />
+        app:layout_constraintTop_toTopOf="@+id/title_profile" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/title_profile"
         style="@style/TextAppearance.AppCompat.Display1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
