@@ -84,7 +84,7 @@ public class DashboardFragment extends Fragment {
             }
         };
 
-        RecyclerView recyclerView = binding.activitiesRecycler;
+        RecyclerView recyclerView = binding.mainRecycler;
         recyclerView.setAdapter(adapter);
         adapter.startListening();
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);

@@ -1,10 +1,11 @@
 package it.units.boardgamesmeetapp.home;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -49,11 +50,48 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         homeViewModel = new ViewModelProvider(this, new HomeViewModelFactory()).get(HomeViewModel.class);
 
-        RecyclerView recyclerView = binding.activitiesRecycler;
+        RecyclerView recyclerView = binding.mainRecycler;
         Query query = FirebaseFirestore.getInstance().collection(FirebaseConfig.EVENTS);
         query = query.where(Filter.greaterThan("timestamp", new Date().getTime()));
         FirestoreRecyclerOptions<Event> options = new FirestoreRecyclerOptions.Builder<Event>().setQuery(query, Event.class).build();
-        FirestoreRecyclerAdapter<Event, EventViewHolder> adapter = new FirestoreRecyclerAdapter<Event, EventViewHolder>(options) {
+        FirestoreRecyclerAdapter<Event, EventViewHolder> adapter = getFilteredAdapter(options);
+
+        recyclerView.setAdapter(adapter);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(layoutManager);
+        adapter.startListening();
+
+        binding.searchView.setupWithSearchBar(binding.searchBar);
+        binding.searchView.addTransitionListener(
+                (searchView, previousState, newState) -> searchView.getEditText().addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                        // ignored
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                        // ignored
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable editable) {
+                        Query filteredQuery = FirebaseFirestore.getInstance().collection(FirebaseConfig.EVENTS);
+                        filteredQuery = filteredQuery.where(Filter.greaterThan("timestamp", new Date().getTime()));
+                        filteredQuery = filteredQuery.whereEqualTo("game", searchView.getEditText().getText().toString());
+                        FirestoreRecyclerOptions<Event> filteredOption = new FirestoreRecyclerOptions.Builder<Event>().setQuery(filteredQuery, Event.class).build();
+                        FirestoreRecyclerAdapter<Event, EventViewHolder> filteredAdapter = getFilteredAdapter(filteredOption);
+                        binding.filteredRecycler.setAdapter(filteredAdapter);
+                        LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+                        binding.filteredRecycler.setLayoutManager(manager);
+                        filteredAdapter.startListening();
+                    }
+                }));
+    }
+
+    @NonNull
+    private FirestoreRecyclerAdapter<Event, EventViewHolder> getFilteredAdapter(FirestoreRecyclerOptions<Event> filteredOption) {
+        return new FirestoreRecyclerAdapter<Event, EventViewHolder>(filteredOption) {
             @NonNull
             @Override
             public EventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -73,17 +111,15 @@ public class HomeFragment extends Fragment {
                 activityBinding.people.setText(String.valueOf(model.getPlayers().size() + "/" + model.getMaxNumberOfPlayers()));
                 activityBinding.eventButton.setText(R.string.submit);
 
-                if(model.getPlayers().contains(FirebaseAuth.getInstance().getUid()) || model.getMaxNumberOfPlayers() == model.getPlayers().size())
+                if (model.getPlayers().contains(FirebaseAuth.getInstance().getUid()) || model.getMaxNumberOfPlayers() == model.getPlayers().size())
                     activityBinding.eventButton.setEnabled(false);
-                activityBinding.eventButton.setOnClickListener(v -> homeViewModel.submit(model));
+                activityBinding.eventButton.setOnClickListener(v -> {
+                    activityBinding.eventButton.setEnabled(false);
+                    homeViewModel.submit(model);
+                });
                 activityBinding.card.setOnClickListener(v -> EventDialog.getInstance(HomeFragment.this, model).show());
             }
         };
-
-        recyclerView.setAdapter(adapter);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        recyclerView.setLayoutManager(layoutManager);
-        adapter.startListening();
     }
 
     @Override
