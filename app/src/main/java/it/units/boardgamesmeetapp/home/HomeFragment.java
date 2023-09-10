@@ -1,14 +1,19 @@
 package it.units.boardgamesmeetapp.home;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -31,6 +36,7 @@ import it.units.boardgamesmeetapp.dashboard.dialog.EventDialog;
 import it.units.boardgamesmeetapp.database.FirebaseConfig;
 import it.units.boardgamesmeetapp.databinding.FragmentHomeBinding;
 import it.units.boardgamesmeetapp.databinding.SingleEventBinding;
+import it.units.boardgamesmeetapp.home.dialog.FilterDialog;
 import it.units.boardgamesmeetapp.models.Event;
 
 public class HomeFragment extends Fragment {
@@ -61,6 +67,13 @@ public class HomeFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         adapter.startListening();
 
+        homeViewModel.getRadioButtonIdMutableLiveData().observe(getViewLifecycleOwner(), buttonId -> {
+            binding.searchBar.setHint(getFilterFieldString(buttonId));
+            binding.searchView.setHint(getFilterFieldString(buttonId));
+        });
+
+        binding.filterButton.setOnClickListener(v -> FilterDialog.getInstance(this).show());
+
         binding.searchView.setupWithSearchBar(binding.searchBar);
         binding.searchView.addTransitionListener(
                 (searchView, previousState, newState) -> searchView.getEditText().addTextChangedListener(new TextWatcher() {
@@ -76,10 +89,8 @@ public class HomeFragment extends Fragment {
 
                     @Override
                     public void afterTextChanged(Editable editable) {
-                        Query filteredQuery = FirebaseFirestore.getInstance().collection(FirebaseConfig.EVENTS);
-                        filteredQuery = filteredQuery.where(Filter.greaterThan("timestamp", new Date().getTime()));
-                        filteredQuery = filteredQuery.whereEqualTo("game", searchView.getEditText().getText().toString());
-                        FirestoreRecyclerOptions<Event> filteredOption = new FirestoreRecyclerOptions.Builder<Event>().setQuery(filteredQuery, Event.class).build();
+                        Integer radioButtonId = homeViewModel.getRadioButtonIdMutableLiveData().getValue();
+                        FirestoreRecyclerOptions<Event> filteredOption = new FirestoreRecyclerOptions.Builder<Event>().setQuery(getFilterQuery(radioButtonId, searchView.getEditText().getText().toString()), Event.class).build();
                         FirestoreRecyclerAdapter<Event, EventViewHolder> filteredAdapter = getFilteredAdapter(filteredOption);
                         binding.filteredRecycler.setAdapter(filteredAdapter);
                         LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
@@ -87,6 +98,29 @@ public class HomeFragment extends Fragment {
                         filteredAdapter.startListening();
                     }
                 }));
+    }
+
+    @NonNull
+    private static Query getFilterQuery(@NonNull Integer buttonId, @NonNull String inputString) {
+        Query query = FirebaseFirestore.getInstance().collection(FirebaseConfig.EVENTS);
+        query = query.where(Filter.greaterThan("timestamp", new Date().getTime()));
+        if(buttonId == R.id.radio_button_game) query = query.whereEqualTo("game", inputString);
+        if(buttonId == R.id.radio_button_name) {
+
+        }
+        if(buttonId == R.id.radio_button_place) query = query.whereEqualTo("location", inputString);
+        // if(buttonId == R.id.radio_button_surname) field = field.concat("Surname");
+        return query;
+    }
+
+    @NonNull
+    private static String getFilterFieldString(@NonNull Integer buttonId) {
+        String field = "Search: ";
+        if(buttonId == R.id.radio_button_game) field = field.concat("Game");
+        if(buttonId == R.id.radio_button_name) field = field.concat("Name");
+        if(buttonId == R.id.radio_button_place) field = field.concat("Place");
+        if(buttonId == R.id.radio_button_surname) field = field.concat("Surname");
+        return field;
     }
 
     @NonNull
@@ -116,11 +150,22 @@ public class HomeFragment extends Fragment {
                 activityBinding.eventButton.setOnClickListener(v -> {
                     activityBinding.eventButton.setEnabled(false);
                     homeViewModel.submit(model);
+                    showLoginResult(R.string.submit);
                 });
                 activityBinding.card.setOnClickListener(v -> EventDialog.getInstance(HomeFragment.this, model).show());
             }
         };
     }
+
+    private void showLoginResult(@StringRes Integer message) {
+        if (requireContext().getApplicationContext() != null) {
+            Toast.makeText(
+                    requireContext().getApplicationContext(),
+                    message,
+                    Toast.LENGTH_LONG).show();
+        }
+    }
+
 
     @Override
     public void onDestroyView() {

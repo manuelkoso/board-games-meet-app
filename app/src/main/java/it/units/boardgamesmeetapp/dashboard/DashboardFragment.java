@@ -4,9 +4,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -76,10 +78,16 @@ public class DashboardFragment extends Fragment {
 
                 if(Objects.equals(model.getOwnerId(), FirebaseAuth.getInstance().getUid())) {
                     activityBinding.eventButton.setText(R.string.cancel_the_event);
-                    activityBinding.eventButton.setOnClickListener(v -> viewModel.deleteEvent(model));
+                    activityBinding.eventButton.setOnClickListener(v -> {
+                        viewModel.deleteEvent(model);
+                        showLoginResult(R.string.cancel_the_event);
+                    });
                 } else {
                     activityBinding.eventButton.setText(R.string.unsubscribe);
-                    activityBinding.eventButton.setOnClickListener(v -> viewModel.unsubscribe(model));
+                    activityBinding.eventButton.setOnClickListener(v -> {
+                        viewModel.unsubscribe(model);
+                        showLoginResult(R.string.unsubscribe);
+                    });
                 }
             }
         };
@@ -89,6 +97,15 @@ public class DashboardFragment extends Fragment {
         adapter.startListening();
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
+    }
+
+    private void showLoginResult(@StringRes Integer message) {
+        if (requireContext().getApplicationContext() != null) {
+            Toast.makeText(
+                    requireContext().getApplicationContext(),
+                    message,
+                    Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override

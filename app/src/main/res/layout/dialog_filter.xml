@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity"
+    android:id="@+id/radio_group"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RadioButton
+        android:id="@+id/radio_button_game"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/game"/>
+    <RadioButton
+        android:id="@+id/radio_button_place"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/place"/>
+    <RadioButton
+        android:id="@+id/radio_button_name"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/name"/>
+    <RadioButton
+        android:id="@+id/radio_button_surname"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/surname"/>
+
+</RadioGroup>

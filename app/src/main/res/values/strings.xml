@@ -53,4 +53,5 @@
     <string name="cancel_the_event">Cancel the event</string>
     <string name="unsubscribe">Unsubscribe</string>
     <string name="search">Search</string>
+    <string name="place">Place</string>
 </resources>

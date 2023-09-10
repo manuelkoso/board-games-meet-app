@@ -8,8 +8,8 @@ import androidx.lifecycle.ViewModel;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 
+import it.units.boardgamesmeetapp.R;
 import it.units.boardgamesmeetapp.database.FirebaseConfig;
 import it.units.boardgamesmeetapp.models.Event;
 
@@ -17,12 +17,12 @@ public class HomeViewModel extends ViewModel {
 
     private final FirebaseAuth firebaseAuth;
     private final FirebaseFirestore firebaseFirestore;
-
-    private final MutableLiveData<Query> queryMutableLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Integer> radioButtonIdMutableLiveData = new MutableLiveData<>();
 
     public HomeViewModel(@NonNull FirebaseAuth firebaseAuth, @NonNull FirebaseFirestore firebaseFirestore) {
         this.firebaseFirestore = firebaseFirestore;
         this.firebaseAuth = firebaseAuth;
+        this.radioButtonIdMutableLiveData.setValue(R.id.radio_button_game);
     }
 
     public void submit(@NonNull Event event) {
@@ -37,5 +37,12 @@ public class HomeViewModel extends ViewModel {
         );
     }
 
+    public MutableLiveData<Integer> getRadioButtonIdMutableLiveData() {
+        return radioButtonIdMutableLiveData;
+    }
+
+    public void updateFilterField(@NonNull Integer radioButtonId) {
+        this.radioButtonIdMutableLiveData.setValue(radioButtonId);
+    }
 
 }
