@@ -105,11 +105,7 @@ public class HomeFragment extends Fragment {
         Query query = FirebaseFirestore.getInstance().collection(FirebaseConfig.EVENTS);
         query = query.where(Filter.greaterThan("timestamp", new Date().getTime()));
         if(buttonId == R.id.radio_button_game) query = query.whereEqualTo("game", inputString);
-        if(buttonId == R.id.radio_button_name) {
-
-        }
         if(buttonId == R.id.radio_button_place) query = query.whereEqualTo("location", inputString);
-        // if(buttonId == R.id.radio_button_surname) field = field.concat("Surname");
         return query;
     }
 
@@ -117,9 +113,7 @@ public class HomeFragment extends Fragment {
     private static String getFilterFieldString(@NonNull Integer buttonId) {
         String field = "Search: ";
         if(buttonId == R.id.radio_button_game) field = field.concat("Game");
-        if(buttonId == R.id.radio_button_name) field = field.concat("Name");
         if(buttonId == R.id.radio_button_place) field = field.concat("Place");
-        if(buttonId == R.id.radio_button_surname) field = field.concat("Surname");
         return field;
     }
 
