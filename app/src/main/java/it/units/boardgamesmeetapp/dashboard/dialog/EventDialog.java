@@ -15,10 +15,12 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
+import it.units.boardgamesmeetapp.database.FirebaseConfig;
 import it.units.boardgamesmeetapp.databinding.DialogEventPlayersBinding;
 import it.units.boardgamesmeetapp.databinding.SinglePlayerBinding;
 import it.units.boardgamesmeetapp.home.PlayersViewHolder;
 import it.units.boardgamesmeetapp.models.Event;
+import it.units.boardgamesmeetapp.models.User;
 import it.units.boardgamesmeetapp.models.UserInfo;
 
 public class EventDialog {
@@ -31,10 +33,10 @@ public class EventDialog {
         DialogEventPlayersBinding dialogEventPlayersBinding = DialogEventPlayersBinding.inflate(LayoutInflater.from(fragment.requireContext()));
         
         RecyclerView recyclerView = dialogEventPlayersBinding.players;
-        Query query = FirebaseFirestore.getInstance().collection("users").whereIn("userId", event.getPlayers());
+        Query query = FirebaseFirestore.getInstance().collection(FirebaseConfig.USERS).whereIn(FirebaseConfig.USERS_ID, event.getPlayers());
 
-        FirestoreRecyclerOptions<UserInfo> options = new FirestoreRecyclerOptions.Builder<UserInfo>().setQuery(query, UserInfo.class).build();
-        FirestoreRecyclerAdapter<UserInfo, PlayersViewHolder> adapter = new FirestoreRecyclerAdapter<UserInfo, PlayersViewHolder>(options) {
+        FirestoreRecyclerOptions<User> options = new FirestoreRecyclerOptions.Builder<User>().setQuery(query, User.class).build();
+        FirestoreRecyclerAdapter<User, PlayersViewHolder> adapter = new FirestoreRecyclerAdapter<User, PlayersViewHolder>(options) {
             @NonNull
             @Override
             public PlayersViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -42,13 +44,14 @@ public class EventDialog {
             }
 
             @Override
-            protected void onBindViewHolder(@NonNull PlayersViewHolder holder, int position, @NonNull UserInfo model) {
+            protected void onBindViewHolder(@NonNull PlayersViewHolder holder, int position, @NonNull User model) {
                 SinglePlayerBinding binding = holder.getBinding();
-                binding.name.append(model.getName());
-                binding.surname.append(model.getSurname());
-                binding.age.append(String.valueOf(model.getAge()));
-                binding.game.append(model.getFavouriteGame());
-                binding.place.append(model.getFavouritePlace());
+                UserInfo userInfo = model.getInfo();
+                binding.name.append(userInfo.getName());
+                binding.surname.append(userInfo.getSurname());
+                binding.age.append(String.valueOf(userInfo.getAge()));
+                binding.game.append(userInfo.getFavouriteGame());
+                binding.place.append(userInfo.getFavouritePlace());
             }
         };
         recyclerView.setAdapter(adapter);

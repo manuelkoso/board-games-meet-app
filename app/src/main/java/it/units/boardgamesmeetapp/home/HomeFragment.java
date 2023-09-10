@@ -24,6 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import it.units.boardgamesmeetapp.R;
 import it.units.boardgamesmeetapp.dashboard.EventViewHolder;
 import it.units.boardgamesmeetapp.dashboard.dialog.EventDialog;
 import it.units.boardgamesmeetapp.database.FirebaseConfig;
@@ -62,22 +63,20 @@ public class HomeFragment extends Fragment {
             @Override
             protected void onBindViewHolder(@NonNull EventViewHolder holder, int position, @NonNull Event model) {
                 SingleEventBinding activityBinding = holder.getBinding();
-                TextView gameTitle = activityBinding.gameTitle;
-                TextView place = activityBinding.place;
-                TextView people = activityBinding.people;
-                place.setText(model.getLocation());
-                Date d = new Date(model.getTimestamp());
+
+                Date date = new Date(model.getTimestamp());
                 SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy - HH:mm", Locale.getDefault());
-                activityBinding.date.setText(dateFormat.format(d));
-                gameTitle.setText(model.getGame());
-                people.setText(String.valueOf(model.getPlayers().size() + "/" + model.getMaxNumberOfPlayers()));
-                activityBinding.eventButton.setText("Submit");
-                activityBinding.eventButton.setOnClickListener(v -> {
-                    homeViewModel.submit(model);
-                });
+
+                activityBinding.place.setText(model.getLocation());
+                activityBinding.date.setText(dateFormat.format(date));
+                activityBinding.gameTitle.setText(model.getGame());
+                activityBinding.people.setText(String.valueOf(model.getPlayers().size() + "/" + model.getMaxNumberOfPlayers()));
+                activityBinding.eventButton.setText(R.string.submit);
+
                 if(model.getPlayers().contains(FirebaseAuth.getInstance().getUid()) || model.getMaxNumberOfPlayers() == model.getPlayers().size())
                     activityBinding.eventButton.setEnabled(false);
-                activityBinding.people.setOnClickListener(v -> EventDialog.getInstance(HomeFragment.this, model).show());
+                activityBinding.eventButton.setOnClickListener(v -> homeViewModel.submit(model));
+                activityBinding.card.setOnClickListener(v -> EventDialog.getInstance(HomeFragment.this, model).show());
             }
         };
 

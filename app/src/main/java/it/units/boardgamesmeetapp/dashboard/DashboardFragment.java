@@ -72,7 +72,7 @@ public class DashboardFragment extends Fragment {
                 activityBinding.date.setText(dateFormat.format(date));
                 activityBinding.gameTitle.setText(model.getGame());
                 activityBinding.people.setText(String.valueOf(model.getPlayers().size() + "/" + model.getMaxNumberOfPlayers()));
-                activityBinding.people.setOnClickListener(v -> EventDialog.getInstance(DashboardFragment.this, model).show());
+                activityBinding.card.setOnClickListener(v -> EventDialog.getInstance(DashboardFragment.this, model).show());
 
                 if(Objects.equals(model.getOwnerId(), FirebaseAuth.getInstance().getUid())) {
                     activityBinding.eventButton.setText(R.string.cancel_the_event);
