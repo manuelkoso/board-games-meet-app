@@ -26,6 +26,7 @@ import java.util.Locale;
 
 import it.units.boardgamesmeetapp.dashboard.EventViewHolder;
 import it.units.boardgamesmeetapp.dashboard.dialog.EventDialog;
+import it.units.boardgamesmeetapp.database.FirebaseConfig;
 import it.units.boardgamesmeetapp.databinding.FragmentHomeBinding;
 import it.units.boardgamesmeetapp.databinding.SingleEventBinding;
 import it.units.boardgamesmeetapp.models.Event;
@@ -48,7 +49,7 @@ public class HomeFragment extends Fragment {
         homeViewModel = new ViewModelProvider(this, new HomeViewModelFactory()).get(HomeViewModel.class);
 
         RecyclerView recyclerView = binding.activitiesRecycler;
-        Query query = FirebaseFirestore.getInstance().collection("activities");
+        Query query = FirebaseFirestore.getInstance().collection(FirebaseConfig.EVENTS);
         query = query.where(Filter.greaterThan("timestamp", new Date().getTime()));
         FirestoreRecyclerOptions<Event> options = new FirestoreRecyclerOptions.Builder<Event>().setQuery(query, Event.class).build();
         FirestoreRecyclerAdapter<Event, EventViewHolder> adapter = new FirestoreRecyclerAdapter<Event, EventViewHolder>(options) {

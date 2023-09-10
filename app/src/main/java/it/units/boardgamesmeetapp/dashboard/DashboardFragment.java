@@ -1,11 +1,9 @@
 package it.units.boardgamesmeetapp.dashboard;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,14 +20,14 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
 import java.text.SimpleDateFormat;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
+import it.units.boardgamesmeetapp.R;
 import it.units.boardgamesmeetapp.dashboard.dialog.EventDialog;
 import it.units.boardgamesmeetapp.dashboard.dialog.NewEventDialog;
+import it.units.boardgamesmeetapp.database.FirebaseConfig;
 import it.units.boardgamesmeetapp.databinding.FragmentDashboardBinding;
 import it.units.boardgamesmeetapp.databinding.SingleEventBinding;
 import it.units.boardgamesmeetapp.models.Event;
@@ -38,8 +36,6 @@ public class DashboardFragment extends Fragment {
 
     private FragmentDashboardBinding binding;
     private DashboardViewModel viewModel;
-
-    private List<Event> userActivities = Collections.emptyList();
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -55,7 +51,7 @@ public class DashboardFragment extends Fragment {
 
         binding.newActivityButton.setOnClickListener(v -> NewEventDialog.getInstance(this).show());
 
-        Query query = FirebaseFirestore.getInstance().collection("activities").whereArrayContains("players", FirebaseAuth.getInstance().getUid());
+        Query query = FirebaseFirestore.getInstance().collection(FirebaseConfig.EVENTS).whereArrayContains("players", Objects.requireNonNull(FirebaseAuth.getInstance().getUid()));
         query = query.where(Filter.greaterThan("timestamp", new Date().getTime()));
         FirestoreRecyclerOptions<Event> options = new FirestoreRecyclerOptions.Builder<Event>().setQuery(query, Event.class).build();
         FirestoreRecyclerAdapter<Event, EventViewHolder> adapter = new FirestoreRecyclerAdapter<Event, EventViewHolder>(options) {
@@ -68,32 +64,26 @@ public class DashboardFragment extends Fragment {
             @Override
             protected void onBindViewHolder(@NonNull EventViewHolder holder, int position, @NonNull Event model) {
                 SingleEventBinding activityBinding = holder.getBinding();
-                TextView gameTitle = activityBinding.gameTitle;
-                TextView place = activityBinding.place;
-                TextView date = activityBinding.date;
-                TextView people = activityBinding.people;
-                place.setText(model.getLocation());
-                Date d = new Date(model.getTimestamp());
-                SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy - HH:mm", Locale.getDefault());
-                date.setText(dateFormat.format(d));
-                gameTitle.setText(model.getGame());
-                people.setText(String.valueOf(model.getPlayers().size() + "/" + model.getMaxNumberOfPlayers()));
-                activityBinding.people.setOnClickListener(v -> EventDialog.getInstance(DashboardFragment.this, model).show());
-                if(Objects.equals(model.getOwnerId(), FirebaseAuth.getInstance().getUid())) {
-                    activityBinding.eventButton.setText("Cancel the event");
-                    activityBinding.card.setStrokeColor(Color.BLUE);
-                    activityBinding.eventButton.setOnClickListener(v -> {
-                        viewModel.deleteEvent(model);
-                    });
-                } else {
-                    activityBinding.eventButton.setText("Unsubscribe");
-                    activityBinding.eventButton.setOnClickListener(v -> {
-                        viewModel.unsubscribe(model);
-                    });
-                }
 
+                Date date = new Date(model.getTimestamp());
+                SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy - HH:mm", Locale.getDefault());
+
+                activityBinding.place.setText(model.getLocation());
+                activityBinding.date.setText(dateFormat.format(date));
+                activityBinding.gameTitle.setText(model.getGame());
+                activityBinding.people.setText(String.valueOf(model.getPlayers().size() + "/" + model.getMaxNumberOfPlayers()));
+                activityBinding.people.setOnClickListener(v -> EventDialog.getInstance(DashboardFragment.this, model).show());
+
+                if(Objects.equals(model.getOwnerId(), FirebaseAuth.getInstance().getUid())) {
+                    activityBinding.eventButton.setText(R.string.cancel_the_event);
+                    activityBinding.eventButton.setOnClickListener(v -> viewModel.deleteEvent(model));
+                } else {
+                    activityBinding.eventButton.setText(R.string.unsubscribe);
+                    activityBinding.eventButton.setOnClickListener(v -> viewModel.unsubscribe(model));
+                }
             }
         };
+
         RecyclerView recyclerView = binding.activitiesRecycler;
         recyclerView.setAdapter(adapter);
         adapter.startListening();

@@ -5,9 +5,7 @@ import androidx.annotation.NonNull;
 import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.IgnoreExtraProperties;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @IgnoreExtraProperties
@@ -17,25 +15,20 @@ public class User {
     private final String id;
     @NonNull
     private UserInfo info;
-    @NonNull
-    private final List<Event> userEvents;
 
     public User() {
         this.id = "";
         info = new UserInfo();
-        userEvents = new ArrayList<>();
     }
 
     public User(@NonNull String id) {
         this.id = id;
         info = new UserInfo();
-        userEvents = new ArrayList<>();
     }
 
     public User(@NonNull String id, @NonNull UserInfo info) {
         this.id = id;
         this.info = info;
-        this.userEvents = new ArrayList<>();
     }
 
     @NonNull
@@ -48,11 +41,6 @@ public class User {
         return info;
     }
 
-    @NonNull
-    public List<Event> getUserEvents() {
-        return userEvents;
-    }
-
     public void setInfo(@NonNull UserInfo info) {
         this.info = info;
     }
@@ -62,7 +50,6 @@ public class User {
         HashMap<String, Object> result = new HashMap<>();
         result.put("id", id);
         result.put("info", info.toMap());
-        result.put("events", userEvents);
         return result;
     }
 

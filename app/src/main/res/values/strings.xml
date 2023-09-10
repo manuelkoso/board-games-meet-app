@@ -50,4 +50,6 @@
     <string name="history">History</string>
     <string name="logout">Logout</string>
     <string name="go_back_to_profile">Go back to profile</string>
+    <string name="cancel_the_event">Cancel the event</string>
+    <string name="unsubscribe">Unsubscribe</string>
 </resources>

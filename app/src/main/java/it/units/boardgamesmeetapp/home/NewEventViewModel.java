@@ -26,10 +26,10 @@ public class NewEventViewModel extends ViewModel {
 
     private final MutableLiveData<Result> submissionResult = new MutableLiveData<>();
 
-    NewEventViewModel(FirebaseAuth firebaseAuth, FirebaseFirestore database) {
+    public NewEventViewModel(@NonNull FirebaseAuth firebaseAuth, @NonNull FirebaseFirestore database) {
         this.database = database;
         this.firebaseAuth = firebaseAuth;
-        this.submissionResult.setValue(Result.NONE);
+        resetSubmissionResult();
     }
 
     public void addNewEvent(@NonNull String game, @NonNull String numberOfPlayers, @NonNull String place, @NonNull String date, @NonNull String time) {
@@ -66,4 +66,9 @@ public class NewEventViewModel extends ViewModel {
     public MutableLiveData<Result> getSubmissionResult() {
         return submissionResult;
     }
+
+    public void resetSubmissionResult() {
+        this.submissionResult.setValue(Result.NONE);
+    }
+
 }

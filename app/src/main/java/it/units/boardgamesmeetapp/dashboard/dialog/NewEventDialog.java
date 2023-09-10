@@ -49,6 +49,7 @@ public class NewEventDialog {
 
         binding = DialogNewEventBinding.inflate(LayoutInflater.from(fragment.requireContext()));
         NewEventViewModel viewModel = new ViewModelProvider(fragment.getViewModelStore(), new NewEventViewModelFactory()).get(NewEventViewModel.class);
+        viewModel.resetSubmissionResult();
 
         this.game = Objects.requireNonNull(binding.game.getEditText());
         this.numberOfPlayers = Objects.requireNonNull(binding.numberOfPlayers.getEditText());
@@ -76,12 +77,11 @@ public class NewEventDialog {
                 binding.loading.setVisibility(View.GONE);
                 setFieldErrors();
                 showLoginResult(fragment.requireContext(), R.string.new_event_failed);
-            } else {
+            } else if (submissionResult == Result.SUCCESS) {
                 showLoginResult(fragment.requireContext(), R.string.new_event_success);
                 dialog.hide();
             }
         });
-
         dialog.setView(binding.getRoot());
     }
 
