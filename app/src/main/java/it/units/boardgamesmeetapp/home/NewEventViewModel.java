@@ -11,6 +11,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -45,12 +46,18 @@ public class NewEventViewModel extends ViewModel {
         }
         try {
             String key = database.collection(FirebaseConfig.EVENTS).document().getId();
+            long timestamp = fromDateTimeStringToTimestamp(date, time);
+            if(timestamp < new Date().getTime()) {
+                submissionResult.setValue(Result.OLD_DATE);
+                return;
+            }
             Event event = new Event(key, Objects.requireNonNull(firebaseAuth.getUid()), game, Integer.parseInt(numberOfPlayers), place, fromDateTimeStringToTimestamp(date, time));
 
             database.collection(FirebaseConfig.EVENTS).document(key).set(event).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     Log.d(FirebaseConfig.TAG, "Data successfully written.");
                     submissionResult.setValue(Result.SUCCESS);
+                    resetFieldValues();
                 } else {
                     Log.w(FirebaseConfig.TAG, task.getException());
                     submissionResult.setValue(Result.FAILURE);
@@ -62,6 +69,10 @@ public class NewEventViewModel extends ViewModel {
             submissionResult.setValue(Result.FAILURE);
         }
 
+    }
+
+    private void resetFieldValues() {
+        Stream.of(currentDate, currentGame, currentPlace, currentTime, currentNumberOfPlayers).forEach(field -> field.setValue(null));
     }
 
     private long fromDateTimeStringToTimestamp(@NonNull String date, @NonNull String time) throws ParseException {

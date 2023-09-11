@@ -18,6 +18,7 @@ public class HomeViewModel extends ViewModel {
     private final FirebaseAuth firebaseAuth;
     private final FirebaseFirestore firebaseFirestore;
     private final MutableLiveData<Integer> radioButtonIdMutableLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Event> currentEventShown = new MutableLiveData<>();
 
     public HomeViewModel(@NonNull FirebaseAuth firebaseAuth, @NonNull FirebaseFirestore firebaseFirestore) {
         this.firebaseFirestore = firebaseFirestore;
@@ -43,6 +44,14 @@ public class HomeViewModel extends ViewModel {
 
     public void updateFilterField(@NonNull Integer radioButtonId) {
         this.radioButtonIdMutableLiveData.setValue(radioButtonId);
+    }
+
+    public @NonNull MutableLiveData<Event> getCurrentEventShown() {
+        return currentEventShown;
+    }
+
+    public void updateCurrentEventShown(@NonNull Event event) {
+        this.currentEventShown.setValue(event);
     }
 
 }

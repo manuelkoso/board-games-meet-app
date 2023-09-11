@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -29,10 +30,12 @@ import com.google.firebase.firestore.Query;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 
 import it.units.boardgamesmeetapp.R;
 import it.units.boardgamesmeetapp.dashboard.EventViewHolder;
 import it.units.boardgamesmeetapp.dashboard.dialog.EventDialog;
+import it.units.boardgamesmeetapp.dashboard.dialog.NewEventDialog;
 import it.units.boardgamesmeetapp.database.FirebaseConfig;
 import it.units.boardgamesmeetapp.databinding.FragmentHomeBinding;
 import it.units.boardgamesmeetapp.databinding.SingleEventBinding;
@@ -43,6 +46,7 @@ public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
     private HomeViewModel homeViewModel;
+    private AlertDialog eventDialog;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -55,6 +59,12 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         homeViewModel = new ViewModelProvider(this, new HomeViewModelFactory()).get(HomeViewModel.class);
+
+        if(savedInstanceState != null && (savedInstanceState.getBoolean("IS_EVENT_DIALOG_SHOWN"))) {
+                eventDialog = EventDialog.getInstance(this, Objects.requireNonNull(homeViewModel.getCurrentEventShown().getValue()));
+                eventDialog.show();
+        }
+
 
         RecyclerView recyclerView = binding.mainRecycler;
         Query query = FirebaseFirestore.getInstance().collection(FirebaseConfig.EVENTS);
@@ -98,6 +108,16 @@ public class HomeFragment extends Fragment {
                         filteredAdapter.startListening();
                     }
                 }));
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (eventDialog != null) {
+            outState.putBoolean("IS_EVENT_DIALOG_SHOWN", eventDialog.isShowing());
+        } else {
+            outState.putBoolean("IS_EVENT_DIALOG_SHOWN", false);
+        }
     }
 
     @NonNull
@@ -146,7 +166,11 @@ public class HomeFragment extends Fragment {
                     homeViewModel.submit(model);
                     showLoginResult(R.string.submit);
                 });
-                activityBinding.card.setOnClickListener(v -> EventDialog.getInstance(HomeFragment.this, model).show());
+                activityBinding.card.setOnClickListener(v -> {
+                    homeViewModel.updateCurrentEventShown(model);
+                    eventDialog = EventDialog.getInstance(HomeFragment.this, model);
+                    eventDialog.show();
+                });
             }
         };
     }

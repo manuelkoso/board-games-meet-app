@@ -18,8 +18,6 @@ import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.timepicker.MaterialTimePicker;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -28,7 +26,6 @@ import it.units.boardgamesmeetapp.R;
 import it.units.boardgamesmeetapp.databinding.DialogNewEventBinding;
 import it.units.boardgamesmeetapp.home.NewEventViewModel;
 import it.units.boardgamesmeetapp.home.NewEventViewModelFactory;
-import it.units.boardgamesmeetapp.models.Event;
 import it.units.boardgamesmeetapp.utils.Result;
 
 public class NewEventDialog {
@@ -91,6 +88,10 @@ public class NewEventDialog {
             } else if (submissionResult == Result.SUCCESS) {
                 showLoginResult(fragment.requireContext(), R.string.new_event_success);
                 dialog.hide();
+            } else if(submissionResult == Result.OLD_DATE) {
+                binding.loading.setVisibility(View.GONE);
+                binding.date.setError("We cannot travel in the past!");
+                binding.time.setError("We cannot travel in the past!");
             }
         });
 

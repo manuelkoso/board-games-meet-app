@@ -31,7 +31,6 @@ import it.units.boardgamesmeetapp.R;
 import it.units.boardgamesmeetapp.dashboard.dialog.EventDialog;
 import it.units.boardgamesmeetapp.dashboard.dialog.NewEventDialog;
 import it.units.boardgamesmeetapp.database.FirebaseConfig;
-import it.units.boardgamesmeetapp.databinding.DialogNewEventBinding;
 import it.units.boardgamesmeetapp.databinding.FragmentDashboardBinding;
 import it.units.boardgamesmeetapp.databinding.SingleEventBinding;
 import it.units.boardgamesmeetapp.models.Event;
@@ -40,7 +39,8 @@ public class DashboardFragment extends Fragment {
 
     private FragmentDashboardBinding binding;
     private DashboardViewModel viewModel;
-    private AlertDialog dialog;
+    private AlertDialog addEventDialog;
+    private AlertDialog eventDialog;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -55,15 +55,19 @@ public class DashboardFragment extends Fragment {
         viewModel = new ViewModelProvider(this, new DashboardViewModelFactory()).get(DashboardViewModel.class);
 
         if(savedInstanceState != null) {
-            if(savedInstanceState.getBoolean("IS_DIALOG_SHOWN")) {
-                dialog = NewEventDialog.getInstance(this);
-                dialog.show();
+            if(savedInstanceState.getBoolean("IS_ADD_EVENT_DIALOG_SHOWN")) {
+                addEventDialog = NewEventDialog.getInstance(this);
+                addEventDialog.show();
+            }
+            if(savedInstanceState.getBoolean("IS_EVENT_DIALOG_SHOWN")) {
+                eventDialog = EventDialog.getInstance(this, Objects.requireNonNull(viewModel.getCurrentEventShown().getValue()));
+                eventDialog.show();
             }
         }
 
         binding.newActivityButton.setOnClickListener(v -> {
-            dialog = NewEventDialog.getInstance(this);
-            dialog.show();
+            addEventDialog = NewEventDialog.getInstance(this);
+            addEventDialog.show();
         });
 
         Query query = FirebaseFirestore.getInstance().collection(FirebaseConfig.EVENTS).whereArrayContains("players", Objects.requireNonNull(FirebaseAuth.getInstance().getUid()));
@@ -81,10 +85,15 @@ public class DashboardFragment extends Fragment {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (dialog != null) {
-            outState.putBoolean("IS_DIALOG_SHOWN", dialog.isShowing());
+        if (addEventDialog != null) {
+            outState.putBoolean("IS_ADD_EVENT_DIALOG_SHOWN", addEventDialog.isShowing());
         } else {
-            outState.putBoolean("IS_DIALOG_SHOWN", false);
+            outState.putBoolean("IS_ADD_EVENT_DIALOG_SHOWN", false);
+        }
+        if (eventDialog != null) {
+            outState.putBoolean("IS_EVENT_DIALOG_SHOWN", eventDialog.isShowing());
+        } else {
+            outState.putBoolean("IS_EVENT_DIALOG_SHOWN", false);
         }
     }
 
@@ -108,7 +117,11 @@ public class DashboardFragment extends Fragment {
                 activityBinding.date.setText(dateFormat.format(date));
                 activityBinding.gameTitle.setText(model.getGame());
                 activityBinding.people.setText(String.valueOf(model.getPlayers().size() + "/" + model.getMaxNumberOfPlayers()));
-                activityBinding.card.setOnClickListener(v -> EventDialog.getInstance(DashboardFragment.this, model).show());
+                activityBinding.card.setOnClickListener(v -> {
+                    viewModel.updateCurrentEventShown(model);
+                    eventDialog = EventDialog.getInstance(DashboardFragment.this, model);
+                    eventDialog.show();
+                });
 
                 if(Objects.equals(model.getOwnerId(), FirebaseAuth.getInstance().getUid())) {
                     activityBinding.eventButton.setText(R.string.cancel_the_event);

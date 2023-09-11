@@ -3,6 +3,7 @@ package it.units.boardgamesmeetapp.dashboard;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -16,6 +17,7 @@ public class DashboardViewModel extends ViewModel {
 
     @NonNull
     private final FirebaseFirestore database;
+    private final MutableLiveData<Event> currentEventShown = new MutableLiveData<>();
 
     public DashboardViewModel(@NonNull FirebaseFirestore database) {
         this.database = database;
@@ -39,6 +41,14 @@ public class DashboardViewModel extends ViewModel {
                 Log.w(FirebaseConfig.TAG, task.getException());
             }
         });
+    }
+
+    public @NonNull MutableLiveData<Event> getCurrentEventShown() {
+        return currentEventShown;
+    }
+
+    public void updateCurrentEventShown(@NonNull Event event) {
+        this.currentEventShown.setValue(event);
     }
 
 }
