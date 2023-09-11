@@ -8,6 +8,9 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
+
 import java.util.Objects;
 
 import it.units.boardgamesmeetapp.databinding.ActivityMainBinding;
@@ -33,7 +36,11 @@ public class MainActivity extends AppCompatActivity {
             }
         }));
 
-        NavigationUI.setupWithNavController(binding.navView, navController);
+        if(binding.navView instanceof BottomNavigationView) {
+            NavigationUI.setupWithNavController((BottomNavigationView) binding.navView, navController);
+        } else {
+            NavigationUI.setupWithNavController((NavigationView) binding.navView, navController);
+        }
 
     }
 }

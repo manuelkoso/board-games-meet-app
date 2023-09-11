@@ -1,6 +1,8 @@
 package it.units.boardgamesmeetapp.dashboard.dialog;
 
 import android.content.Context;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -16,6 +18,8 @@ import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.timepicker.MaterialTimePicker;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -57,6 +61,13 @@ public class NewEventDialog {
         this.date = Objects.requireNonNull(binding.date.getEditText());
         this.time = Objects.requireNonNull(binding.time.getEditText());
 
+        game.setText(viewModel.getCurrentGame().getValue());
+        numberOfPlayers.setText(viewModel.getCurrentNumberOfPlayers().getValue());
+        place.setText(viewModel.getCurrentPlace().getValue());
+        date.setText(viewModel.getCurrentDate().getValue());
+        time.setText(viewModel.getCurrentTime().getValue());
+
+
         MaterialDatePicker<Long> materialDatePicker = MaterialDatePicker.Builder.datePicker().setTitleText("Select date").build();
         date.setOnClickListener(v -> materialDatePicker.show(fragment.requireActivity().getSupportFragmentManager(), "MATERIAL_DATE_PICKER"));
         materialDatePicker.addOnPositiveButtonClickListener(selection -> date.setText(materialDatePicker.getHeaderText()));
@@ -82,6 +93,24 @@ public class NewEventDialog {
                 dialog.hide();
             }
         });
+
+        TextWatcher afterTextChangedListener = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // ignore
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // ignore
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                viewModel.updateCurrentEvent(game.getText().toString(), numberOfPlayers.getText().toString(), place.getText().toString(), date.getText().toString(), time.getText().toString());
+            }
+        };
+        Stream.of(game, numberOfPlayers, place, date, time).forEach(field -> field.addTextChangedListener(afterTextChangedListener));
         dialog.setView(binding.getRoot());
     }
 

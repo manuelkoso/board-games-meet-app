@@ -1,6 +1,7 @@
 package it.units.boardgamesmeetapp.dashboard.dialog;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
@@ -52,6 +54,9 @@ public class EventDialog {
                 binding.age.append(String.valueOf(userInfo.getAge()));
                 binding.game.append(userInfo.getFavouriteGame());
                 binding.place.append(userInfo.getFavouritePlace());
+                if (!model.getId().equals(FirebaseAuth.getInstance().getUid())) {
+                    binding.ownerBadge.setVisibility(View.GONE);
+                }
             }
         };
         recyclerView.setAdapter(adapter);

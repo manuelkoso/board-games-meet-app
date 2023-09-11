@@ -21,10 +21,16 @@ import it.units.boardgamesmeetapp.utils.Result;
 
 public class NewEventViewModel extends ViewModel {
 
+    @NonNull
     private final FirebaseFirestore database;
+    @NonNull
     private final FirebaseAuth firebaseAuth;
-
     private final MutableLiveData<Result> submissionResult = new MutableLiveData<>();
+    private final MutableLiveData<String> currentGame = new MutableLiveData<>();
+    private final MutableLiveData<String> currentNumberOfPlayers = new MutableLiveData<>();
+    private final MutableLiveData<String> currentPlace = new MutableLiveData<>();
+    private final MutableLiveData<String> currentDate = new MutableLiveData<>();
+    private final MutableLiveData<String> currentTime = new MutableLiveData<>();
 
     public NewEventViewModel(@NonNull FirebaseAuth firebaseAuth, @NonNull FirebaseFirestore database) {
         this.database = database;
@@ -71,4 +77,31 @@ public class NewEventViewModel extends ViewModel {
         this.submissionResult.setValue(Result.NONE);
     }
 
+    public void updateCurrentEvent(@NonNull String game, @NonNull String numberOfPlayers, @NonNull String place, @NonNull String date, @NonNull String time) {
+        currentGame.setValue(game);
+        currentNumberOfPlayers.setValue(numberOfPlayers);
+        currentPlace.setValue(place);
+        currentDate.setValue(date);
+        currentTime.setValue(time);
+    }
+
+    public MutableLiveData<String> getCurrentGame() {
+        return currentGame;
+    }
+
+    public MutableLiveData<String> getCurrentNumberOfPlayers() {
+        return currentNumberOfPlayers;
+    }
+
+    public MutableLiveData<String> getCurrentPlace() {
+        return currentPlace;
+    }
+
+    public MutableLiveData<String> getCurrentDate() {
+        return currentDate;
+    }
+
+    public MutableLiveData<String> getCurrentTime() {
+        return currentTime;
+    }
 }

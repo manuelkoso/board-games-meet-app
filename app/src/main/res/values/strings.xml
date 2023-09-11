@@ -55,4 +55,5 @@
     <string name="search">Search</string>
     <string name="place">Place</string>
     <string name="filter_dialog_title">Filter fields</string>
+    <string name="modify">Modify</string>
 </resources>
