@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.ParseException;
@@ -23,7 +24,7 @@ import it.units.boardgamesmeetapp.utils.Result;
 public class NewEventViewModel extends ViewModel {
 
     @NonNull
-    private final FirebaseFirestore database;
+    private final FirebaseFirestore firebaseFirestore;
     @NonNull
     private final FirebaseAuth firebaseAuth;
     private final MutableLiveData<Result> submissionResult = new MutableLiveData<>();
@@ -33,8 +34,8 @@ public class NewEventViewModel extends ViewModel {
     private final MutableLiveData<String> currentDate = new MutableLiveData<>();
     private final MutableLiveData<String> currentTime = new MutableLiveData<>();
 
-    public NewEventViewModel(@NonNull FirebaseAuth firebaseAuth, @NonNull FirebaseFirestore database) {
-        this.database = database;
+    public NewEventViewModel(@NonNull FirebaseAuth firebaseAuth, @NonNull FirebaseFirestore firebaseFirestore) {
+        this.firebaseFirestore = firebaseFirestore;
         this.firebaseAuth = firebaseAuth;
         resetSubmissionResult();
     }
@@ -45,15 +46,14 @@ public class NewEventViewModel extends ViewModel {
             return;
         }
         try {
-            String key = database.collection(FirebaseConfig.EVENTS).document().getId();
+            String key = firebaseFirestore.collection(FirebaseConfig.EVENTS).document().getId();
             long timestamp = fromDateTimeStringToTimestamp(date, time);
             if(timestamp < new Date().getTime()) {
                 submissionResult.setValue(Result.OLD_DATE);
                 return;
             }
             Event event = new Event(key, Objects.requireNonNull(firebaseAuth.getUid()), game, Integer.parseInt(numberOfPlayers), place, fromDateTimeStringToTimestamp(date, time));
-
-            database.collection(FirebaseConfig.EVENTS).document(key).set(event).addOnCompleteListener(task -> {
+            firebaseFirestore.collection(FirebaseConfig.EVENTS).document(key).set(event).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     Log.d(FirebaseConfig.TAG, "Data successfully written.");
                     submissionResult.setValue(Result.SUCCESS);
@@ -96,6 +96,17 @@ public class NewEventViewModel extends ViewModel {
         currentTime.setValue(time);
     }
 
+    public void updateCurrentEvent(@NonNull Event event) {
+        currentGame.setValue(event.getGame());
+        currentNumberOfPlayers.setValue(String.valueOf(event.getMaxNumberOfPlayers()));
+        currentPlace.setValue(event.getLocation());
+        Date date = new Date(event.getTimestamp());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        currentDate.setValue(dateFormat.format(date));
+        currentTime.setValue(timeFormat.format(date));
+    }
+
     public MutableLiveData<String> getCurrentGame() {
         return currentGame;
     }
@@ -115,4 +126,35 @@ public class NewEventViewModel extends ViewModel {
     public MutableLiveData<String> getCurrentTime() {
         return currentTime;
     }
+
+    public void modifyEvent(String eventKey, String game, String numberOfPlayers, String place, String date, String time) {
+        if (Stream.of(game, numberOfPlayers, place, date, time).anyMatch(String::isEmpty)) {
+            submissionResult.setValue(Result.FAILURE);
+            return;
+        }
+        try {
+            DocumentReference reference = firebaseFirestore.collection(FirebaseConfig.EVENTS).document(eventKey);
+            long timestamp = fromDateTimeStringToTimestamp(date, time);
+            if(timestamp < new Date().getTime()) {
+                submissionResult.setValue(Result.OLD_DATE);
+                return;
+            }
+            Event event = new Event(eventKey, Objects.requireNonNull(firebaseAuth.getUid()), game, Integer.parseInt(numberOfPlayers), place, fromDateTimeStringToTimestamp(date, time));
+            reference.update(event.toMap()).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    Log.d(FirebaseConfig.TAG, "Data successfully written.");
+                    submissionResult.setValue(Result.SUCCESS);
+                    resetFieldValues();
+                } else {
+                    Log.w(FirebaseConfig.TAG, task.getException());
+                    submissionResult.setValue(Result.FAILURE);
+                }
+            });
+
+        } catch (ParseException e) {
+            Log.w(FirebaseConfig.TAG, e);
+            submissionResult.setValue(Result.FAILURE);
+        }
+    }
+
 }

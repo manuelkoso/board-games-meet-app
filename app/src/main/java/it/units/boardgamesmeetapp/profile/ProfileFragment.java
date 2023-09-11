@@ -52,6 +52,9 @@ public class ProfileFragment extends Fragment {
                     NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_global_loginFragment));
                 }
         );
+        binding.historyButton.setOnClickListener(v -> {
+            NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_navigation_profile_to_historyFragment));
+        });
     }
 
     @Override

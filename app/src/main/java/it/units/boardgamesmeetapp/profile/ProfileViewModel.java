@@ -18,16 +18,16 @@ import it.units.boardgamesmeetapp.models.UserInfo;
 
 public class ProfileViewModel extends ViewModel {
     @NonNull
-    private final FirebaseFirestore database;
+    private final FirebaseFirestore firebaseFirestore;
     @NonNull
     private final FirebaseAuth firebaseAuth;
     private final MutableLiveData<UserInfo> initialUserInfo = new MutableLiveData<>();
     private final MutableLiveData<UserInfo> currentUserInfo = new MutableLiveData<>();
 
-    public ProfileViewModel(@NonNull FirebaseAuth firebaseAuth, @NonNull FirebaseFirestore database) {
-        this.database = database;
+    public ProfileViewModel(@NonNull FirebaseAuth firebaseAuth, @NonNull FirebaseFirestore firebaseFirestore) {
+        this.firebaseFirestore = firebaseFirestore;
         this.firebaseAuth = firebaseAuth;
-        DocumentReference reference = database.collection(FirebaseConfig.USERS).document(Objects.requireNonNull(firebaseAuth.getUid()));
+        DocumentReference reference = firebaseFirestore.collection(FirebaseConfig.USERS).document(Objects.requireNonNull(firebaseAuth.getUid()));
         reference.addSnapshotListener(
                 (value, exception) -> {
                     if (exception != null) {
@@ -50,7 +50,7 @@ public class ProfileViewModel extends ViewModel {
     }
 
     public void modifyUserInformation() {
-        DocumentReference reference = database.collection(FirebaseConfig.USERS).document(Objects.requireNonNull(firebaseAuth.getUid()));
+        DocumentReference reference = firebaseFirestore.collection(FirebaseConfig.USERS).document(Objects.requireNonNull(firebaseAuth.getUid()));
         reference.update("info", Objects.requireNonNull(currentUserInfo.getValue()).toMap()).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Log.d(FirebaseConfig.TAG, "User information modified correctly");
