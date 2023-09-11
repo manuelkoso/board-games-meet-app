@@ -19,8 +19,11 @@ import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.timepicker.MaterialTimePicker;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.TimeZone;
 import java.util.stream.Stream;
 
 import it.units.boardgamesmeetapp.R;
@@ -134,11 +137,23 @@ public class NewEventDialog {
 
     private void buildDataTimePickers(@NonNull Fragment fragment) {
         MaterialDatePicker<Long> materialDatePicker = MaterialDatePicker.Builder.datePicker().setTitleText("Select date").build();
-        date.setOnClickListener(v -> materialDatePicker.show(fragment.requireActivity().getSupportFragmentManager(), "MATERIAL_DATE_PICKER"));
-        materialDatePicker.addOnPositiveButtonClickListener(selection -> date.setText(materialDatePicker.getHeaderText()));
+        date.setOnClickListener(v -> {
+            Stream.of(game, numberOfPlayers, place).forEach(View::clearFocus);
+            materialDatePicker.show(fragment.requireActivity().getSupportFragmentManager(), "MATERIAL_DATE_PICKER");
+        });
+        materialDatePicker.addOnPositiveButtonClickListener(selection -> {
+            Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+            calendar.setTimeInMillis(selection);
+            SimpleDateFormat format = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
+            String formattedDate  = format.format(calendar.getTime());
+            date.setText(formattedDate);
+        });
 
         MaterialTimePicker timePicker = new MaterialTimePicker.Builder().setTitleText("Select time").build();
-        time.setOnClickListener(v -> timePicker.show(fragment.requireActivity().getSupportFragmentManager(), "MATERIAL_TIME_PICKER"));
+        time.setOnClickListener(v -> {
+            Stream.of(game, numberOfPlayers, place).forEach(View::clearFocus);
+            timePicker.show(fragment.requireActivity().getSupportFragmentManager(), "MATERIAL_TIME_PICKER");
+        });
         timePicker.addOnPositiveButtonClickListener(selection -> time.setText(String.format(Locale.getDefault(), "%02d:%02d", timePicker.getHour(), timePicker.getMinute())));
     }
 
