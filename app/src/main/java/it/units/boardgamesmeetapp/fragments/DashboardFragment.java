@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -62,12 +63,12 @@ public class DashboardFragment extends Fragment {
         mainViewModel.updateActionBarTitle("My events");
         mainViewModel.updateActionBarBackButtonState(false);
 
-        if(savedInstanceState != null) {
-            if(savedInstanceState.getBoolean("IS_ADD_EVENT_DIALOG_SHOWN")) {
+        if (savedInstanceState != null) {
+            if (savedInstanceState.getBoolean("IS_ADD_EVENT_DIALOG_SHOWN")) {
                 addEventDialog = NewEventDialog.getInstance(this);
                 addEventDialog.show();
             }
-            if(savedInstanceState.getBoolean("IS_EVENT_DIALOG_SHOWN")) {
+            if (savedInstanceState.getBoolean("IS_EVENT_DIALOG_SHOWN")) {
                 eventDialog = PlayersDialog.getInstance(this, Objects.requireNonNull(viewModel.getCurrentEventShown().getValue()));
                 eventDialog.show();
             }
@@ -131,11 +132,15 @@ public class DashboardFragment extends Fragment {
                     eventDialog.show();
                 });
 
-                if(Objects.equals(model.getOwnerId(), FirebaseAuth.getInstance().getUid())) {
+                if (Objects.equals(model.getOwnerId(), FirebaseAuth.getInstance().getUid())) {
                     activityBinding.eventButton.setText(R.string.cancel_the_event);
                     activityBinding.eventButton.setOnClickListener(v -> {
-                        viewModel.deleteEvent(model);
-                        showLoginResult(R.string.cancel_the_event);
+                        new MaterialAlertDialogBuilder(requireContext()).setTitle(R.string.cancel_the_event)
+                                .setMessage("Do you want to cancel this event?")
+                                .setPositiveButton("Yes", (dialogInterface, i) -> {
+                                    viewModel.deleteEvent(model);
+                                    showLoginResult(R.string.cancel_the_event);
+                                }).setNegativeButton("No", ((dialogInterface, i) -> {})).show();
                     });
                     activityBinding.modifyButton.setVisibility(View.VISIBLE);
                     activityBinding.modifyButton.setOnClickListener(v -> {
@@ -145,8 +150,12 @@ public class DashboardFragment extends Fragment {
                 } else {
                     activityBinding.eventButton.setText(R.string.unsubscribe);
                     activityBinding.eventButton.setOnClickListener(v -> {
-                        viewModel.unsubscribe(model);
-                        showLoginResult(R.string.unsubscribe);
+                        new MaterialAlertDialogBuilder(requireContext()).setTitle(R.string.cancel_the_event)
+                                .setMessage("Do you want to unsubscribe to this event?")
+                                .setPositiveButton("Yes", (dialogInterface, i) -> {
+                                    viewModel.unsubscribe(model);
+                                    showLoginResult(R.string.unsubscribe);
+                                }).setNegativeButton("No", ((dialogInterface, i) -> {})).show();
                     });
                 }
             }

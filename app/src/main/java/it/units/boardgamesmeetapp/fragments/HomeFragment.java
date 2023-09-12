@@ -126,9 +126,8 @@ public class HomeFragment extends Fragment {
     @NonNull
     private static Query getFilterQuery(@NonNull Integer buttonId, @NonNull String inputString) {
         Query query = FirebaseFirestore.getInstance().collection(FirebaseConfig.EVENTS);
-        query = query.where(Filter.greaterThan("timestamp", new Date().getTime()));
-        if(buttonId == R.id.radio_button_game) query = query.whereEqualTo("game", inputString);
-        if(buttonId == R.id.radio_button_place) query = query.whereEqualTo("location", inputString);
+        if(buttonId == R.id.radio_button_game) query = query.orderBy("game").orderBy("timestamp", Query.Direction.DESCENDING).startAt(inputString).endAt(inputString + "\uf8ff").limit(20);
+        if(buttonId == R.id.radio_button_place) query = query.orderBy("location").orderBy("timestamp", Query.Direction.DESCENDING).startAt(inputString).endAt(inputString + "\uf8ff").limit(20);
         return query;
     }
 
@@ -162,6 +161,11 @@ public class HomeFragment extends Fragment {
                 activityBinding.people.setText(String.valueOf(model.getPlayers().size() + "/" + model.getMaxNumberOfPlayers()));
                 activityBinding.eventButton.setText(R.string.submit);
 
+                if(model.getTimestamp() < new Date().getTime()) {
+                    activityBinding.eventButton.setText("Done");
+                    activityBinding.eventButton.setEnabled(false);
+                    return;
+                }
                 if (model.getPlayers().contains(FirebaseAuth.getInstance().getUid()) || model.getMaxNumberOfPlayers() == model.getPlayers().size())
                     activityBinding.eventButton.setEnabled(false);
                 activityBinding.eventButton.setOnClickListener(v -> {

@@ -82,8 +82,8 @@ public class HistoryFragment extends Fragment {
                 activityBinding.date.setText(dateFormat.format(date));
                 activityBinding.gameTitle.setText(model.getGame());
                 activityBinding.people.setText(String.valueOf(model.getPlayers().size() + "/" + model.getMaxNumberOfPlayers()));
-                activityBinding.modifyButton.setVisibility(View.GONE);
-                activityBinding.eventButton.setVisibility(View.GONE);
+                activityBinding.eventButton.setText("Done");
+                activityBinding.eventButton.setEnabled(false);
             }
         };
     }
