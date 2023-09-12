@@ -1,31 +1,36 @@
 package it.units.boardgamesmeetapp.fragments;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
+
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.ActionOnlyNavDirections;
-import androidx.navigation.fragment.NavHostFragment;
 
 
-import it.units.boardgamesmeetapp.R;
+import java.util.Objects;
+
 import it.units.boardgamesmeetapp.databinding.FragmentProfileBinding;
+import it.units.boardgamesmeetapp.models.UserInfo;
 import it.units.boardgamesmeetapp.viewmodels.MainViewModel;
 import it.units.boardgamesmeetapp.viewmodels.MainViewModelFactory;
 import it.units.boardgamesmeetapp.viewmodels.profile.ProfileViewModel;
 import it.units.boardgamesmeetapp.viewmodels.profile.ProfileViewModelFactory;
-import it.units.boardgamesmeetapp.dialogs.UserInfoDialog;
 
 public class ProfileFragment extends Fragment {
     private FragmentProfileBinding binding;
-
-    private AlertDialog profileInformationDialog;
+    private EditText name;
+    private EditText surname;
+    private EditText age;
+    private EditText favouritePlace;
+    private EditText favouriteGame;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -41,32 +46,73 @@ public class ProfileFragment extends Fragment {
         MainViewModel mainViewModel = new ViewModelProvider(requireActivity(), new MainViewModelFactory()).get(MainViewModel.class);
         mainViewModel.updateActionBarTitle("Profile");
         mainViewModel.updateActionBarBackButtonState(false);
-        if(savedInstanceState != null && (savedInstanceState.getBoolean("IS_PROFILE_DIALOG_SHOWN"))) {
-            profileInformationDialog = UserInfoDialog.getInstance(this);
-            profileInformationDialog.show();
-        }
 
-//        binding.informationButton.setOnClickListener(v -> {
-//            profileInformationDialog = UserInfoDialog.getInstance(this);
-//            profileInformationDialog.show();
-//        });
-//        binding.logout.setOnClickListener(v -> {
-//                    viewModel.logout();
-//                    NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_global_loginFragment));
-//                }
-//        );
-//        binding.historyButton.setOnClickListener(v -> {
-//            NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_navigation_profile_to_navigation_history));
-//        });
+        name = Objects.requireNonNull(binding.name.getEditText());
+        surname = Objects.requireNonNull(binding.surname.getEditText());
+        age = Objects.requireNonNull(binding.age.getEditText());
+        favouritePlace = Objects.requireNonNull(binding.place.getEditText());
+        favouriteGame = Objects.requireNonNull(binding.game.getEditText());
+
+        viewModel.getUserParticipatedEvents().observe(getViewLifecycleOwner(), data -> binding.numberParticipatedEvents.setText(String.valueOf(data)));
+        viewModel.getUserCreatedEvents().observe(getViewLifecycleOwner(), data -> binding.numberCreatedEvents.setText(String.valueOf(data)));
+
+        viewModel.getInitialUserInfo().observe(getViewLifecycleOwner(), initialUserInfo -> {
+            if (initialUserInfo == null) return;
+            setTextFieldWith(initialUserInfo);
+        });
+        viewModel.getCurrentUserInfo().observe(getViewLifecycleOwner(), currentUserInfo -> binding.modifyButton.setEnabled(!currentUserInfo.equals(viewModel.getInitialUserInfo().getValue())));
+
+        binding.modifyButton.setOnClickListener(v -> {
+            viewModel.modifyUserInformation();
+            name.clearFocus();
+            surname.clearFocus();
+            age.clearFocus();
+            favouritePlace.clearFocus();
+            favouriteGame.clearFocus();
+        });
+
+        TextWatcher afterTextChangedListener = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // ignore
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // ignore
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                UserInfo userInfo = new UserInfo(name.getText().toString(), surname.getText().toString(), getAgeFromString(age.getText().toString()), favouritePlace.getText().toString(), favouriteGame.getText().toString());
+                viewModel.updateCurrentInfoUser(userInfo);
+            }
+        };
+
+        setAfterTextChangedListener(afterTextChangedListener);
     }
 
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        if (profileInformationDialog != null) {
-            outState.putBoolean("IS_PROFILE_DIALOG_SHOWN", profileInformationDialog.isShowing());
-        } else {
-            outState.putBoolean("IS_PROFILE_DIALOG_SHOWN", false);
+    private void setAfterTextChangedListener(TextWatcher afterTextChangedListener) {
+        name.addTextChangedListener(afterTextChangedListener);
+        surname.addTextChangedListener(afterTextChangedListener);
+        age.addTextChangedListener(afterTextChangedListener);
+        favouritePlace.addTextChangedListener(afterTextChangedListener);
+        favouriteGame.addTextChangedListener(afterTextChangedListener);
+    }
+
+    private void setTextFieldWith(@NonNull UserInfo initialUserInfo) {
+        name.setText(initialUserInfo.getName());
+        surname.setText(initialUserInfo.getSurname());
+        age.setText(String.valueOf(initialUserInfo.getAge()));
+        favouritePlace.setText(initialUserInfo.getFavouritePlace());
+        favouriteGame.setText(initialUserInfo.getFavouriteGame());
+    }
+
+    private int getAgeFromString(String stringAge) {
+        try {
+            return Integer.parseInt(stringAge);
+        } catch (NumberFormatException exception) {
+            return 0;
         }
     }
 
