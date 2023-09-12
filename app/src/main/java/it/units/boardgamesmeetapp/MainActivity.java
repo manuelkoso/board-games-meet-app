@@ -1,6 +1,7 @@
 package it.units.boardgamesmeetapp;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -15,6 +16,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Objects;
 
@@ -35,8 +37,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         viewModel = new ViewModelProvider(this, new MainViewModelFactory()).get(MainViewModel.class);
-        viewModel.getActionBarTitle().observe(this, title -> Objects.requireNonNull(getSupportActionBar()).setTitle(title));
-        viewModel.getEnableActionBarBackButton().observe(this, enable -> getSupportActionBar().setDisplayHomeAsUpEnabled(enable));
+        viewModel.getActionBarTitle().observe(this, Objects.requireNonNull(binding.topAppBar)::setTitle);
 
         NavHostFragment navHostFragment =
                 (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
@@ -45,10 +46,21 @@ public class MainActivity extends AppCompatActivity {
         navController.addOnDestinationChangedListener(((controller, destination, arguments) -> {
             if (destination.getId() == R.id.navigation_login || destination.getId() == R.id.navigation_signup) {
                 binding.navView.setVisibility(View.GONE);
+                Objects.requireNonNull(binding.topAppBar).setVisibility(View.GONE);
             } else {
                 binding.navView.setVisibility(View.VISIBLE);
+                Objects.requireNonNull(binding.topAppBar).setVisibility(View.VISIBLE);
             }
         }));
+
+        Objects.requireNonNull(binding.topAppBar).setOnMenuItemClickListener(item -> {
+            if(item.getItemId() == R.id.more) {
+                viewModel.logout();
+                navController.navigate(R.id.navigation_login);
+                return true;
+            }
+            return false;
+        });
 
         if (binding.navView instanceof BottomNavigationView) {
             NavigationUI.setupWithNavController((BottomNavigationView) binding.navView, navController);
@@ -57,15 +69,5 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (getSupportFragmentManager().getBackStackEntryCount() > 0 ) {
-            getSupportFragmentManager().popBackStack();
-        }
-        else {
-            super.onBackPressed();
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
 }

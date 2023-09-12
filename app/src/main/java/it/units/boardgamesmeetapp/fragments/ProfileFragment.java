@@ -46,18 +46,18 @@ public class ProfileFragment extends Fragment {
             profileInformationDialog.show();
         }
 
-        binding.informationButton.setOnClickListener(v -> {
-            profileInformationDialog = UserInfoDialog.getInstance(this);
-            profileInformationDialog.show();
-        });
-        binding.logout.setOnClickListener(v -> {
-                    viewModel.logout();
-                    NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_global_loginFragment));
-                }
-        );
-        binding.historyButton.setOnClickListener(v -> {
-            NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_navigation_profile_to_historyFragment));
-        });
+//        binding.informationButton.setOnClickListener(v -> {
+//            profileInformationDialog = UserInfoDialog.getInstance(this);
+//            profileInformationDialog.show();
+//        });
+//        binding.logout.setOnClickListener(v -> {
+//                    viewModel.logout();
+//                    NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_global_loginFragment));
+//                }
+//        );
+//        binding.historyButton.setOnClickListener(v -> {
+//            NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_navigation_profile_to_navigation_history));
+//        });
     }
 
     @Override

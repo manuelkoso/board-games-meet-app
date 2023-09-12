@@ -10,9 +10,17 @@
         android:id="@+id/navigation_home"
         android:icon="@drawable/ic_home_black_24dp"
         android:title="@string/title_home" />
+
+    <item
+        android:id="@+id/navigation_history"
+        android:icon="@android:drawable/ic_menu_recent_history"
+        android:title="@string/history"
+        />
+
     <item
         android:id="@+id/navigation_profile"
         android:icon="@drawable/account_circle"
         android:title="@string/profile" />
+
 
 </menu>

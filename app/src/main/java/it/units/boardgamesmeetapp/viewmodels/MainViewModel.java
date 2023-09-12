@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public class MainViewModel extends ViewModel {
 
     private final MutableLiveData<String> actionBarTitle = new MutableLiveData<>();
@@ -27,6 +29,10 @@ public class MainViewModel extends ViewModel {
 
     public void updateActionBarBackButtonState(boolean isEnabled) {
         enableActionBarBackButton.setValue(isEnabled);
+    }
+
+    public void logout() {
+        FirebaseAuth.getInstance().signOut();
     }
 
 }
