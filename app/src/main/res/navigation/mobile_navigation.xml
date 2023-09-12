@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="it.units.boardgamesmeetapp.home.HomeFragment"
+        android:name="it.units.boardgamesmeetapp.fragments.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_dashboard">
         <action
@@ -17,26 +17,24 @@
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="it.units.boardgamesmeetapp.dashboard.DashboardFragment"
+        android:name="it.units.boardgamesmeetapp.fragments.DashboardFragment"
         android:label="@string/title_dashboard"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/navigation_profile"
-        android:name="it.units.boardgamesmeetapp.profile.ProfileFragment"
+        android:name="it.units.boardgamesmeetapp.fragments.ProfileFragment"
         android:label="@string/title_profile"
         tools:layout="@layout/dialog_profile_information" >
         <action
             android:id="@+id/action_navigation_profile_to_historyFragment"
             app:destination="@id/historyFragment"
-            app:enterAnim="@anim/fui_slide_in_right"
-            app:exitAnim="@anim/fui_slide_out_left"
-            app:popEnterAnim="@anim/fui_slide_in_right"
-            app:popExitAnim="@anim/fui_slide_out_left" />
+            app:popUpTo="@id/navigation_profile"
+            app:popUpToInclusive="false" />
     </fragment>
     <fragment
         android:id="@+id/navigation_login"
-        android:name="it.units.boardgamesmeetapp.login.LoginFragment"
+        android:name="it.units.boardgamesmeetapp.fragments.LoginFragment"
         android:label="fragment_login"
         tools:layout="@layout/fragment_login">
         <action
@@ -61,7 +59,7 @@
         app:popUpToInclusive="true" />
     <fragment
         android:id="@+id/navigation_signup"
-        android:name="it.units.boardgamesmeetapp.login.SignupFragment"
+        android:name="it.units.boardgamesmeetapp.fragments.SignupFragment"
         android:label="fragment_signup"
         tools:layout="@layout/fragment_signup">
         <action
@@ -72,7 +70,7 @@
     </fragment>
     <fragment
         android:id="@+id/historyFragment"
-        android:name="it.units.boardgamesmeetapp.profile.HistoryFragment"
+        android:name="it.units.boardgamesmeetapp.fragments.HistoryFragment"
         android:label="fragment_history"
         tools:layout="@layout/fragment_history" />
 </navigation>
