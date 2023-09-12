@@ -61,7 +61,7 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         homeViewModel = new ViewModelProvider(this, new HomeViewModelFactory()).get(HomeViewModel.class);
         MainViewModel mainViewModel = new ViewModelProvider(requireActivity(), new MainViewModelFactory()).get(MainViewModel.class);
-        mainViewModel.updateActionBarTitle("Home");
+        mainViewModel.updateActionBarTitle("Find events");
         mainViewModel.updateActionBarBackButtonState(false);
         if(savedInstanceState != null && (savedInstanceState.getBoolean("IS_EVENT_DIALOG_SHOWN"))) {
                 eventDialog = PlayersDialog.getInstance(this, Objects.requireNonNull(homeViewModel.getCurrentEventShown().getValue()));
