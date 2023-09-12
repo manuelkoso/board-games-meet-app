@@ -54,7 +54,9 @@ public class PlayersDialog {
                 binding.age.append(String.valueOf(userInfo.getAge()));
                 binding.game.append(userInfo.getFavouriteGame());
                 binding.place.append(userInfo.getFavouritePlace());
-                if (model.getId().equals(FirebaseAuth.getInstance().getUid())) {
+                if (model.getId().equals(event.getOwnerId())) {
+                    binding.ownerBadge.setVisibility(View.VISIBLE);
+                } else {
                     binding.ownerBadge.setVisibility(View.GONE);
                 }
             }
