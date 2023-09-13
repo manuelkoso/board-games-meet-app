@@ -29,6 +29,8 @@ import java.util.Locale;
 import java.util.Objects;
 
 import it.units.boardgamesmeetapp.R;
+import it.units.boardgamesmeetapp.databinding.DashboardEventBinding;
+import it.units.boardgamesmeetapp.viewholders.DashboardEventViewHolder;
 import it.units.boardgamesmeetapp.viewmodels.MainViewModel;
 import it.units.boardgamesmeetapp.viewmodels.MainViewModelFactory;
 import it.units.boardgamesmeetapp.viewmodels.dashboard.DashboardViewModel;
@@ -82,7 +84,7 @@ public class DashboardFragment extends Fragment {
         Query query = FirebaseFirestore.getInstance().collection(FirebaseConfig.EVENTS).whereArrayContains("players", Objects.requireNonNull(FirebaseAuth.getInstance().getUid()));
         query = query.where(Filter.greaterThan("timestamp", new Date().getTime()));
         FirestoreRecyclerOptions<Event> options = new FirestoreRecyclerOptions.Builder<Event>().setQuery(query, Event.class).build();
-        FirestoreRecyclerAdapter<Event, EventViewHolder> adapter = getEventEventViewHolderFirestoreRecyclerAdapter(options);
+        FirestoreRecyclerAdapter<Event, DashboardEventViewHolder> adapter = getEventEventViewHolderFirestoreRecyclerAdapter(options);
 
         RecyclerView recyclerView = binding.mainRecycler;
         recyclerView.setAdapter(adapter);
@@ -107,17 +109,17 @@ public class DashboardFragment extends Fragment {
     }
 
     @NonNull
-    private FirestoreRecyclerAdapter<Event, EventViewHolder> getEventEventViewHolderFirestoreRecyclerAdapter(@NonNull FirestoreRecyclerOptions<Event> options) {
-        return new FirestoreRecyclerAdapter<Event, EventViewHolder>(options) {
+    private FirestoreRecyclerAdapter<Event, DashboardEventViewHolder> getEventEventViewHolderFirestoreRecyclerAdapter(@NonNull FirestoreRecyclerOptions<Event> options) {
+        return new FirestoreRecyclerAdapter<Event, DashboardEventViewHolder>(options) {
             @NonNull
             @Override
-            public EventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                return new EventViewHolder(SingleEventBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
+            public DashboardEventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                return new DashboardEventViewHolder(DashboardEventBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
             }
 
             @Override
-            protected void onBindViewHolder(@NonNull EventViewHolder holder, int position, @NonNull Event model) {
-                SingleEventBinding activityBinding = holder.getBinding();
+            protected void onBindViewHolder(@NonNull DashboardEventViewHolder holder, int position, @NonNull Event model) {
+                DashboardEventBinding activityBinding = holder.getBinding();
 
                 Date date = new Date(model.getTimestamp());
                 SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy - HH:mm", Locale.getDefault());
