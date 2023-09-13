@@ -52,7 +52,7 @@ public class NewEventViewModel extends ViewModel {
                 submissionResult.setValue(Result.OLD_DATE);
                 return;
             }
-            Event event = new Event(key, Objects.requireNonNull(firebaseAuth.getUid()), game.toLowerCase(), Integer.parseInt(numberOfPlayers), place, fromDateTimeStringToTimestamp(date, time));
+            Event event = new Event(key, Objects.requireNonNull(firebaseAuth.getUid()), game.toLowerCase(), Integer.parseInt(numberOfPlayers), place.toLowerCase(), fromDateTimeStringToTimestamp(date, time));
             firebaseFirestore.collection(FirebaseConfig.EVENTS).document(key).set(event).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     Log.d(FirebaseConfig.TAG, "Data successfully written.");

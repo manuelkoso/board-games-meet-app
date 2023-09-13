@@ -12,7 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -128,9 +127,9 @@ public class HomeFragment extends Fragment {
     private static Query getFilterQuery(@NonNull Integer buttonId, @NonNull String inputString) {
         Query query = FirebaseFirestore.getInstance().collection(FirebaseConfig.EVENTS);
         if (buttonId == R.id.radio_button_game)
-            query = query.orderBy("game").orderBy("timestamp", Query.Direction.DESCENDING).startAt(inputString).endAt(inputString + "\uf8ff").limit(20);
+            query = query.orderBy("game").orderBy("timestamp", Query.Direction.DESCENDING).startAt(inputString.toLowerCase()).endAt(inputString.toLowerCase() + "\uf8ff").limit(20);
         if (buttonId == R.id.radio_button_place)
-            query = query.orderBy("location").orderBy("timestamp", Query.Direction.DESCENDING).startAt(inputString).endAt(inputString + "\uf8ff").limit(20);
+            query = query.orderBy("location").orderBy("timestamp", Query.Direction.DESCENDING).startAt(inputString.toLowerCase()).endAt(inputString.toLowerCase() + "\uf8ff").limit(20);
         return query;
     }
 
