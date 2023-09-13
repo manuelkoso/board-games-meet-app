@@ -16,7 +16,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -48,10 +47,11 @@ public class SignupFragment extends Fragment {
         loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory())
                 .get(LoginViewModel.class);
 
-        final TextInputLayout usernameLayout = binding.email;
-        final TextInputLayout passwordLayout = binding.password;
-        final EditText username = usernameLayout.getEditText();
-        final EditText password = passwordLayout.getEditText();
+        if (savedInstanceState != null) {
+            binding.email.getEditText().setText(savedInstanceState.getString("EMAIL"));
+            binding.password.getEditText().setText(savedInstanceState.getString("PASSWORD"));
+        }
+
 
         loginViewModel.getLoginFormState().observe(getViewLifecycleOwner(), loginFormState -> {
             if (loginFormState == null) {
@@ -66,9 +66,8 @@ public class SignupFragment extends Fragment {
                 return;
             }
             binding.loading.setVisibility(View.GONE);
-            showLoginResult(loginResult.getMessage());
             if (loginResult.getResult() == Result.FAILURE) {
-                usernameLayout.setError(getString(loginResult.getMessage()));
+                binding.email.setError(getString(loginResult.getMessage()));
             } else {
                 NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_navigation_signup_to_navigation_profile));
             }
@@ -87,18 +86,18 @@ public class SignupFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                loginViewModel.loginDataChanged(Objects.requireNonNull(username).getText().toString(),
-                        Objects.requireNonNull(password).getText().toString());
+                loginViewModel.loginDataChanged(Objects.requireNonNull(binding.email.getEditText()).getText().toString(),
+                        Objects.requireNonNull(binding.password.getEditText()).getText().toString());
             }
         };
 
-        Objects.requireNonNull(username).addTextChangedListener(afterTextChangedListener);
-        Objects.requireNonNull(password).addTextChangedListener(afterTextChangedListener);
+        Objects.requireNonNull(binding.email.getEditText()).addTextChangedListener(afterTextChangedListener);
+        Objects.requireNonNull(binding.password.getEditText()).addTextChangedListener(afterTextChangedListener);
 
         binding.signup.setOnClickListener(v -> {
             binding.loading.setVisibility(View.VISIBLE);
-            loginViewModel.signup(username.getText().toString(),
-                    password.getText().toString());
+            loginViewModel.signup(binding.email.getEditText().getText().toString(),
+                    binding.password.getEditText().getText().toString());
         });
 
         binding.gotoSignupButton.setOnClickListener(v-> NavHostFragment.findNavController(this).navigateUp());
@@ -118,13 +117,11 @@ public class SignupFragment extends Fragment {
         }
     }
 
-    private void showLoginResult(@StringRes Integer errorString) {
-        if (getContext() != null && getContext().getApplicationContext() != null) {
-            Toast.makeText(
-                    getContext().getApplicationContext(),
-                    errorString,
-                    Toast.LENGTH_LONG).show();
-        }
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putString("EMAIL", binding.email.getEditText().getText().toString());
+        outState.putString("PASSWORD", binding.password.getEditText().getText().toString());
+        super.onSaveInstanceState(outState);
     }
 
     @Override

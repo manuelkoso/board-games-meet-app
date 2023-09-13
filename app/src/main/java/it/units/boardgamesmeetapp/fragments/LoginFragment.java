@@ -3,7 +3,6 @@ package it.units.boardgamesmeetapp.fragments;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.ActionOnlyNavDirections;
 import androidx.navigation.fragment.NavHostFragment;
@@ -15,13 +14,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import java.util.Objects;
 
 import it.units.boardgamesmeetapp.databinding.FragmentLoginBinding;
 
 import it.units.boardgamesmeetapp.R;
+import it.units.boardgamesmeetapp.dialogs.PlayersDialog;
 import it.units.boardgamesmeetapp.utils.Result;
 import it.units.boardgamesmeetapp.viewmodels.MainViewModel;
 import it.units.boardgamesmeetapp.viewmodels.MainViewModelFactory;
@@ -50,6 +49,11 @@ public class LoginFragment extends Fragment {
         MainViewModel mainViewModel = new ViewModelProvider(requireActivity(), new MainViewModelFactory()).get(MainViewModel.class);
         mainViewModel.updateActionBarTitle(getResources().getString(R.string.board_games));
 
+        if (savedInstanceState != null) {
+            binding.email.getEditText().setText(savedInstanceState.getString("EMAIL"));
+            binding.password.getEditText().setText(savedInstanceState.getString("PASSWORD"));
+        }
+
         loginViewModel.getLoginResult().observe(getViewLifecycleOwner(), loginResult -> {
             if (loginResult == null) {
                 return;
@@ -57,7 +61,6 @@ public class LoginFragment extends Fragment {
             binding.loading.setVisibility(View.GONE);
             if (loginResult.getResult() == Result.FAILURE) {
                 setFieldsErrors(loginResult);
-                showLoginFailed(loginResult.getMessage());
             } else {
                 NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_navigation_login_to_navigation_home));
             }
@@ -117,13 +120,11 @@ public class LoginFragment extends Fragment {
         binding.password.setError(null);
     }
 
-    private void showLoginFailed(@StringRes Integer errorString) {
-        if (getContext() != null && getContext().getApplicationContext() != null) {
-            Toast.makeText(
-                    getContext().getApplicationContext(),
-                    errorString,
-                    Toast.LENGTH_LONG).show();
-        }
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putString("EMAIL", binding.email.getEditText().getText().toString());
+        outState.putString("PASSWORD", binding.password.getEditText().getText().toString());
+        super.onSaveInstanceState(outState);
     }
 
     @Override
