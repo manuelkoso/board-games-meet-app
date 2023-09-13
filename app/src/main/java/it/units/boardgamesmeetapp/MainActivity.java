@@ -2,6 +2,7 @@ package it.units.boardgamesmeetapp;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -45,11 +46,13 @@ public class MainActivity extends AppCompatActivity {
 
         navController.addOnDestinationChangedListener(((controller, destination, arguments) -> {
             if (destination.getId() == R.id.navigation_login || destination.getId() == R.id.navigation_signup) {
+                Menu menu = binding.topAppBar.getMenu();
+                menu.findItem(R.id.more).setVisible(false);
                 binding.navView.setVisibility(View.GONE);
-                Objects.requireNonNull(binding.topAppBar).setVisibility(View.GONE);
             } else {
+                Menu menu = binding.topAppBar.getMenu();
+                menu.findItem(R.id.more).setVisible(true);
                 binding.navView.setVisibility(View.VISIBLE);
-                Objects.requireNonNull(binding.topAppBar).setVisibility(View.VISIBLE);
             }
         }));
 
@@ -68,6 +71,5 @@ public class MainActivity extends AppCompatActivity {
             NavigationUI.setupWithNavController((NavigationView) binding.navView, navController);
         }
     }
-
 
 }
