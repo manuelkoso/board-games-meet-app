@@ -7,17 +7,31 @@
     android:padding="20dp"
     tools:context=".MainActivity">
 
+    <Button
+        android:id="@+id/dialog_close"
+        style="?attr/materialIconButtonFilledTonalStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:icon="@drawable/ic_baseline_keyboard_arrow_down_24"
+        app:layout_constraintBottom_toTopOf="@+id/filter_dialog_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed">
+
+    </Button>
+
     <TextView
         android:id="@+id/filter_dialog_title"
-        style="@style/TextAppearance.AppCompat.Display1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="10dp"
+        android:fontFamily="@font/yantramanav_medium"
         android:text="@string/filter_dialog_title"
+        android:textAppearance="?attr/textAppearanceHeadline5"
         app:layout_constraintBottom_toTopOf="@+id/radio_group"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/dialog_close"
         app:layout_constraintVertical_bias="0.5"
         app:layout_constraintVertical_chainStyle="packed" />
 
@@ -25,7 +39,6 @@
         android:id="@+id/radio_group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -35,12 +48,14 @@
             android:id="@+id/radio_button_game"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:fontFamily="@font/yantramanav"
             android:text="@string/game" />
 
         <RadioButton
             android:id="@+id/radio_button_place"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:fontFamily="@font/yantramanav"
             android:text="@string/place" />
 
     </RadioGroup>

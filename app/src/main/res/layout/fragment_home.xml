@@ -38,7 +38,6 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:elevation="0dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.914"
                 app:layout_constraintStart_toEndOf="@+id/search_bar"
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>

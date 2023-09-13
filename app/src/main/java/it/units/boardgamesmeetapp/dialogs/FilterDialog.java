@@ -27,6 +27,7 @@ public class FilterDialog {
             RadioButton button = binding.getRoot().findViewById(buttonId);
             button.setChecked(true);
         });
+        binding.dialogClose.setOnClickListener(v -> dialog.hide());
         dialog.setView(binding.getRoot());
     }
 

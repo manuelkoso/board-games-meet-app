@@ -17,6 +17,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
+import java.util.stream.Stream;
+
 import it.units.boardgamesmeetapp.database.FirebaseConfig;
 import it.units.boardgamesmeetapp.databinding.DialogEventPlayersBinding;
 import it.units.boardgamesmeetapp.databinding.SinglePlayerBinding;

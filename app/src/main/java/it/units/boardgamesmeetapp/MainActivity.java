@@ -16,6 +16,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -58,8 +59,13 @@ public class MainActivity extends AppCompatActivity {
 
         Objects.requireNonNull(binding.topAppBar).setOnMenuItemClickListener(item -> {
             if(item.getItemId() == R.id.more) {
-                viewModel.logout();
-                navController.navigate(R.id.action_global_loginFragment);
+                new MaterialAlertDialogBuilder(this).setTitle("Logout")
+                        .setMessage("Do you want to logout?")
+                        .setPositiveButton("Yes", (dialogInterface, i) -> {
+                            viewModel.logout();
+                            navController.navigate(R.id.action_global_loginFragment);
+                        }).setNegativeButton("No", ((dialogInterface, i) -> {
+                        })).show();
                 return true;
             }
             return false;

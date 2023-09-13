@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -65,9 +66,9 @@ public class HomeFragment extends Fragment {
         MainViewModel mainViewModel = new ViewModelProvider(requireActivity(), new MainViewModelFactory()).get(MainViewModel.class);
         mainViewModel.updateActionBarTitle("Find events");
         mainViewModel.updateActionBarBackButtonState(false);
-        if(savedInstanceState != null && (savedInstanceState.getBoolean("IS_EVENT_DIALOG_SHOWN"))) {
-                eventDialog = PlayersDialog.getInstance(this, Objects.requireNonNull(homeViewModel.getCurrentEventShown().getValue()));
-                eventDialog.show();
+        if (savedInstanceState != null && (savedInstanceState.getBoolean("IS_EVENT_DIALOG_SHOWN"))) {
+            eventDialog = PlayersDialog.getInstance(this, Objects.requireNonNull(homeViewModel.getCurrentEventShown().getValue()));
+            eventDialog.show();
         }
 
 
@@ -128,16 +129,18 @@ public class HomeFragment extends Fragment {
     @NonNull
     private static Query getFilterQuery(@NonNull Integer buttonId, @NonNull String inputString) {
         Query query = FirebaseFirestore.getInstance().collection(FirebaseConfig.EVENTS);
-        if(buttonId == R.id.radio_button_game) query = query.orderBy("game").orderBy("timestamp", Query.Direction.DESCENDING).startAt(inputString).endAt(inputString + "\uf8ff").limit(20);
-        if(buttonId == R.id.radio_button_place) query = query.orderBy("location").orderBy("timestamp", Query.Direction.DESCENDING).startAt(inputString).endAt(inputString + "\uf8ff").limit(20);
+        if (buttonId == R.id.radio_button_game)
+            query = query.orderBy("game").orderBy("timestamp", Query.Direction.DESCENDING).startAt(inputString).endAt(inputString + "\uf8ff").limit(20);
+        if (buttonId == R.id.radio_button_place)
+            query = query.orderBy("location").orderBy("timestamp", Query.Direction.DESCENDING).startAt(inputString).endAt(inputString + "\uf8ff").limit(20);
         return query;
     }
 
     @NonNull
     private static String getFilterFieldString(@NonNull Integer buttonId) {
         String field = "Search: ";
-        if(buttonId == R.id.radio_button_game) field = field.concat("Game");
-        if(buttonId == R.id.radio_button_place) field = field.concat("Place");
+        if (buttonId == R.id.radio_button_game) field = field.concat("Game");
+        if (buttonId == R.id.radio_button_place) field = field.concat("Place");
         return field;
     }
 
@@ -163,7 +166,7 @@ public class HomeFragment extends Fragment {
                 activityBinding.people.setText(String.valueOf(model.getPlayers().size() + "/" + model.getMaxNumberOfPlayers()));
                 activityBinding.eventButton.setText(R.string.submit);
 
-                if(model.getTimestamp() < new Date().getTime()) {
+                if (model.getTimestamp() < new Date().getTime()) {
                     activityBinding.eventButton.setText("Done");
                     activityBinding.eventButton.setEnabled(false);
                     return;
@@ -171,9 +174,14 @@ public class HomeFragment extends Fragment {
                 if (model.getPlayers().contains(FirebaseAuth.getInstance().getUid()) || model.getMaxNumberOfPlayers() == model.getPlayers().size())
                     activityBinding.eventButton.setEnabled(false);
                 activityBinding.eventButton.setOnClickListener(v -> {
-                    activityBinding.eventButton.setEnabled(false);
-                    homeViewModel.submit(model);
-                    showLoginResult(R.string.submit);
+                    new MaterialAlertDialogBuilder(requireContext()).setTitle("Subscription")
+                            .setMessage("Do you want to subscribe to this event?")
+                            .setPositiveButton("Yes", (dialogInterface, i) -> {
+                                homeViewModel.submit(model);
+                                activityBinding.eventButton.setEnabled(false);
+                                showLoginResult(R.string.submit);
+                            }).setNegativeButton("No", ((dialogInterface, i) -> {
+                            })).show();
                 });
                 activityBinding.card.setOnClickListener(v -> {
                     homeViewModel.updateCurrentEventShown(model);

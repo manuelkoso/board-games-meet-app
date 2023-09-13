@@ -23,7 +23,7 @@
             android:background="?attr/colorSecondaryContainer"
             android:layout_height="?attr/actionBarSize"
             app:menu="@menu/top_app_bar"
-            app:title="@string/app_name" />
+            app:title="@string/board_games" />
 
     </com.google.android.material.appbar.AppBarLayout>
 

@@ -152,7 +152,7 @@ public class DashboardFragment extends Fragment {
                 } else {
                     activityBinding.eventButton.setText(R.string.unsubscribe);
                     activityBinding.eventButton.setOnClickListener(v -> {
-                        new MaterialAlertDialogBuilder(requireContext()).setTitle(R.string.cancel_the_event)
+                        new MaterialAlertDialogBuilder(requireContext()).setTitle(R.string.unsubscribe)
                                 .setMessage("Do you want to unsubscribe to this event?")
                                 .setPositiveButton("Yes", (dialogInterface, i) -> {
                                     viewModel.unsubscribe(model);

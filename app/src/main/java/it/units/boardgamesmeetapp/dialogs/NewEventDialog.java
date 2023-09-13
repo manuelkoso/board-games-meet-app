@@ -55,7 +55,7 @@ public class NewEventDialog {
         addTextWatcherOnFields();
 
         binding.button.setText("Create");
-
+        binding.dialogClose.setOnClickListener(v -> dialog.hide());
         binding.button.setOnClickListener(v -> {
             binding.loading.setVisibility(View.VISIBLE);
             viewModel.addNewEvent(game.getText().toString(), numberOfPlayers.getText().toString(), place.getText().toString(), date.getText().toString(), time.getText().toString());
@@ -88,7 +88,7 @@ public class NewEventDialog {
         initFormFields();
         buildDataTimePickers(fragment);
         addTextWatcherOnFields();
-
+        binding.dialogClose.setOnClickListener(v -> dialog.hide());
         binding.button.setText("Modify");
 
         binding.button.setOnClickListener(v -> {

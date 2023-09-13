@@ -24,11 +24,12 @@
 
             <TextView
                 android:id="@+id/app_name"
-                style="@style/TextAppearance.AppCompat.Display1"
+                android:textAppearance="?attr/textAppearanceHeadline3"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="10dp"
+                android:fontFamily="@font/monofett"
                 android:gravity="center"
                 android:text="@string/board_games"
                 app:layout_constraintBottom_toTopOf="@+id/logo"
@@ -38,11 +39,11 @@
 
             <ImageView
                 android:id="@+id/logo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
                 android:layout_marginBottom="24dp"
                 android:contentDescription="@string/app_logo"
-                android:src="@drawable/logo"
+                android:src="@drawable/icons8_dice_100"
                 app:layout_constraintBottom_toTopOf="@id/email"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -63,6 +64,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/logo">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:fontFamily="@font/yantramanav_medium"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textEmailAddress" />
@@ -84,6 +86,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
+                    android:fontFamily="@font/yantramanav_medium"
                     android:layout_height="wrap_content"
                     android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -94,6 +97,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
                 android:layout_marginBottom="16dp"
+                android:fontFamily="@font/yantramanav_medium"
                 android:text="@string/login"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -121,6 +125,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
+        android:fontFamily="@font/yantramanav_medium"
+        android:textAppearance="?attr/textAppearanceBodyLarge"
         android:text="@string/signup_hint"
         app:layout_constraintBottom_toTopOf="@+id/goto_signup_button"
         app:layout_constraintEnd_toEndOf="parent"
