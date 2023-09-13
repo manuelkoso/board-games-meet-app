@@ -126,6 +126,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
         android:fontFamily="@font/yantramanav_medium"
+        android:textAppearance="?attr/textAppearanceBodyLarge"
         android:text="@string/login_hint"
         app:layout_constraintBottom_toTopOf="@+id/goto_signup_button"
         app:layout_constraintEnd_toEndOf="parent"
