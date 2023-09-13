@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -63,9 +64,12 @@ public class PlayersDialog {
             }
         };
         recyclerView.setAdapter(adapter);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(fragment.requireContext(), LinearLayoutManager.VERTICAL, false);
+        // GridLayoutManager gridLayoutManager = new GridLayoutManager(fragment.requireContext(), 2);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(fragment.requireContext(), LinearLayoutManager.HORIZONTAL, false);
+        
         recyclerView.setLayoutManager(layoutManager);
         adapter.startListening();
+        dialog.setTitle("Players");
         dialog.setView(dialogEventPlayersBinding.getRoot());
         
     }
