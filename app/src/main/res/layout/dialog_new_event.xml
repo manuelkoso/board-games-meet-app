@@ -81,7 +81,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/number_of_players"
-            app:startIconDrawable="@android:drawable/ic_dialog_map">
+            app:startIconDrawable="@drawable/map_pin_alt_svgrepo_com">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
@@ -103,7 +103,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/place"
-            app:startIconDrawable="@android:drawable/ic_menu_my_calendar">
+            app:startIconDrawable="@drawable/calendar_days_svgrepo_com">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
@@ -128,7 +128,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/date"
-            app:startIconDrawable="@android:drawable/ic_menu_recent_history">
+            app:startIconDrawable="@drawable/history">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"

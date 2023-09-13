@@ -51,8 +51,7 @@ public class PlayersDialog {
             protected void onBindViewHolder(@NonNull PlayersViewHolder holder, int position, @NonNull User model) {
                 SinglePlayerBinding binding = holder.getBinding();
                 UserInfo userInfo = model.getInfo();
-                binding.name.append(userInfo.getName());
-                binding.surname.append(userInfo.getSurname());
+                binding.name.append(userInfo.getName() + " " + userInfo.getSurname());
                 binding.age.append(String.valueOf(userInfo.getAge()));
                 binding.game.append(userInfo.getFavouriteGame());
                 binding.place.append(userInfo.getFavouritePlace());
