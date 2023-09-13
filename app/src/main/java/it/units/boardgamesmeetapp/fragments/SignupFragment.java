@@ -68,6 +68,9 @@ public class SignupFragment extends Fragment {
             binding.loading.setVisibility(View.GONE);
             if (loginResult.getResult() == Result.FAILURE) {
                 binding.email.setError(getString(loginResult.getMessage()));
+            } else if (loginResult.getResult() == Result.NETWORK_FAILURE) {
+                binding.email.setError(getString(loginResult.getMessage()));
+                binding.password.setError(getString(loginResult.getMessage()));
             } else {
                 NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_navigation_signup_to_navigation_profile));
             }
@@ -91,16 +94,24 @@ public class SignupFragment extends Fragment {
             }
         };
 
-        Objects.requireNonNull(binding.email.getEditText()).addTextChangedListener(afterTextChangedListener);
-        Objects.requireNonNull(binding.password.getEditText()).addTextChangedListener(afterTextChangedListener);
+        Objects.requireNonNull(binding.email.getEditText()).
 
-        binding.signup.setOnClickListener(v -> {
+                addTextChangedListener(afterTextChangedListener);
+        Objects.requireNonNull(binding.password.getEditText()).
+
+                addTextChangedListener(afterTextChangedListener);
+
+        binding.signup.setOnClickListener(v ->
+
+        {
             binding.loading.setVisibility(View.VISIBLE);
             loginViewModel.signup(binding.email.getEditText().getText().toString(),
                     binding.password.getEditText().getText().toString());
         });
 
-        binding.gotoSignupButton.setOnClickListener(v-> NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_global_loginFragment)));
+        binding.gotoSignupButton.setOnClickListener(v -> NavHostFragment.findNavController(this).
+
+                navigate(new ActionOnlyNavDirections(R.id.action_global_loginFragment)));
     }
 
     private void setFieldErrors(@NonNull LoginState loginFormState) {

@@ -1,6 +1,7 @@
 package it.units.boardgamesmeetapp.viewmodels.login;
 
 import static it.units.boardgamesmeetapp.utils.Result.FAILURE;
+import static it.units.boardgamesmeetapp.utils.Result.NETWORK_FAILURE;
 import static it.units.boardgamesmeetapp.utils.Result.SUCCESS;
 
 import androidx.annotation.NonNull;
@@ -12,6 +13,7 @@ import androidx.lifecycle.ViewModel;
 import android.util.Log;
 import android.util.Patterns;
 
+import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -107,8 +109,13 @@ public class LoginViewModel extends ViewModel {
                 DocumentReference reference = firebaseFirestore.collection(FirebaseConfig.USERS).document(user.getId());
                 reference.set(user);
             } else {
+                if(task.getException() instanceof FirebaseNetworkException) {
+                    loginResult.setValue(new LoginResult(NETWORK_FAILURE, R.string.network_failure));
+                } else {
+                    loginResult.setValue(new LoginResult(FAILURE, R.string.signup_failed));
+                }
                 Log.w(FirebaseConfig.TAG, task.getException());
-                loginResult.setValue(new LoginResult(FAILURE, R.string.signup_failed));
+
             }
         });
     }

@@ -4,5 +4,6 @@ public enum Result {
     SUCCESS,
     FAILURE,
     NONE,
-    OLD_DATE
+    OLD_DATE,
+    NETWORK_FAILURE
 }
