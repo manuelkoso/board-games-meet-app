@@ -16,17 +16,15 @@ import it.units.boardgamesmeetapp.viewmodels.home.HomeViewModelFactory;
 
 public class FilterDialog {
     @NonNull
-    private AlertDialog dialog;
+    private final AlertDialog dialog;
 
     private FilterDialog(@NonNull Fragment fragment) {
         this.dialog = new MaterialAlertDialogBuilder(fragment.requireContext()).create();
         DialogFilterBinding binding = DialogFilterBinding.inflate(LayoutInflater.from(fragment.requireContext()));
         HomeViewModel viewModel =  new ViewModelProvider(fragment, new HomeViewModelFactory()).get(HomeViewModel.class);
+
         binding.radioGroup.setOnCheckedChangeListener((radioGroup, radioButtonId) -> viewModel.updateFilterField(radioButtonId));
-        viewModel.getRadioButtonIdMutableLiveData().observe(fragment.getViewLifecycleOwner(), buttonId -> {
-            RadioButton button = binding.getRoot().findViewById(buttonId);
-            button.setChecked(true);
-        });
+        viewModel.getRadioButtonIdMutableLiveData().observe(fragment.getViewLifecycleOwner(), buttonId -> ((RadioButton) binding.getRoot().findViewById(buttonId)).setChecked(true));
         binding.dialogClose.setOnClickListener(v -> dialog.hide());
         dialog.setView(binding.getRoot());
     }
