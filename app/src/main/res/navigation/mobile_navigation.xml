@@ -24,13 +24,8 @@
     <fragment
         android:id="@+id/navigation_profile"
         android:name="it.units.boardgamesmeetapp.fragments.ProfileFragment"
-        android:label="@string/title_profile"
-        tools:layout="@layout/dialog_profile_information" >
-        <action
-            android:id="@+id/action_navigation_profile_to_navigation_history"
-            app:destination="@id/navigation_history"
-            app:popUpTo="@id/navigation_profile"
-            app:popUpToInclusive="false" />
+        android:label="@string/profile"
+        tools:layout="@layout/fragment_profile" >
     </fragment>
     <fragment
         android:id="@+id/navigation_login"

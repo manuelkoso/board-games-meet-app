@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         Objects.requireNonNull(binding.topAppBar).setOnMenuItemClickListener(item -> {
             if(item.getItemId() == R.id.more) {
                 viewModel.logout();
-                navController.navigate(R.id.navigation_login);
+                navController.navigate(R.id.action_global_loginFragment);
                 return true;
             }
             return false;
