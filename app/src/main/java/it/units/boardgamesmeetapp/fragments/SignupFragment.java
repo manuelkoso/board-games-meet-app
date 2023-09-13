@@ -100,8 +100,7 @@ public class SignupFragment extends Fragment {
                     binding.password.getEditText().getText().toString());
         });
 
-        binding.gotoSignupButton.setOnClickListener(v-> NavHostFragment.findNavController(this).navigateUp());
-
+        binding.gotoSignupButton.setOnClickListener(v-> NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_global_loginFragment)));
     }
 
     private void setFieldErrors(@NonNull LoginState loginFormState) {

@@ -146,8 +146,8 @@ public class DashboardFragment extends Fragment {
                     });
                     activityBinding.modifyButton.setVisibility(View.VISIBLE);
                     activityBinding.modifyButton.setOnClickListener(v -> {
-                        eventDialog = NewEventDialog.getInstanceWithInitialEvent(DashboardFragment.this, model);
-                        eventDialog.show();
+                        addEventDialog = NewEventDialog.getInstanceWithInitialEvent(DashboardFragment.this, model);
+                        addEventDialog.show();
                     });
                 } else {
                     activityBinding.eventButton.setText(R.string.unsubscribe);
