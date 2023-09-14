@@ -18,8 +18,8 @@ import com.google.android.material.navigation.NavigationView;
 import java.util.Objects;
 
 import it.units.boardgamesmeetapp.databinding.ActivityMainBinding;
-import it.units.boardgamesmeetapp.viewmodels.MainViewModel;
-import it.units.boardgamesmeetapp.viewmodels.MainViewModelFactory;
+import it.units.boardgamesmeetapp.viewmodels.main.MainViewModel;
+import it.units.boardgamesmeetapp.viewmodels.main.MainViewModelFactory;
 
 public class MainActivity extends AppCompatActivity {
 

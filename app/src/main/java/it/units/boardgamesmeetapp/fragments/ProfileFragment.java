@@ -19,8 +19,8 @@ import java.util.Objects;
 
 import it.units.boardgamesmeetapp.databinding.FragmentProfileBinding;
 import it.units.boardgamesmeetapp.models.UserInfo;
-import it.units.boardgamesmeetapp.viewmodels.MainViewModel;
-import it.units.boardgamesmeetapp.viewmodels.MainViewModelFactory;
+import it.units.boardgamesmeetapp.viewmodels.main.MainViewModel;
+import it.units.boardgamesmeetapp.viewmodels.main.MainViewModelFactory;
 import it.units.boardgamesmeetapp.viewmodels.profile.ProfileViewModel;
 import it.units.boardgamesmeetapp.viewmodels.profile.ProfileViewModelFactory;
 

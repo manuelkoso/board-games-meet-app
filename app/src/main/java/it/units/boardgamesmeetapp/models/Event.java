@@ -1,13 +1,17 @@
 package it.units.boardgamesmeetapp.models;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 @IgnoreExtraProperties
@@ -21,7 +25,7 @@ public class Event {
     private String location;
     private long timestamp;
 
-    public Event(@NonNull String key, @NonNull String ownerId, @NonNull String game, int maxNumberOfPlayers, @NonNull String location, long timestamp) {
+    public Event(String key, String ownerId, String game, int maxNumberOfPlayers, String location, long timestamp) {
         this.ownerId = ownerId;
         this.game = game;
         this.timestamp = timestamp;
@@ -64,7 +68,7 @@ public class Event {
         return location;
     }
 
-    @NonNull
+    @Nullable
     public String getKey() {
         return key;
     }
@@ -72,6 +76,18 @@ public class Event {
     public void addPlayer(String playerId) {
         if (!players.contains(playerId) && players.size() < maxNumberOfPlayers)
             this.players.add(playerId);
+    }
+
+    public String getDate() {
+        Date date = new Date(timestamp);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
+        return dateFormat.format(date);
+    }
+
+    public String getTime() {
+        Date date = new Date(timestamp);
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        return timeFormat.format(date);
     }
 
     @Exclude

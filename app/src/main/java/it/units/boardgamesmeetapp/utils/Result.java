@@ -3,7 +3,8 @@ package it.units.boardgamesmeetapp.utils;
 public enum Result {
     SUCCESS,
     FAILURE,
+    EMPTY_FIELD,
     NONE,
     OLD_DATE,
-    NETWORK_FAILURE
+    WRONG_NUMBER_PLAYERS, NETWORK_FAILURE
 }

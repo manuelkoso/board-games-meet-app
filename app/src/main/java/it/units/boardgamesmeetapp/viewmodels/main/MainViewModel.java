@@ -1,4 +1,4 @@
-package it.units.boardgamesmeetapp.viewmodels;
+package it.units.boardgamesmeetapp.viewmodels.main;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;

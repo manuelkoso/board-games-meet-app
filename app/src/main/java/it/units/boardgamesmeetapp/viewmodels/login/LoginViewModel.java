@@ -23,6 +23,7 @@ import java.util.Objects;
 import it.units.boardgamesmeetapp.R;
 import it.units.boardgamesmeetapp.database.FirebaseConfig;
 import it.units.boardgamesmeetapp.models.User;
+import it.units.boardgamesmeetapp.viewmodels.SubmissionResult;
 
 public class LoginViewModel extends ViewModel {
     private static final String LOGIN_FAILED_MESSAGE = "Login failed!";
@@ -33,7 +34,7 @@ public class LoginViewModel extends ViewModel {
     @NonNull
     private final FirebaseFirestore firebaseFirestore;
     private final MutableLiveData<LoginState> loginFormState = new MutableLiveData<>();
-    private final MutableLiveData<LoginResult> loginResult = new MutableLiveData<>();
+    private final MutableLiveData<SubmissionResult> loginResult = new MutableLiveData<>();
 
     public LoginViewModel(@NonNull FirebaseAuth firebaseAuth, @NonNull FirebaseFirestore firebaseFirestore) {
         this.firebaseFirestore = firebaseFirestore;
@@ -44,7 +45,7 @@ public class LoginViewModel extends ViewModel {
         return loginFormState;
     }
 
-    public @NonNull LiveData<LoginResult> getLoginResult() {
+    public @NonNull LiveData<SubmissionResult> getLoginResult() {
         if (isAlreadyLoggedIn()) {
             updateLoginResult();
         }
@@ -53,7 +54,7 @@ public class LoginViewModel extends ViewModel {
 
     private void updateLoginResult() {
         if (loginResult.getValue() == null)
-            loginResult.setValue(new LoginResult(SUCCESS));
+            loginResult.setValue(new SubmissionResult(SUCCESS));
     }
 
     private boolean isAlreadyLoggedIn() {
@@ -69,10 +70,10 @@ public class LoginViewModel extends ViewModel {
         firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Log.d(FirebaseConfig.TAG, LOGIN_SUCCESS_MESSAGE);
-                loginResult.setValue(new LoginResult(SUCCESS));
+                loginResult.setValue(new SubmissionResult(SUCCESS));
             } else {
                 Log.w(FirebaseConfig.TAG, task.getException());
-                loginResult.setValue(new LoginResult(FAILURE, R.string.login_failed));
+                loginResult.setValue(new SubmissionResult(FAILURE, R.string.login_failed));
             }
         });
     }
@@ -80,11 +81,11 @@ public class LoginViewModel extends ViewModel {
     private boolean isInputEmpty(@NonNull String email, @NonNull String password) {
         if (email.isEmpty()) {
             Log.w(FirebaseConfig.TAG, LOGIN_FAILED_MESSAGE);
-            loginResult.setValue(new LoginResult(FAILURE, R.string.email_empty));
+            loginResult.setValue(new SubmissionResult(FAILURE, R.string.email_empty));
             return true;
         } else if (password.isEmpty()) {
             Log.w(FirebaseConfig.TAG, LOGIN_FAILED_MESSAGE);
-            loginResult.setValue(new LoginResult(FAILURE, R.string.password_empty));
+            loginResult.setValue(new SubmissionResult(FAILURE, R.string.password_empty));
             return true;
         }
         return false;
@@ -104,15 +105,15 @@ public class LoginViewModel extends ViewModel {
         firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Log.d(FirebaseConfig.TAG, LOGIN_SUCCESS_MESSAGE);
-                loginResult.setValue(new LoginResult(SUCCESS, R.string.signup_success));
+                loginResult.setValue(new SubmissionResult(SUCCESS, R.string.signup_success));
                 User user = new User(Objects.requireNonNull(firebaseAuth.getUid()));
                 DocumentReference reference = firebaseFirestore.collection(FirebaseConfig.USERS).document(user.getId());
                 reference.set(user);
             } else {
                 if(task.getException() instanceof FirebaseNetworkException) {
-                    loginResult.setValue(new LoginResult(NETWORK_FAILURE, R.string.network_failure));
+                    loginResult.setValue(new SubmissionResult(NETWORK_FAILURE, R.string.network_failure));
                 } else {
-                    loginResult.setValue(new LoginResult(FAILURE, R.string.signup_failed));
+                    loginResult.setValue(new SubmissionResult(FAILURE, R.string.signup_failed));
                 }
                 Log.w(FirebaseConfig.TAG, task.getException());
 

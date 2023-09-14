@@ -20,11 +20,10 @@ import java.util.Objects;
 import it.units.boardgamesmeetapp.databinding.FragmentLoginBinding;
 
 import it.units.boardgamesmeetapp.R;
-import it.units.boardgamesmeetapp.dialogs.PlayersDialog;
 import it.units.boardgamesmeetapp.utils.Result;
-import it.units.boardgamesmeetapp.viewmodels.MainViewModel;
-import it.units.boardgamesmeetapp.viewmodels.MainViewModelFactory;
-import it.units.boardgamesmeetapp.viewmodels.login.LoginResult;
+import it.units.boardgamesmeetapp.viewmodels.main.MainViewModel;
+import it.units.boardgamesmeetapp.viewmodels.main.MainViewModelFactory;
+import it.units.boardgamesmeetapp.viewmodels.SubmissionResult;
 import it.units.boardgamesmeetapp.viewmodels.login.LoginViewModel;
 import it.units.boardgamesmeetapp.viewmodels.login.LoginViewModelFactory;
 
@@ -104,7 +103,7 @@ public class LoginFragment extends Fragment {
 
     }
 
-    private void setFieldsErrors(LoginResult loginResult) {
+    private void setFieldsErrors(SubmissionResult loginResult) {
         if (loginResult.getMessage() == R.string.email_empty) {
             binding.email.setError(getResources().getString(loginResult.getMessage()));
         } else if (loginResult.getMessage() == R.string.password_empty) {

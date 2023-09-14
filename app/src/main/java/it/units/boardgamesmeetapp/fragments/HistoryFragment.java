@@ -30,8 +30,8 @@ import it.units.boardgamesmeetapp.database.FirebaseConfig;
 import it.units.boardgamesmeetapp.databinding.FragmentHistoryBinding;
 import it.units.boardgamesmeetapp.databinding.SingleEventBinding;
 import it.units.boardgamesmeetapp.models.Event;
-import it.units.boardgamesmeetapp.viewmodels.MainViewModel;
-import it.units.boardgamesmeetapp.viewmodels.MainViewModelFactory;
+import it.units.boardgamesmeetapp.viewmodels.main.MainViewModel;
+import it.units.boardgamesmeetapp.viewmodels.main.MainViewModelFactory;
 
 public class HistoryFragment extends Fragment {
 

@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
@@ -17,7 +18,9 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.timepicker.MaterialTimePicker;
+import com.google.firebase.auth.FirebaseAuth;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -30,93 +33,92 @@ import it.units.boardgamesmeetapp.databinding.DialogNewEventBinding;
 import it.units.boardgamesmeetapp.viewmodels.newevent.NewEventViewModel;
 import it.units.boardgamesmeetapp.viewmodels.newevent.NewEventViewModelFactory;
 import it.units.boardgamesmeetapp.models.Event;
-import it.units.boardgamesmeetapp.utils.Result;
 
 public class NewEventDialog {
-
-    private AlertDialog dialog;
+    @NonNull
+    private final AlertDialog dialog;
     @NonNull
     private final DialogNewEventBinding binding;
     @NonNull
     private final NewEventViewModel viewModel;
+    @Nullable
+    private final Event initialEvent;
     private EditText game;
     private EditText numberOfPlayers;
     private EditText place;
     private EditText date;
     private EditText time;
 
-    private NewEventDialog(@NonNull Fragment fragment) {
-        this.dialog = new MaterialAlertDialogBuilder(fragment.requireContext()).create();
+    private NewEventDialog(@NonNull Fragment fragment, @Nullable Event initialEvent) {
+        dialog = new MaterialAlertDialogBuilder(fragment.requireContext()).create();
         binding = DialogNewEventBinding.inflate(LayoutInflater.from(fragment.requireContext()));
         viewModel = new ViewModelProvider(fragment.getViewModelStore(), new NewEventViewModelFactory()).get(NewEventViewModel.class);
+        this.initialEvent = initialEvent;
+
         viewModel.resetSubmissionResult();
-        initFormFields();
-        buildDataTimePickers(fragment);
-        addTextWatcherOnFields();
+        viewModel.setEventKey(getEventKey());
 
-        binding.button.setText("Create");
+        initDialog(fragment);
+
         binding.dialogClose.setOnClickListener(v -> dialog.hide());
-        binding.button.setOnClickListener(v -> {
+        binding.submitEventButton.setOnClickListener(v -> {
             binding.loading.setVisibility(View.VISIBLE);
-            viewModel.addNewEvent(game.getText().toString(), numberOfPlayers.getText().toString(), place.getText().toString(), date.getText().toString(), time.getText().toString());
-        });
-        viewModel.getSubmissionResult().observe(fragment.getViewLifecycleOwner(), submissionResult -> {
-            removeFieldErrors();
-            if (submissionResult == Result.NONE) return;
-            if (submissionResult == Result.FAILURE) {
-                binding.loading.setVisibility(View.GONE);
-                setFieldErrors();
-                showLoginResult(fragment.requireContext(), R.string.new_event_failed);
-            } else if (submissionResult == Result.SUCCESS) {
-                showLoginResult(fragment.requireContext(), R.string.new_event_success);
-                dialog.hide();
-            } else if(submissionResult == Result.OLD_DATE) {
-                binding.loading.setVisibility(View.GONE);
-                binding.date.setError("We cannot travel in the past!");
-                binding.time.setError("We cannot travel in the past!");
-            }
-        });
-        dialog.setView(binding.getRoot());
-    }
-
-    private NewEventDialog(@NonNull Fragment fragment, @NonNull Event initialEvent) {
-        this.dialog = new MaterialAlertDialogBuilder(fragment.requireContext()).create();
-        binding = DialogNewEventBinding.inflate(LayoutInflater.from(fragment.requireContext()));
-        viewModel = new ViewModelProvider(fragment.getViewModelStore(), new NewEventViewModelFactory()).get(NewEventViewModel.class);
-        viewModel.resetSubmissionResult();
-        viewModel.updateCurrentEvent(initialEvent);
-        initFormFields();
-        buildDataTimePickers(fragment);
-        addTextWatcherOnFields();
-        binding.dialogClose.setOnClickListener(v -> dialog.hide());
-        binding.button.setText("Modify");
-
-        binding.button.setOnClickListener(v -> {
-            binding.loading.setVisibility(View.VISIBLE);
-            viewModel.modifyEvent(initialEvent.getKey(), game.getText().toString(), numberOfPlayers.getText().toString(), place.getText().toString(), date.getText().toString(), time.getText().toString());
+            submitNewEvent();
         });
 
         viewModel.getSubmissionResult().observe(fragment.getViewLifecycleOwner(), submissionResult -> {
             removeFieldErrors();
-            if (submissionResult == Result.NONE) return;
-            if (submissionResult == Result.FAILURE) {
-                binding.loading.setVisibility(View.GONE);
-                setFieldErrors();
-                showLoginResult(fragment.requireContext(), R.string.new_event_failed);
-            } else if (submissionResult == Result.SUCCESS) {
-                showLoginResult(fragment.requireContext(), R.string.new_event_success);
-                dialog.hide();
-            } else if(submissionResult == Result.OLD_DATE) {
-                binding.loading.setVisibility(View.GONE);
-                binding.date.setError("We cannot travel in the past!");
-                binding.time.setError("We cannot travel in the past!");
+            binding.loading.setVisibility(View.GONE);
+            switch (submissionResult.getResult()) {
+                case EMPTY_FIELD:
+                    setFieldErrorOnEmptyFields();
+                    break;
+                case OLD_DATE:
+                    binding.date.setError(fragment.getResources().getString(submissionResult.getMessage()));
+                    binding.time.setError(fragment.getResources().getString(submissionResult.getMessage()));
+                    break;
+                case SUCCESS:
+                    showResult(fragment.requireContext(), submissionResult.getMessage());
+                    dialog.hide();
+                    break;
+                case WRONG_NUMBER_PLAYERS:
+                    binding.numberOfPlayers.setError(fragment.getResources().getString(submissionResult.getMessage()));
+                    break;
+                case NONE:
+                    return;
+                default:
+                    showResult(fragment.requireContext(), submissionResult.getMessage());
             }
         });
-
+        viewModel.resetSubmissionResult();
         dialog.setView(binding.getRoot());
     }
 
-    private void addTextWatcherOnFields() {
+    private void initDialog(@NonNull Fragment fragment) {
+        initFormFields();
+        buildDataPicker(fragment);
+        buildTimePicker(fragment);
+        setTextButton();
+    }
+
+    private @Nullable String getEventKey() {
+        if (initialEvent != null) return initialEvent.getKey();
+        return null;
+    }
+
+    private void submitNewEvent() {
+        viewModel.submit();
+    }
+
+    private void setTextButton() {
+        if (initialEvent != null) {
+            binding.submitEventButton.setText(R.string.modify);
+        } else {
+            binding.submitEventButton.setText(R.string.create);
+        }
+    }
+
+    private void addTextWatcher() {
         TextWatcher afterTextChangedListener = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -136,7 +138,7 @@ public class NewEventDialog {
         Stream.of(game, numberOfPlayers, place, date, time).forEach(field -> field.addTextChangedListener(afterTextChangedListener));
     }
 
-    private void buildDataTimePickers(@NonNull Fragment fragment) {
+    private void buildDataPicker(@NonNull Fragment fragment) {
         MaterialDatePicker<Long> materialDatePicker = MaterialDatePicker.Builder.datePicker().setTitleText("Select date").build();
         date.setOnClickListener(v -> {
             Stream.of(game, numberOfPlayers, place).forEach(View::clearFocus);
@@ -146,10 +148,12 @@ public class NewEventDialog {
             Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
             calendar.setTimeInMillis(selection);
             SimpleDateFormat format = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
-            String formattedDate  = format.format(calendar.getTime());
+            String formattedDate = format.format(calendar.getTime());
             date.setText(formattedDate);
         });
+    }
 
+    private void buildTimePicker(@NonNull Fragment fragment) {
         MaterialTimePicker timePicker = new MaterialTimePicker.Builder().setTitleText("Select time").build();
         time.setOnClickListener(v -> {
             Stream.of(game, numberOfPlayers, place).forEach(View::clearFocus);
@@ -159,28 +163,30 @@ public class NewEventDialog {
     }
 
     private void initFormFields() {
-        this.game = Objects.requireNonNull(binding.game.getEditText());
-        this.numberOfPlayers = Objects.requireNonNull(binding.numberOfPlayers.getEditText());
-        this.place = Objects.requireNonNull(binding.place.getEditText());
-        this.date = Objects.requireNonNull(binding.date.getEditText());
-        this.time = Objects.requireNonNull(binding.time.getEditText());
+        game = Objects.requireNonNull(binding.game.getEditText());
+        numberOfPlayers = Objects.requireNonNull(binding.numberOfPlayers.getEditText());
+        place = Objects.requireNonNull(binding.place.getEditText());
+        date = Objects.requireNonNull(binding.date.getEditText());
+        time = Objects.requireNonNull(binding.time.getEditText());
 
         game.setText(viewModel.getCurrentGame().getValue());
         numberOfPlayers.setText(viewModel.getCurrentNumberOfPlayers().getValue());
         place.setText(viewModel.getCurrentPlace().getValue());
         date.setText(viewModel.getCurrentDate().getValue());
         time.setText(viewModel.getCurrentTime().getValue());
+
+        addTextWatcher();
     }
 
     private void removeFieldErrors() {
         Stream.of(binding.game, binding.numberOfPlayers, binding.place, binding.date, binding.time).forEach(field -> field.setError(null));
     }
 
-    private void setFieldErrors() {
+    private void setFieldErrorOnEmptyFields() {
         Stream.of(binding.game, binding.numberOfPlayers, binding.place, binding.date, binding.time).filter(field -> Objects.requireNonNull(field.getEditText()).getText().toString().isEmpty()).forEach(field -> field.setError("Empty field!"));
     }
 
-    private void showLoginResult(@NonNull Context context, @StringRes Integer message) {
+    private void showResult(@NonNull Context context, @StringRes Integer message) {
         if (context.getApplicationContext() != null) {
             Toast.makeText(
                     context.getApplicationContext(),
@@ -189,12 +195,7 @@ public class NewEventDialog {
         }
     }
 
-    public static @NonNull AlertDialog getInstance(@NonNull Fragment fragment) {
-        NewEventDialog newEventDialog = new NewEventDialog(fragment);
-        return newEventDialog.dialog;
-    }
-
-    public static @NonNull AlertDialog getInstanceWithInitialEvent(@NonNull Fragment fragment, @NonNull Event event) {
+    public static @NonNull AlertDialog getInstance(@NonNull Fragment fragment, @Nullable Event event) {
         NewEventDialog newEventDialog = new NewEventDialog(fragment, event);
         return newEventDialog.dialog;
     }

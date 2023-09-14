@@ -1,8 +1,10 @@
-package it.units.boardgamesmeetapp.viewmodels;
+package it.units.boardgamesmeetapp.viewmodels.main;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
+
+import it.units.boardgamesmeetapp.viewmodels.main.MainViewModel;
 
 public class MainViewModelFactory implements ViewModelProvider.Factory {
 

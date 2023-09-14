@@ -31,16 +31,14 @@ import java.util.Objects;
 import it.units.boardgamesmeetapp.R;
 import it.units.boardgamesmeetapp.databinding.DashboardEventBinding;
 import it.units.boardgamesmeetapp.viewholders.DashboardEventViewHolder;
-import it.units.boardgamesmeetapp.viewmodels.MainViewModel;
-import it.units.boardgamesmeetapp.viewmodels.MainViewModelFactory;
+import it.units.boardgamesmeetapp.viewmodels.main.MainViewModel;
+import it.units.boardgamesmeetapp.viewmodels.main.MainViewModelFactory;
 import it.units.boardgamesmeetapp.viewmodels.dashboard.DashboardViewModel;
 import it.units.boardgamesmeetapp.viewmodels.dashboard.DashboardViewModelFactory;
-import it.units.boardgamesmeetapp.viewholders.EventViewHolder;
 import it.units.boardgamesmeetapp.dialogs.PlayersDialog;
 import it.units.boardgamesmeetapp.dialogs.NewEventDialog;
 import it.units.boardgamesmeetapp.database.FirebaseConfig;
 import it.units.boardgamesmeetapp.databinding.FragmentDashboardBinding;
-import it.units.boardgamesmeetapp.databinding.SingleEventBinding;
 import it.units.boardgamesmeetapp.models.Event;
 
 public class DashboardFragment extends Fragment {
@@ -67,7 +65,7 @@ public class DashboardFragment extends Fragment {
 
         if (savedInstanceState != null) {
             if (savedInstanceState.getBoolean("IS_ADD_EVENT_DIALOG_SHOWN")) {
-                addEventDialog = NewEventDialog.getInstance(this);
+                addEventDialog = NewEventDialog.getInstance(this, null);
                 addEventDialog.show();
             }
             if (savedInstanceState.getBoolean("IS_EVENT_DIALOG_SHOWN")) {
@@ -77,7 +75,7 @@ public class DashboardFragment extends Fragment {
         }
 
         binding.newActivityButton.setOnClickListener(v -> {
-            addEventDialog = NewEventDialog.getInstance(this);
+            addEventDialog = NewEventDialog.getInstance(this, null);
             addEventDialog.show();
         });
 
@@ -146,7 +144,7 @@ public class DashboardFragment extends Fragment {
                     });
                     activityBinding.modifyButton.setVisibility(View.VISIBLE);
                     activityBinding.modifyButton.setOnClickListener(v -> {
-                        addEventDialog = NewEventDialog.getInstanceWithInitialEvent(DashboardFragment.this, model);
+                        addEventDialog = NewEventDialog.getInstance(DashboardFragment.this, model);
                         addEventDialog.show();
                     });
                 } else {

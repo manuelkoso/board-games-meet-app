@@ -21,7 +21,7 @@
     <string name="where">Where</string>
     <string name="submit">Submit</string>
     <string name="settings">Settings</string>
-    <string name="new_event_success">Added a new event!</string>
+    <string name="new_event_success">New event created!</string>
     <string name="statistics">Statistics</string>
     <string name="my_activity">My activities</string>
     <string name="my_activities">My activities</string>
@@ -58,4 +58,10 @@
     <string name="logout_question">Do you want to logout?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="create">Create</string>
+    <string name="empty_field_error">Empty field!</string>
+    <string name="old_date_error">We cannot travel in the past!</string>
+    <string name="unknown_error">Something went wrong!</string>
+    <string name="modify_event_success">Event modified!</string>
+    <string name="number_of_players_error">There must be at least 2 players</string>
 </resources>
