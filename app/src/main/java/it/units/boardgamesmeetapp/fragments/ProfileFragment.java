@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import java.util.Objects;
 
+import it.units.boardgamesmeetapp.R;
 import it.units.boardgamesmeetapp.databinding.FragmentProfileBinding;
 import it.units.boardgamesmeetapp.models.UserInfo;
 import it.units.boardgamesmeetapp.viewmodels.main.MainViewModel;
@@ -44,7 +45,7 @@ public class ProfileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ProfileViewModel viewModel = new ViewModelProvider(this, new ProfileViewModelFactory()).get(ProfileViewModel.class);
         MainViewModel mainViewModel = new ViewModelProvider(requireActivity(), new MainViewModelFactory()).get(MainViewModel.class);
-        mainViewModel.updateActionBarTitle("Profile");
+        mainViewModel.updateActionBarTitle(getString(R.string.profile));
 
         name = Objects.requireNonNull(binding.name.getEditText());
         surname = Objects.requireNonNull(binding.surname.getEditText());

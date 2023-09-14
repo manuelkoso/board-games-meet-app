@@ -31,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         MainViewModel viewModel = new ViewModelProvider(this, new MainViewModelFactory()).get(MainViewModel.class);
+        viewModel.updateActionBarTitle(getString(R.string.board_games));
+
         viewModel.getActionBarTitle().observe(this, Objects.requireNonNull(binding.topAppBar)::setTitle);
 
         NavHostFragment navHostFragment =

@@ -77,4 +77,8 @@
     <string name="unsubscribe_event_dialog_title">Do you want to unsubscribe to this event?</string>
     <string name="cancel">Cancel</string>
     <string name="unsubscribe">Unsubscribe</string>
+    <string name="search_game">Search: Game</string>
+    <string name="search_place">Search: Place</string>
+    <string name="subscribtion">Subscrbtion</string>
+    <string name="event_subscribe_dialog_title">Do you want to subscribe to this event?</string>
 </resources>

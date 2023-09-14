@@ -6,13 +6,15 @@ import androidx.lifecycle.ViewModel;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import it.units.boardgamesmeetapp.R;
+
 public class MainViewModel extends ViewModel {
 
     private final MutableLiveData<String> actionBarTitle = new MutableLiveData<>();
     private final MutableLiveData<Boolean> enableActionBarBackButton = new MutableLiveData<>();
 
     public MainViewModel() {
-        actionBarTitle.setValue("Board games");
+        actionBarTitle.setValue(null);
     }
 
     public MutableLiveData<String> getActionBarTitle() {

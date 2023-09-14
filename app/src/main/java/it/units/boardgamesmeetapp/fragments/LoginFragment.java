@@ -28,6 +28,8 @@ import it.units.boardgamesmeetapp.viewmodels.login.LoginViewModel;
 import it.units.boardgamesmeetapp.viewmodels.login.LoginViewModelFactory;
 
 public class LoginFragment extends Fragment {
+    public static final String EMAIL_KEY = "EMAIL";
+    public static final String PASSWORD_KEY = "PASSWORD";
     private FragmentLoginBinding binding;
 
     @Nullable
@@ -49,8 +51,8 @@ public class LoginFragment extends Fragment {
         mainViewModel.updateActionBarTitle(getResources().getString(R.string.board_games));
 
         if (savedInstanceState != null) {
-            binding.email.getEditText().setText(savedInstanceState.getString("EMAIL"));
-            binding.password.getEditText().setText(savedInstanceState.getString("PASSWORD"));
+            Objects.requireNonNull(binding.email.getEditText()).setText(savedInstanceState.getString(EMAIL_KEY));
+            Objects.requireNonNull(binding.password.getEditText()).setText(savedInstanceState.getString(PASSWORD_KEY));
         }
 
         loginViewModel.getLoginResult().observe(getViewLifecycleOwner(), loginResult -> {
@@ -83,12 +85,12 @@ public class LoginFragment extends Fragment {
         TextWatcher textWatcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+                // ignored
             }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+                // ignored
             }
 
             @Override
@@ -100,8 +102,8 @@ public class LoginFragment extends Fragment {
             }
         };
 
-        binding.email.getEditText().addTextChangedListener(textWatcher);
-        binding.password.getEditText().addTextChangedListener(textWatcher);
+        Objects.requireNonNull(binding.email.getEditText()).addTextChangedListener(textWatcher);
+        Objects.requireNonNull(binding.password.getEditText()).addTextChangedListener(textWatcher);
 
     }
 
@@ -129,8 +131,8 @@ public class LoginFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putString("EMAIL", binding.email.getEditText().getText().toString());
-        outState.putString("PASSWORD", binding.password.getEditText().getText().toString());
+        outState.putString(EMAIL_KEY, Objects.requireNonNull(binding.email.getEditText()).getText().toString());
+        outState.putString(PASSWORD_KEY, Objects.requireNonNull(binding.password.getEditText()).getText().toString());
         super.onSaveInstanceState(outState);
     }
 

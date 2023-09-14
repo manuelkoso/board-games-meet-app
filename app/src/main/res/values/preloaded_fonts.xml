@@ -1,14 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <array name="preloaded_fonts" translatable="false">
-        <item>@font/almendra_sc</item>
         <item>@font/bungee</item>
-        <item>@font/bungee_hairline</item>
-        <item>@font/bungee_inline</item>
-        <item>@font/caesar_dressing</item>
-        <item>@font/goblin_one</item>
-        <item>@font/major_mono_display</item>
-        <item>@font/molengo</item>
         <item>@font/monofett</item>
         <item>@font/yantramanav</item>
         <item>@font/yantramanav_black</item>

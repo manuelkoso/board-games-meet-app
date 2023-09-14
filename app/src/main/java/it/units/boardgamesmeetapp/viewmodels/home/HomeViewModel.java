@@ -30,7 +30,7 @@ public class HomeViewModel extends ViewModel {
         event.addPlayer(firebaseAuth.getUid());
         firebaseFirestore.collection(FirebaseConfig.EVENTS_REFERENCE).document(event.getKey()).update(event.toMap()).addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        Log.d(FirebaseConfig.TAG, "Event submission done");
+                        Log.d(FirebaseConfig.TAG, FirebaseConfig.EVENT_SUBSCRIBED);
                     } else {
                         Log.w(FirebaseConfig.TAG, task.getException());
                     }

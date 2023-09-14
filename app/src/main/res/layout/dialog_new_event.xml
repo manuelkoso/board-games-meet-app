@@ -81,7 +81,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/number_of_players"
-            app:startIconDrawable="@drawable/map_pin_alt_svgrepo_com">
+            app:startIconDrawable="@drawable/map_pin">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
@@ -103,7 +103,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/place"
-            app:startIconDrawable="@drawable/calendar_days_svgrepo_com">
+            app:startIconDrawable="@drawable/calendar">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"

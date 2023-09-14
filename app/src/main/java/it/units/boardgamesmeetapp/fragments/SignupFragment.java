@@ -4,7 +4,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.ActionOnlyNavDirections;
@@ -15,9 +14,6 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-
-import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Objects;
 
@@ -31,7 +27,8 @@ import it.units.boardgamesmeetapp.viewmodels.main.MainViewModel;
 import it.units.boardgamesmeetapp.viewmodels.main.MainViewModelFactory;
 
 public class SignupFragment extends Fragment {
-
+    public static final String EMAIL_KEY = "EMAIL";
+    public static final String PASSWORD_KEY = "PASSWORD";
     private LoginViewModel loginViewModel;
 
     private FragmentSignupBinding binding;
@@ -52,8 +49,8 @@ public class SignupFragment extends Fragment {
         mainViewModel.updateActionBarTitle(getResources().getString(R.string.board_games));
 
         if (savedInstanceState != null) {
-            binding.email.getEditText().setText(savedInstanceState.getString("EMAIL"));
-            binding.password.getEditText().setText(savedInstanceState.getString("PASSWORD"));
+            Objects.requireNonNull(binding.email.getEditText()).setText(savedInstanceState.getString(EMAIL_KEY));
+            Objects.requireNonNull(binding.password.getEditText()).setText(savedInstanceState.getString(PASSWORD_KEY));
         }
 
 
@@ -137,8 +134,8 @@ public class SignupFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putString("EMAIL", binding.email.getEditText().getText().toString());
-        outState.putString("PASSWORD", binding.password.getEditText().getText().toString());
+        outState.putString(EMAIL_KEY, Objects.requireNonNull(binding.email.getEditText()).getText().toString());
+        outState.putString(PASSWORD_KEY, Objects.requireNonNull(binding.password.getEditText()).getText().toString());
         super.onSaveInstanceState(outState);
     }
 
