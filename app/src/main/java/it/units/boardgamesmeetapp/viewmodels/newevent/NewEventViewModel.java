@@ -44,7 +44,7 @@ public class NewEventViewModel extends ViewModel {
         try {
             if (checkCurrentEventInfoViewFieldValidity()) {
                 if (currentEventKey.getValue() == null) {
-                    currentEventKey.setValue(firebaseFirestore.collection(FirebaseConfig.EVENTS).document().getId());
+                    currentEventKey.setValue(firebaseFirestore.collection(FirebaseConfig.EVENTS_REFERENCE).document().getId());
                 }
                 String game = Objects.requireNonNull(currentEventInfoView.getValue()).getGame().toUpperCase();
                 String place = currentEventInfoView.getValue().getPlace().toUpperCase();
@@ -85,7 +85,7 @@ public class NewEventViewModel extends ViewModel {
     }
 
     public void submitEvent(@NonNull Event newEvent) {
-        firebaseFirestore.collection(FirebaseConfig.EVENTS).document(Objects.requireNonNull(newEvent.getKey())).set(newEvent).addOnCompleteListener(task -> {
+        firebaseFirestore.collection(FirebaseConfig.EVENTS_REFERENCE).document(Objects.requireNonNull(newEvent.getKey())).set(newEvent).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Log.d(FirebaseConfig.TAG, FirebaseConfig.DATA_WRITE_SUCCESS);
             } else {

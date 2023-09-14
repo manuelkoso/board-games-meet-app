@@ -24,7 +24,7 @@ public class DashboardViewModel extends ViewModel {
     }
 
     public void deleteEvent(@NonNull Event event) {
-        database.collection(FirebaseConfig.EVENTS).document(event.getKey()).delete().addOnCompleteListener(task -> {
+        database.collection(FirebaseConfig.EVENTS_REFERENCE).document(event.getKey()).delete().addOnCompleteListener(task -> {
             if(task.isSuccessful()) {
                 Log.d(FirebaseConfig.TAG, "Event deleted");
             } else {
@@ -34,7 +34,7 @@ public class DashboardViewModel extends ViewModel {
     }
 
     public void unsubscribe(@NonNull Event event) {
-        database.collection(FirebaseConfig.EVENTS).document(event.getKey()).update("players", FieldValue.arrayRemove(FirebaseAuth.getInstance().getUid())).addOnCompleteListener(task -> {
+        database.collection(FirebaseConfig.EVENTS_REFERENCE).document(event.getKey()).update("players", FieldValue.arrayRemove(FirebaseAuth.getInstance().getUid())).addOnCompleteListener(task -> {
             if(task.isSuccessful()) {
                 Log.d(FirebaseConfig.TAG, "Event unsubscribed");
             } else {

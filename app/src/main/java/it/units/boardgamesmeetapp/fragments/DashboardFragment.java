@@ -79,7 +79,7 @@ public class DashboardFragment extends Fragment {
             addEventDialog.show();
         });
 
-        Query query = FirebaseFirestore.getInstance().collection(FirebaseConfig.EVENTS).whereArrayContains("players", Objects.requireNonNull(FirebaseAuth.getInstance().getUid()));
+        Query query = FirebaseFirestore.getInstance().collection(FirebaseConfig.EVENTS_REFERENCE).whereArrayContains("players", Objects.requireNonNull(FirebaseAuth.getInstance().getUid()));
         query = query.where(Filter.greaterThan("timestamp", new Date().getTime()));
         FirestoreRecyclerOptions<Event> options = new FirestoreRecyclerOptions.Builder<Event>().setQuery(query, Event.class).build();
         FirestoreRecyclerAdapter<Event, DashboardEventViewHolder> adapter = getEventEventViewHolderFirestoreRecyclerAdapter(options);

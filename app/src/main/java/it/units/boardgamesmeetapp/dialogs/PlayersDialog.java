@@ -35,7 +35,7 @@ public class PlayersDialog {
         DialogEventPlayersBinding dialogEventPlayersBinding = DialogEventPlayersBinding.inflate(LayoutInflater.from(fragment.requireContext()));
         
         RecyclerView recyclerView = dialogEventPlayersBinding.players;
-        Query query = FirebaseFirestore.getInstance().collection(FirebaseConfig.USERS).whereIn(FirebaseConfig.USERS_ID, event.getPlayers());
+        Query query = FirebaseFirestore.getInstance().collection(FirebaseConfig.USERS_REFERENCE).whereIn(FirebaseConfig.USERS_ID_REFERENCE, event.getPlayers());
 
         FirestoreRecyclerOptions<User> options = new FirestoreRecyclerOptions.Builder<User>().setQuery(query, User.class).build();
         FirestoreRecyclerAdapter<User, PlayersViewHolder> adapter = new FirestoreRecyclerAdapter<User, PlayersViewHolder>(options) {

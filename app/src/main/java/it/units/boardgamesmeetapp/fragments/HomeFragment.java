@@ -70,7 +70,7 @@ public class HomeFragment extends Fragment {
 
 
         RecyclerView recyclerView = binding.mainRecycler;
-        Query query = FirebaseFirestore.getInstance().collection(FirebaseConfig.EVENTS);
+        Query query = FirebaseFirestore.getInstance().collection(FirebaseConfig.EVENTS_REFERENCE);
         query = query.where(Filter.greaterThan("timestamp", new Date().getTime()));
         FirestoreRecyclerOptions<Event> options = new FirestoreRecyclerOptions.Builder<Event>().setQuery(query, Event.class).build();
         FirestoreRecyclerAdapter<Event, EventViewHolder> adapter = getFilteredAdapter(options);
@@ -125,7 +125,7 @@ public class HomeFragment extends Fragment {
 
     @NonNull
     private static Query getFilterQuery(@NonNull Integer buttonId, @NonNull String inputString) {
-        Query query = FirebaseFirestore.getInstance().collection(FirebaseConfig.EVENTS);
+        Query query = FirebaseFirestore.getInstance().collection(FirebaseConfig.EVENTS_REFERENCE);
         if (buttonId == R.id.radio_button_game)
             query = query.orderBy("game").orderBy("timestamp", Query.Direction.DESCENDING).startAt(inputString.toLowerCase()).endAt(inputString.toLowerCase() + "\uf8ff").limit(20);
         if (buttonId == R.id.radio_button_place)

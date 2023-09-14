@@ -7,8 +7,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.AggregateQuery;
-import com.google.firebase.firestore.AggregateSource;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -33,7 +31,7 @@ public class ProfileViewModel extends ViewModel {
         this.firebaseAuth = firebaseAuth;
         this.userParticipatedEvents.setValue(0);
         this.userCreatedEvents.setValue(0);
-        DocumentReference reference = firebaseFirestore.collection(FirebaseConfig.USERS).document(Objects.requireNonNull(firebaseAuth.getUid()));
+        DocumentReference reference = firebaseFirestore.collection(FirebaseConfig.USERS_REFERENCE).document(Objects.requireNonNull(firebaseAuth.getUid()));
         reference.addSnapshotListener(
                 (value, exception) -> {
                     if (exception != null) {
@@ -49,7 +47,7 @@ public class ProfileViewModel extends ViewModel {
                     }
                 }
         );
-        firebaseFirestore.collection(FirebaseConfig.EVENTS).whereArrayContains("players", Objects.requireNonNull(firebaseAuth.getUid())).get().addOnCompleteListener(task -> {
+        firebaseFirestore.collection(FirebaseConfig.EVENTS_REFERENCE).whereArrayContains("players", Objects.requireNonNull(firebaseAuth.getUid())).get().addOnCompleteListener(task -> {
             if(task.isSuccessful()) {
                 int lol = task.getResult().size();
                 userParticipatedEvents.setValue(task.getResult().size());
@@ -57,7 +55,7 @@ public class ProfileViewModel extends ViewModel {
                 userParticipatedEvents.setValue(0);
             }
         });
-        firebaseFirestore.collection(FirebaseConfig.EVENTS).whereEqualTo("ownerId", firebaseAuth.getUid()).get().addOnCompleteListener(task -> {
+        firebaseFirestore.collection(FirebaseConfig.EVENTS_REFERENCE).whereEqualTo("ownerId", firebaseAuth.getUid()).get().addOnCompleteListener(task -> {
             if(task.isSuccessful()) {
                 userCreatedEvents.setValue(task.getResult().size());
             } else {
@@ -79,7 +77,7 @@ public class ProfileViewModel extends ViewModel {
     }
 
     public void modifyUserInformation() {
-        DocumentReference reference = firebaseFirestore.collection(FirebaseConfig.USERS).document(Objects.requireNonNull(firebaseAuth.getUid()));
+        DocumentReference reference = firebaseFirestore.collection(FirebaseConfig.USERS_REFERENCE).document(Objects.requireNonNull(firebaseAuth.getUid()));
         reference.update("info", Objects.requireNonNull(currentUserInfo.getValue()).toMap()).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Log.d(FirebaseConfig.TAG, "User information modified correctly");

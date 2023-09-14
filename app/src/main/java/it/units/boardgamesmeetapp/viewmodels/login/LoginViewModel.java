@@ -111,7 +111,7 @@ public class LoginViewModel extends ViewModel {
                 Log.d(FirebaseConfig.TAG, LOGIN_SUCCESS_MESSAGE);
                 loginResult.setValue(new SubmissionResult(SUCCESS, R.string.signup_success));
                 User user = new User(Objects.requireNonNull(firebaseAuth.getUid()));
-                DocumentReference reference = firebaseFirestore.collection(FirebaseConfig.USERS).document(user.getId());
+                DocumentReference reference = firebaseFirestore.collection(FirebaseConfig.USERS_REFERENCE).document(user.getId());
                 reference.set(user);
             } else {
                 if(task.getException() instanceof FirebaseNetworkException) {
