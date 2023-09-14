@@ -7,19 +7,16 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
-import java.util.stream.Stream;
-
+import it.units.boardgamesmeetapp.R;
 import it.units.boardgamesmeetapp.database.FirebaseConfig;
 import it.units.boardgamesmeetapp.databinding.DialogEventPlayersBinding;
 import it.units.boardgamesmeetapp.databinding.SinglePlayerBinding;
@@ -64,12 +61,11 @@ public class PlayersDialog {
             }
         };
         recyclerView.setAdapter(adapter);
-        // GridLayoutManager gridLayoutManager = new GridLayoutManager(fragment.requireContext(), 2);
         LinearLayoutManager layoutManager = new LinearLayoutManager(fragment.requireContext(), LinearLayoutManager.HORIZONTAL, false);
         
         recyclerView.setLayoutManager(layoutManager);
         adapter.startListening();
-        dialog.setTitle("Players");
+        dialog.setTitle(R.string.players);
         dialog.setView(dialogEventPlayersBinding.getRoot());
         
     }
