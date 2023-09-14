@@ -68,7 +68,7 @@ public class Event {
         return place;
     }
 
-    @Nullable
+    @NonNull
     public String getKey() {
         return key;
     }

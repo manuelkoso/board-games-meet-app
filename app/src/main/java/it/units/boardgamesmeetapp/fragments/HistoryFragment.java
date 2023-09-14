@@ -20,12 +20,11 @@ import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 import java.util.Objects;
 
 import it.units.boardgamesmeetapp.R;
+import it.units.boardgamesmeetapp.models.EventInfoView;
 import it.units.boardgamesmeetapp.viewholders.EventViewHolder;
 import it.units.boardgamesmeetapp.database.FirebaseConfig;
 import it.units.boardgamesmeetapp.databinding.FragmentHistoryBinding;
@@ -51,8 +50,8 @@ public class HistoryFragment extends Fragment {
         MainViewModel mainViewModel = new ViewModelProvider(requireActivity(), new MainViewModelFactory()).get(MainViewModel.class);
         mainViewModel.updateActionBarTitle(getString(R.string.history));
 
-        Query query = FirebaseFirestore.getInstance().collection(FirebaseConfig.EVENTS_REFERENCE).whereArrayContains("players", Objects.requireNonNull(FirebaseAuth.getInstance().getUid()));
-        query = query.where(Filter.lessThan("timestamp", new Date().getTime()));
+        Query query = FirebaseFirestore.getInstance().collection(FirebaseConfig.EVENTS_REFERENCE).whereArrayContains(FirebaseConfig.PLAYERS_FIELD_REFERENCE, Objects.requireNonNull(FirebaseAuth.getInstance().getUid()));
+        query = query.where(Filter.lessThan(FirebaseConfig.TIMESTAMP_FIELD_REFERENCE, new Date().getTime()));
         FirestoreRecyclerOptions<Event> options = new FirestoreRecyclerOptions.Builder<Event>().setQuery(query, Event.class).build();
         FirestoreRecyclerAdapter<Event, EventViewHolder> adapter = getEventEventViewHolderFirestoreRecyclerAdapter(options);
 
@@ -75,15 +74,13 @@ public class HistoryFragment extends Fragment {
             @Override
             protected void onBindViewHolder(@NonNull EventViewHolder holder, int position, @NonNull Event model) {
                 SingleEventBinding activityBinding = holder.getBinding();
+                EventInfoView eventInfoView = new EventInfoView(model);
 
-                Date date = new Date(model.getTimestamp());
-                SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy - HH:mm", Locale.getDefault());
-
-                activityBinding.place.setText(model.getPlace());
-                activityBinding.date.setText(dateFormat.format(date));
-                activityBinding.gameTitle.setText(model.getGame());
-                activityBinding.people.setText(String.valueOf(model.getPlayers().size() + "/" + model.getMaxNumberOfPlayers()));
-                activityBinding.eventButton.setText("Done");
+                activityBinding.place.setText(eventInfoView.getPlace());
+                activityBinding.date.setText(eventInfoView.getDate());
+                activityBinding.gameTitle.setText(eventInfoView.getGame());
+                activityBinding.people.setText(String.valueOf(eventInfoView.getNumberOfPlayers() + "/" + eventInfoView.getMaxNumberOfPlayers()));
+                activityBinding.eventButton.setText(R.string.done);
                 activityBinding.eventButton.setEnabled(false);
             }
         };

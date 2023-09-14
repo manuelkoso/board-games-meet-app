@@ -14,7 +14,6 @@ import it.units.boardgamesmeetapp.database.FirebaseConfig;
 import it.units.boardgamesmeetapp.models.Event;
 
 public class DashboardViewModel extends ViewModel {
-
     @NonNull
     private final FirebaseFirestore database;
     private final MutableLiveData<Event> currentEventShown = new MutableLiveData<>();
@@ -26,7 +25,7 @@ public class DashboardViewModel extends ViewModel {
     public void deleteEvent(@NonNull Event event) {
         database.collection(FirebaseConfig.EVENTS_REFERENCE).document(event.getKey()).delete().addOnCompleteListener(task -> {
             if(task.isSuccessful()) {
-                Log.d(FirebaseConfig.TAG, "Event deleted");
+                Log.d(FirebaseConfig.TAG, FirebaseConfig.EVENT_DELETED);
             } else {
                 Log.w(FirebaseConfig.TAG, task.getException());
             }
@@ -34,9 +33,9 @@ public class DashboardViewModel extends ViewModel {
     }
 
     public void unsubscribe(@NonNull Event event) {
-        database.collection(FirebaseConfig.EVENTS_REFERENCE).document(event.getKey()).update("players", FieldValue.arrayRemove(FirebaseAuth.getInstance().getUid())).addOnCompleteListener(task -> {
+        database.collection(FirebaseConfig.EVENTS_REFERENCE).document(event.getKey()).update(FirebaseConfig.PLAYERS_FIELD_REFERENCE, FieldValue.arrayRemove(FirebaseAuth.getInstance().getUid())).addOnCompleteListener(task -> {
             if(task.isSuccessful()) {
-                Log.d(FirebaseConfig.TAG, "Event unsubscribed");
+                Log.d(FirebaseConfig.TAG, FirebaseConfig.EVENT_UNSUBSCRIBED);
             } else {
                 Log.w(FirebaseConfig.TAG, task.getException());
             }
