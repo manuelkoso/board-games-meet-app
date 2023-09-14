@@ -76,4 +76,5 @@
     <string name="search_place">Search: Place</string>
     <string name="subscribtion">Subscrbtion</string>
     <string name="event_subscribe_dialog_title">Do you want to subscribe to this event?</string>
+    <string name="app_logo">App logo</string>
 </resources>
