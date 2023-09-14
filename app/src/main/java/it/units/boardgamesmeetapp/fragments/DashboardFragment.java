@@ -23,13 +23,12 @@ import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 import java.util.Objects;
 
 import it.units.boardgamesmeetapp.R;
 import it.units.boardgamesmeetapp.databinding.DashboardEventBinding;
+import it.units.boardgamesmeetapp.models.EventInfoView;
 import it.units.boardgamesmeetapp.viewholders.DashboardEventViewHolder;
 import it.units.boardgamesmeetapp.viewmodels.main.MainViewModel;
 import it.units.boardgamesmeetapp.viewmodels.main.MainViewModelFactory;
@@ -43,10 +42,12 @@ import it.units.boardgamesmeetapp.models.Event;
 
 public class DashboardFragment extends Fragment {
 
+    public static final String ADD_EVENT_KEY = "IS_ADD_EVENT_DIALOG_SHOWN";
+    public static final String PLAYERS_DIALOG_KEY = "IS_EVENT_DIALOG_SHOWN";
     private FragmentDashboardBinding binding;
     private DashboardViewModel viewModel;
     private AlertDialog addEventDialog;
-    private AlertDialog eventDialog;
+    private AlertDialog playersDialog;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -60,17 +61,16 @@ public class DashboardFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         viewModel = new ViewModelProvider(this, new DashboardViewModelFactory()).get(DashboardViewModel.class);
         MainViewModel mainViewModel = new ViewModelProvider(requireActivity(), new MainViewModelFactory()).get(MainViewModel.class);
-        mainViewModel.updateActionBarTitle("My events");
-        mainViewModel.updateActionBarBackButtonState(false);
+        mainViewModel.updateActionBarTitle(getString(R.string.my_events));
 
         if (savedInstanceState != null) {
-            if (savedInstanceState.getBoolean("IS_ADD_EVENT_DIALOG_SHOWN")) {
+            if (savedInstanceState.getBoolean(ADD_EVENT_KEY)) {
                 addEventDialog = NewEventDialog.getInstance(this, null);
                 addEventDialog.show();
             }
-            if (savedInstanceState.getBoolean("IS_EVENT_DIALOG_SHOWN")) {
-                eventDialog = PlayersDialog.getInstance(this, Objects.requireNonNull(viewModel.getCurrentEventShown().getValue()));
-                eventDialog.show();
+            if (savedInstanceState.getBoolean(PLAYERS_DIALOG_KEY)) {
+                playersDialog = PlayersDialog.getInstance(this, Objects.requireNonNull(viewModel.getCurrentEventShown().getValue()));
+                playersDialog.show();
             }
         }
 
@@ -79,8 +79,8 @@ public class DashboardFragment extends Fragment {
             addEventDialog.show();
         });
 
-        Query query = FirebaseFirestore.getInstance().collection(FirebaseConfig.EVENTS_REFERENCE).whereArrayContains("players", Objects.requireNonNull(FirebaseAuth.getInstance().getUid()));
-        query = query.where(Filter.greaterThan("timestamp", new Date().getTime()));
+        Query query = FirebaseFirestore.getInstance().collection(FirebaseConfig.EVENTS_REFERENCE).whereArrayContains(FirebaseConfig.PLAYERS_FIELD_REFERENCE, Objects.requireNonNull(FirebaseAuth.getInstance().getUid()));
+        query = query.where(Filter.greaterThan(FirebaseConfig.TIMESTAMP_FIELD_REFERENCE, getCurrentTime()));
         FirestoreRecyclerOptions<Event> options = new FirestoreRecyclerOptions.Builder<Event>().setQuery(query, Event.class).build();
         FirestoreRecyclerAdapter<Event, DashboardEventViewHolder> adapter = getEventEventViewHolderFirestoreRecyclerAdapter(options);
 
@@ -91,18 +91,22 @@ public class DashboardFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
     }
 
+    private static long getCurrentTime() {
+        return new Date().getTime();
+    }
+
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         if (addEventDialog != null) {
-            outState.putBoolean("IS_ADD_EVENT_DIALOG_SHOWN", addEventDialog.isShowing());
+            outState.putBoolean(ADD_EVENT_KEY, addEventDialog.isShowing());
         } else {
-            outState.putBoolean("IS_ADD_EVENT_DIALOG_SHOWN", false);
+            outState.putBoolean(ADD_EVENT_KEY, false);
         }
-        if (eventDialog != null) {
-            outState.putBoolean("IS_EVENT_DIALOG_SHOWN", eventDialog.isShowing());
+        if (playersDialog != null) {
+            outState.putBoolean(PLAYERS_DIALOG_KEY, playersDialog.isShowing());
         } else {
-            outState.putBoolean("IS_EVENT_DIALOG_SHOWN", false);
+            outState.putBoolean(PLAYERS_DIALOG_KEY, false);
         }
     }
 
@@ -118,30 +122,28 @@ public class DashboardFragment extends Fragment {
             @Override
             protected void onBindViewHolder(@NonNull DashboardEventViewHolder holder, int position, @NonNull Event model) {
                 DashboardEventBinding activityBinding = holder.getBinding();
+                EventInfoView eventInfoView = new EventInfoView(model);
 
-                Date date = new Date(model.getTimestamp());
-                SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy - HH:mm", Locale.getDefault());
-
-                activityBinding.place.setText(model.getPlace());
-                activityBinding.date.setText(dateFormat.format(date));
-                activityBinding.gameTitle.setText(model.getGame());
-                activityBinding.people.setText(String.valueOf(model.getPlayers().size() + "/" + model.getMaxNumberOfPlayers()));
+                activityBinding.place.setText(eventInfoView.getPlace());
+                activityBinding.date.setText(eventInfoView.getDate());
+                activityBinding.gameTitle.setText(eventInfoView.getGame());
+                activityBinding.people.setText(String.valueOf(eventInfoView.getNumberOfPlayers() + "/" + eventInfoView.getMaxNumberOfPlayers()));
                 activityBinding.card.setOnClickListener(v -> {
                     viewModel.updateCurrentEventShown(model);
-                    eventDialog = PlayersDialog.getInstance(DashboardFragment.this, model);
-                    eventDialog.show();
+                    playersDialog = PlayersDialog.getInstance(DashboardFragment.this, model);
+                    playersDialog.show();
                 });
 
                 if (Objects.equals(model.getOwnerId(), FirebaseAuth.getInstance().getUid())) {
-                    activityBinding.eventButton.setText(R.string.cancel_the_event);
-                    activityBinding.eventButton.setOnClickListener(v -> {
-                        new MaterialAlertDialogBuilder(requireContext()).setTitle(R.string.cancel_the_event)
-                                .setMessage("Do you want to cancel this event?")
-                                .setPositiveButton("Yes", (dialogInterface, i) -> {
-                                    viewModel.deleteEvent(model);
-                                    showLoginResult(R.string.cancel_the_event);
-                                }).setNegativeButton("No", ((dialogInterface, i) -> {})).show();
-                    });
+                    activityBinding.eventButton.setText(R.string.cancel);
+                    activityBinding.eventButton.setOnClickListener(v ->
+                            new MaterialAlertDialogBuilder(requireContext()).setTitle(R.string.cancel)
+                                    .setMessage(R.string.cancel_event_dialog_title)
+                                    .setPositiveButton(R.string.yes, (dialogInterface, i) -> {
+                                        viewModel.deleteEvent(model);
+                                        showResult(R.string.event_canceled);
+                                    }).setNegativeButton(R.string.no, ((dialogInterface, i) -> {
+                                    })).show());
                     activityBinding.modifyButton.setVisibility(View.VISIBLE);
                     activityBinding.modifyButton.setOnClickListener(v -> {
                         addEventDialog = NewEventDialog.getInstance(DashboardFragment.this, model);
@@ -149,20 +151,20 @@ public class DashboardFragment extends Fragment {
                     });
                 } else {
                     activityBinding.eventButton.setText(R.string.unsubscribe);
-                    activityBinding.eventButton.setOnClickListener(v -> {
-                        new MaterialAlertDialogBuilder(requireContext()).setTitle(R.string.unsubscribe)
-                                .setMessage("Do you want to unsubscribe to this event?")
-                                .setPositiveButton("Yes", (dialogInterface, i) -> {
-                                    viewModel.unsubscribe(model);
-                                    showLoginResult(R.string.unsubscribe);
-                                }).setNegativeButton("No", ((dialogInterface, i) -> {})).show();
-                    });
+                    activityBinding.eventButton.setOnClickListener(v ->
+                            new MaterialAlertDialogBuilder(requireContext()).setTitle(R.string.unsubscribe)
+                                    .setMessage(R.string.unsubscribe_event_dialog_title)
+                                    .setPositiveButton(R.string.yes, (dialogInterface, i) -> {
+                                        viewModel.unsubscribe(model);
+                                        showResult(R.string.event_unsubscribed);
+                                    }).setNegativeButton(R.string.no, ((dialogInterface, i) -> {
+                                    })).show());
                 }
             }
         };
     }
 
-    private void showLoginResult(@StringRes Integer message) {
+    private void showResult(@StringRes Integer message) {
         if (requireContext().getApplicationContext() != null) {
             Toast.makeText(
                     requireContext().getApplicationContext(),

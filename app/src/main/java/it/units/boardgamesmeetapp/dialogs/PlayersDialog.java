@@ -67,7 +67,6 @@ public class PlayersDialog {
         adapter.startListening();
         dialog.setTitle(R.string.players);
         dialog.setView(dialogEventPlayersBinding.getRoot());
-        
     }
 
     public static @NonNull AlertDialog getInstance(@NonNull Fragment fragment, @NonNull Event event) {

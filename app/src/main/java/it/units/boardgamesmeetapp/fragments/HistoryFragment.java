@@ -25,6 +25,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
 
+import it.units.boardgamesmeetapp.R;
 import it.units.boardgamesmeetapp.viewholders.EventViewHolder;
 import it.units.boardgamesmeetapp.database.FirebaseConfig;
 import it.units.boardgamesmeetapp.databinding.FragmentHistoryBinding;
@@ -48,7 +49,7 @@ public class HistoryFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         MainViewModel mainViewModel = new ViewModelProvider(requireActivity(), new MainViewModelFactory()).get(MainViewModel.class);
-        mainViewModel.updateActionBarTitle("History");
+        mainViewModel.updateActionBarTitle(getString(R.string.history));
 
         Query query = FirebaseFirestore.getInstance().collection(FirebaseConfig.EVENTS_REFERENCE).whereArrayContains("players", Objects.requireNonNull(FirebaseAuth.getInstance().getUid()));
         query = query.where(Filter.lessThan("timestamp", new Date().getTime()));

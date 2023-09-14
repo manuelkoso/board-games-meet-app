@@ -4,8 +4,6 @@ import androidx.annotation.NonNull;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import it.units.boardgamesmeetapp.databinding.DialogEventPlayersBinding;
-import it.units.boardgamesmeetapp.databinding.SingleEventBinding;
 import it.units.boardgamesmeetapp.databinding.SinglePlayerBinding;
 
 public class PlayersViewHolder extends RecyclerView.ViewHolder {

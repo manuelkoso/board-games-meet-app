@@ -45,7 +45,6 @@ public class ProfileFragment extends Fragment {
         ProfileViewModel viewModel = new ViewModelProvider(this, new ProfileViewModelFactory()).get(ProfileViewModel.class);
         MainViewModel mainViewModel = new ViewModelProvider(requireActivity(), new MainViewModelFactory()).get(MainViewModel.class);
         mainViewModel.updateActionBarTitle("Profile");
-        mainViewModel.updateActionBarBackButtonState(false);
 
         name = Objects.requireNonNull(binding.name.getEditText());
         surname = Objects.requireNonNull(binding.surname.getEditText());

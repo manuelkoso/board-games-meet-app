@@ -46,8 +46,8 @@
     <string name="history">History</string>
     <string name="logout">Logout</string>
     <string name="go_back_to_profile">Go back to profile</string>
-    <string name="cancel_the_event">Cancel the event</string>
-    <string name="unsubscribe">Unsubscribe</string>
+    <string name="event_canceled">Event canceled</string>
+    <string name="event_unsubscribed">Event unsubscribed</string>
     <string name="search">Search</string>
     <string name="place">Place</string>
     <string name="filter_dialog_title">Filter fields</string>
@@ -71,4 +71,10 @@
     <string name="done">Done</string>
     <string name="date_picker_title">Select date</string>
     <string name="time_picker_title">Select time</string>
+    <string name="my_events">My events</string>
+    <string name="find_events">Find events</string>
+    <string name="cancel_event_dialog_title">Do you want to cancel this event?</string>
+    <string name="unsubscribe_event_dialog_title">Do you want to unsubscribe to this event?</string>
+    <string name="cancel">Cancel</string>
+    <string name="unsubscribe">Unsubscribe</string>
 </resources>

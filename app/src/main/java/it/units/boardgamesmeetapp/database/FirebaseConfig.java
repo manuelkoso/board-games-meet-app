@@ -7,6 +7,8 @@ public class FirebaseConfig {
     public static final String USERS_REFERENCE = "users";
     public static final String EVENTS_REFERENCE = "events";
     public static final String USERS_ID_REFERENCE = "id";
+    public static final String PLAYERS_FIELD_REFERENCE = "players";
+    public static final String TIMESTAMP_FIELD_REFERENCE = "timestamp";
     public static final String DATA_WRITE_SUCCESS = "Data successfully written";
 
 }

@@ -72,17 +72,17 @@ public class NewEventDialog {
             binding.loading.setVisibility(View.GONE);
             switch (submissionResult.getResult()) {
                 case EMPTY_FIELD:
-                    setFieldErrorOnEmptyFields(fragment.getResources().getString(submissionResult.getMessage()));
+                    setFieldErrorOnEmptyFields(fragment.getString(submissionResult.getMessage()));
                     break;
                 case OLD_DATE:
                     binding.date.setErrorEnabled(true);
                     binding.time.setErrorEnabled(true);
-                    binding.date.setError(fragment.getResources().getString(submissionResult.getMessage()));
+                    binding.date.setError(fragment.getString(submissionResult.getMessage()));
                     binding.time.setError(fragment.getResources().getString(submissionResult.getMessage()));
                     break;
                 case WRONG_NUMBER_PLAYERS:
                     binding.numberOfPlayers.setErrorEnabled(true);
-                    binding.numberOfPlayers.setError(fragment.getResources().getString(submissionResult.getMessage()));
+                    binding.numberOfPlayers.setError(fragment.getString(submissionResult.getMessage()));
                     break;
                 case NONE:
                     return;
