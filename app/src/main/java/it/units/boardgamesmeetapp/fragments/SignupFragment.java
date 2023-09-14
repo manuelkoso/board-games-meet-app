@@ -116,13 +116,17 @@ public class SignupFragment extends Fragment {
 
     private void setFieldErrors(@NonNull LoginState loginFormState) {
         if (loginFormState.getUsernameError() != null) {
+            binding.email.setErrorEnabled(true);
             binding.email.setError(getString(loginFormState.getUsernameError()));
         } else {
+            binding.email.setErrorEnabled(false);
             binding.email.setError(null);
         }
         if (loginFormState.getPasswordError() != null) {
+            binding.password.setErrorEnabled(true);
             binding.password.setError(getString(loginFormState.getPasswordError()));
         } else {
+            binding.password.setErrorEnabled(false);
             binding.password.setError(null);
         }
     }

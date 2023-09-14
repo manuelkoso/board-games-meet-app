@@ -6,10 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.ParseException;
@@ -91,13 +88,12 @@ public class NewEventViewModel extends ViewModel {
         firebaseFirestore.collection(FirebaseConfig.EVENTS).document(Objects.requireNonNull(currentEventKey.getValue())).set(newEvent).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Log.d(FirebaseConfig.TAG, FirebaseConfig.DATA_WRITE_SUCCESS);
-                submissionResult.setValue(new SubmissionResult(Result.SUCCESS, R.string.new_event_success));
-                resetFieldValues();
             } else {
                 Log.w(FirebaseConfig.TAG, task.getException());
-                submissionResult.setValue(new SubmissionResult(Result.FAILURE, R.string.unknown_error));
             }
         });
+        submissionResult.setValue(new SubmissionResult(Result.SUCCESS, R.string.new_event_success));
+        resetFieldValues();
     }
 
     private void resetFieldValues() {

@@ -72,8 +72,12 @@ public class LoginViewModel extends ViewModel {
                 Log.d(FirebaseConfig.TAG, LOGIN_SUCCESS_MESSAGE);
                 loginResult.setValue(new SubmissionResult(SUCCESS));
             } else {
+                if(task.getException() instanceof FirebaseNetworkException) {
+                    loginResult.setValue(new SubmissionResult(NETWORK_FAILURE, R.string.network_failure));
+                } else {
+                    loginResult.setValue(new SubmissionResult(FAILURE, R.string.signup_failed));
+                }
                 Log.w(FirebaseConfig.TAG, task.getException());
-                loginResult.setValue(new SubmissionResult(FAILURE, R.string.login_failed));
             }
         });
     }
@@ -116,7 +120,6 @@ public class LoginViewModel extends ViewModel {
                     loginResult.setValue(new SubmissionResult(FAILURE, R.string.signup_failed));
                 }
                 Log.w(FirebaseConfig.TAG, task.getException());
-
             }
         });
     }

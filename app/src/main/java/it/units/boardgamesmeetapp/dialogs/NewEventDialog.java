@@ -18,9 +18,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.timepicker.MaterialTimePicker;
-import com.google.firebase.auth.FirebaseAuth;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -55,8 +53,10 @@ public class NewEventDialog {
         viewModel = new ViewModelProvider(fragment.getViewModelStore(), new NewEventViewModelFactory()).get(NewEventViewModel.class);
         this.initialEvent = initialEvent;
 
-        viewModel.resetSubmissionResult();
         viewModel.setEventKey(getEventKey());
+
+        if(initialEvent != null)
+            viewModel.updateCurrentEvent(initialEvent.getGame(), String.valueOf(initialEvent.getMaxNumberOfPlayers()), initialEvent.getLocation(), initialEvent.getDate(), initialEvent.getTime());
 
         initDialog(fragment);
 
@@ -71,26 +71,26 @@ public class NewEventDialog {
             binding.loading.setVisibility(View.GONE);
             switch (submissionResult.getResult()) {
                 case EMPTY_FIELD:
-                    setFieldErrorOnEmptyFields();
+                    setFieldErrorOnEmptyFields(fragment.getResources().getString(submissionResult.getMessage()));
                     break;
                 case OLD_DATE:
+                    binding.date.setErrorEnabled(true);
+                    binding.time.setErrorEnabled(true);
                     binding.date.setError(fragment.getResources().getString(submissionResult.getMessage()));
                     binding.time.setError(fragment.getResources().getString(submissionResult.getMessage()));
                     break;
-                case SUCCESS:
-                    showResult(fragment.requireContext(), submissionResult.getMessage());
-                    dialog.hide();
-                    break;
                 case WRONG_NUMBER_PLAYERS:
+                    binding.numberOfPlayers.setErrorEnabled(true);
                     binding.numberOfPlayers.setError(fragment.getResources().getString(submissionResult.getMessage()));
                     break;
                 case NONE:
                     return;
                 default:
                     showResult(fragment.requireContext(), submissionResult.getMessage());
+                    dialog.hide();
             }
         });
-        viewModel.resetSubmissionResult();
+
         dialog.setView(binding.getRoot());
     }
 
@@ -132,6 +132,7 @@ public class NewEventDialog {
 
             @Override
             public void afterTextChanged(Editable s) {
+                viewModel.resetSubmissionResult();
                 viewModel.updateCurrentEvent(game.getText().toString(), numberOfPlayers.getText().toString(), place.getText().toString(), date.getText().toString(), time.getText().toString());
             }
         };
@@ -179,11 +180,17 @@ public class NewEventDialog {
     }
 
     private void removeFieldErrors() {
-        Stream.of(binding.game, binding.numberOfPlayers, binding.place, binding.date, binding.time).forEach(field -> field.setError(null));
+        Stream.of(binding.game, binding.numberOfPlayers, binding.place, binding.date, binding.time).forEach(field -> {
+            field.setErrorEnabled(false);
+            field.setError(null);
+        });
     }
 
-    private void setFieldErrorOnEmptyFields() {
-        Stream.of(binding.game, binding.numberOfPlayers, binding.place, binding.date, binding.time).filter(field -> Objects.requireNonNull(field.getEditText()).getText().toString().isEmpty()).forEach(field -> field.setError("Empty field!"));
+    private void setFieldErrorOnEmptyFields(String errorMessage) {
+        Stream.of(binding.game, binding.numberOfPlayers, binding.place, binding.date, binding.time).filter(field -> Objects.requireNonNull(field.getEditText()).getText().toString().isEmpty()).forEach(field -> {
+            field.setErrorEnabled(true);
+            field.setError(errorMessage);
+        });
     }
 
     private void showResult(@NonNull Context context, @StringRes Integer message) {

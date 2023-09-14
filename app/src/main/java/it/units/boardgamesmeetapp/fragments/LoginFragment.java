@@ -58,10 +58,10 @@ public class LoginFragment extends Fragment {
                 return;
             }
             binding.loading.setVisibility(View.GONE);
-            if (loginResult.getResult() == Result.FAILURE) {
-                setFieldsErrors(loginResult);
-            } else {
+            if (loginResult.getResult() == Result.SUCCESS) {
                 NavHostFragment.findNavController(this).navigate(new ActionOnlyNavDirections(R.id.action_navigation_login_to_navigation_home));
+            } else {
+                setFieldsErrors(loginResult);
             }
         });
 
@@ -93,6 +93,8 @@ public class LoginFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
+                binding.email.setErrorEnabled(false);
+                binding.password.setErrorEnabled(false);
                 binding.email.setError(null);
                 binding.password.setError(null);
             }
@@ -105,16 +107,22 @@ public class LoginFragment extends Fragment {
 
     private void setFieldsErrors(SubmissionResult loginResult) {
         if (loginResult.getMessage() == R.string.email_empty) {
+            binding.email.setErrorEnabled(true);
             binding.email.setError(getResources().getString(loginResult.getMessage()));
         } else if (loginResult.getMessage() == R.string.password_empty) {
+            binding.password.setErrorEnabled(true);
             binding.password.setError(getResources().getString(loginResult.getMessage()));
         } else {
+            binding.email.setErrorEnabled(true);
+            binding.password.setErrorEnabled(true);
             binding.email.setError(getResources().getString(loginResult.getMessage()));
             binding.password.setError(getResources().getString(loginResult.getMessage()));
         }
     }
 
     private void removeFieldErrors() {
+        binding.email.setErrorEnabled(false);
+        binding.password.setErrorEnabled(false);
         binding.email.setError(null);
         binding.password.setError(null);
     }
