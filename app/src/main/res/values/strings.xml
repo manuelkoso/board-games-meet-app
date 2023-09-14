@@ -65,4 +65,10 @@
     <string name="modify_event_success">Event modified!</string>
     <string name="number_of_players_error">There must be at least 2 players</string>
     <string name="players">Players</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome!"</string>
+    <string name="done">Done</string>
+    <string name="date_picker_title">Select date</string>
+    <string name="time_picker_title">Select time</string>
 </resources>

@@ -43,18 +43,16 @@
             android:id="@+id/action_navigation_login_to_navigation_signup"
             app:destination="@id/navigation_signup"
             app:enterAnim="@anim/fui_slide_in_right"
-            app:exitAnim="@anim/fui_slide_out_left"
+            app:exitAnim="@android:anim/fade_out"
             app:launchSingleTop="false"
-            app:popEnterAnim="@anim/fui_slide_in_right"
-            app:popExitAnim="@anim/fui_slide_out_left"
             app:popUpTo="@id/navigation_login"
             app:popUpToInclusive="true" />
     </fragment>
     <action
         android:id="@+id/action_global_loginFragment"
         app:destination="@id/navigation_login"
-        app:enterAnim="@anim/fui_slide_in_right"
-        app:exitAnim="@anim/fui_slide_out_left"
+        app:enterAnim="@android:anim/fade_in"
+        app:exitAnim="@android:anim/slide_out_right"
         app:popUpTo="@id/mobile_navigation"
         app:popUpToInclusive="true" />
     <fragment

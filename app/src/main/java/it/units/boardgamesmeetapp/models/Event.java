@@ -22,16 +22,16 @@ public class Event {
     private String game;
     private int maxNumberOfPlayers;
     private List<String> players;
-    private String location;
+    private String place;
     private long timestamp;
 
-    public Event(String key, String ownerId, String game, int maxNumberOfPlayers, String location, long timestamp) {
+    public Event(@NonNull String key, @NonNull String ownerId, @NonNull String game, int maxNumberOfPlayers, @NonNull String place, long timestamp) throws IllegalArgumentException {
         this.ownerId = ownerId;
         this.game = game;
         this.timestamp = timestamp;
         this.key = key;
         this.maxNumberOfPlayers = maxNumberOfPlayers;
-        this.location = location;
+        this.place = place;
         players = new ArrayList<>(maxNumberOfPlayers);
         players.add(ownerId);
     }
@@ -64,8 +64,8 @@ public class Event {
     }
 
     @NonNull
-    public String getLocation() {
-        return location;
+    public String getPlace() {
+        return place;
     }
 
     @Nullable
@@ -98,7 +98,7 @@ public class Event {
         result.put("game", game);
         result.put("maxNumberOfPlayers", maxNumberOfPlayers);
         result.put("players", players);
-        result.put("location", location);
+        result.put("location", place);
         result.put("timestamp", timestamp);
         return result;
     }

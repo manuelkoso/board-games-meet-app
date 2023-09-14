@@ -157,7 +157,7 @@ public class HomeFragment extends Fragment {
                 Date date = new Date(model.getTimestamp());
                 SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy - HH:mm", Locale.getDefault());
 
-                activityBinding.place.setText(model.getLocation());
+                activityBinding.place.setText(model.getPlace());
                 activityBinding.date.setText(dateFormat.format(date));
                 activityBinding.gameTitle.setText(model.getGame());
                 activityBinding.people.setText(String.valueOf(model.getPlayers().size() + "/" + model.getMaxNumberOfPlayers()));

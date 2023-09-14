@@ -14,27 +14,25 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.stream.Stream;
 
 import it.units.boardgamesmeetapp.R;
 import it.units.boardgamesmeetapp.database.FirebaseConfig;
 import it.units.boardgamesmeetapp.models.Event;
+import it.units.boardgamesmeetapp.models.EventInfoView;
 import it.units.boardgamesmeetapp.utils.Result;
 import it.units.boardgamesmeetapp.viewmodels.SubmissionResult;
 
 public class NewEventViewModel extends ViewModel {
 
+    public static final int MIN_NUMBER_OF_PLAYERS = 2;
     @NonNull
     private final FirebaseFirestore firebaseFirestore;
     @NonNull
     private final FirebaseAuth firebaseAuth;
     private final MutableLiveData<SubmissionResult> submissionResult = new MutableLiveData<>();
     private final MutableLiveData<String> currentEventKey = new MutableLiveData<>();
-    private final MutableLiveData<String> currentGame = new MutableLiveData<>();
-    private final MutableLiveData<String> currentNumberOfPlayers = new MutableLiveData<>();
-    private final MutableLiveData<String> currentPlace = new MutableLiveData<>();
-    private final MutableLiveData<String> currentDate = new MutableLiveData<>();
-    private final MutableLiveData<String> currentTime = new MutableLiveData<>();
+    private final MutableLiveData<EventInfoView> currentEventInfoView = new MutableLiveData<>();
+    private final MutableLiveData<EventInfoView> initialEventInfoView = new MutableLiveData<>();
 
     public NewEventViewModel(@NonNull FirebaseFirestore firebaseFirestore, @NonNull FirebaseAuth firebaseAuth) {
         this.firebaseAuth = firebaseAuth;
@@ -44,48 +42,50 @@ public class NewEventViewModel extends ViewModel {
 
     public void submit() {
         try {
-            if (checkInputError()) return;
-            if (currentEventKey.getValue() == null) {
-                currentEventKey.setValue(firebaseFirestore.collection(FirebaseConfig.EVENTS).document().getId());
+            if (checkCurrentEventInfoViewFieldValidity()) {
+                if (currentEventKey.getValue() == null) {
+                    currentEventKey.setValue(firebaseFirestore.collection(FirebaseConfig.EVENTS).document().getId());
+                }
+                String game = Objects.requireNonNull(currentEventInfoView.getValue()).getGame().toUpperCase();
+                String place = currentEventInfoView.getValue().getPlace().toUpperCase();
+                int maxNumberOfPlayers = Integer.parseInt(currentEventInfoView.getValue().getMaxNumberOfPlayers());
+                long timestamp = getTimestampFromDateTimeString(currentEventInfoView.getValue().getDate(), currentEventInfoView.getValue().getTime());
+                Event newEvent = new Event(currentEventKey.getValue(), Objects.requireNonNull(firebaseAuth.getUid()), game, maxNumberOfPlayers, place, timestamp);
+                submitEvent(newEvent);
             }
-            submitEvent();
-        } catch (ParseException e) {
-            submissionResult.setValue(new SubmissionResult(Result.FAILURE, R.string.unknown_error));
+        } catch (ParseException exception) {
+            Log.w("APP", exception);
         }
     }
 
-    private boolean checkInputError() throws ParseException {
-        if (isAnyFieldEmpty()) {
+    private boolean checkCurrentEventInfoViewFieldValidity() throws ParseException {
+        if (currentEventInfoView.getValue() == null || Objects.requireNonNull(currentEventInfoView.getValue()).isAnyFieldEmpty()) {
             submissionResult.setValue(new SubmissionResult(Result.EMPTY_FIELD, R.string.empty_field_error));
-            return true;
+            return false;
         }
-        if(Integer.parseInt(Objects.requireNonNull(currentNumberOfPlayers.getValue())) < 2) {
+        if (Integer.parseInt(currentEventInfoView.getValue().getMaxNumberOfPlayers()) < MIN_NUMBER_OF_PLAYERS) {
             submissionResult.setValue(new SubmissionResult(Result.WRONG_NUMBER_PLAYERS, R.string.number_of_players_error));
-            return true;
+            return false;
         }
-        if (hasPastDate()) {
+        if (getTimestampFromDateTimeString(currentEventInfoView.getValue().getDate(), currentEventInfoView.getValue().getTime()) < getCurrentTimestamp()) {
             submissionResult.setValue(new SubmissionResult(Result.OLD_DATE, R.string.old_date_error));
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 
-    private boolean hasPastDate() throws ParseException {
-        return fromDateTimeStringToTimestamp() < new Date().getTime();
-    }
-
-    private long fromDateTimeStringToTimestamp() throws ParseException {
+    private long getTimestampFromDateTimeString(@NonNull String date, @NonNull String time) throws ParseException {
         SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy HH:mm", Locale.getDefault());
-        return Objects.requireNonNull(dateFormat.parse(currentDate.getValue() + " " + currentTime.getValue())).getTime();
+        return Objects.requireNonNull(dateFormat.parse(date + " " + time)).getTime();
     }
 
-    private boolean isAnyFieldEmpty() {
-        return Stream.of(currentGame.getValue(), currentDate.getValue(), currentPlace.getValue(), currentTime.getValue(), currentNumberOfPlayers.getValue()).anyMatch(value -> value == null || value.isEmpty());
+
+    private static long getCurrentTimestamp() {
+        return new Date().getTime();
     }
 
-    public void submitEvent() throws ParseException {
-        Event newEvent = new Event(currentEventKey.getValue(), Objects.requireNonNull(firebaseAuth.getUid()), currentGame.getValue(), Integer.parseInt(currentNumberOfPlayers.getValue()), currentPlace.getValue(), fromDateTimeStringToTimestamp());
-        firebaseFirestore.collection(FirebaseConfig.EVENTS).document(Objects.requireNonNull(currentEventKey.getValue())).set(newEvent).addOnCompleteListener(task -> {
+    public void submitEvent(@NonNull Event newEvent) {
+        firebaseFirestore.collection(FirebaseConfig.EVENTS).document(Objects.requireNonNull(newEvent.getKey())).set(newEvent).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Log.d(FirebaseConfig.TAG, FirebaseConfig.DATA_WRITE_SUCCESS);
             } else {
@@ -93,11 +93,6 @@ public class NewEventViewModel extends ViewModel {
             }
         });
         submissionResult.setValue(new SubmissionResult(Result.SUCCESS, R.string.new_event_success));
-        resetFieldValues();
-    }
-
-    private void resetFieldValues() {
-        currentGame.setValue(null);
     }
 
     public MutableLiveData<SubmissionResult> getSubmissionResult() {
@@ -108,35 +103,23 @@ public class NewEventViewModel extends ViewModel {
         this.submissionResult.setValue(new SubmissionResult(Result.NONE));
     }
 
-    public void updateCurrentEvent(@NonNull String game, @NonNull String numberOfPlayers, @NonNull String place, @NonNull String date, @NonNull String time) {
-        currentGame.setValue(game);
-        currentNumberOfPlayers.setValue(numberOfPlayers);
-        currentPlace.setValue(place);
-        currentDate.setValue(date);
-        currentTime.setValue(time);
+    public void updateCurrentEvent(@NonNull EventInfoView eventInfoView) {
+        currentEventInfoView.setValue(eventInfoView);
     }
 
     public void setEventKey(String eventKey) {
         currentEventKey.setValue(eventKey);
     }
 
-    public MutableLiveData<String> getCurrentGame() {
-        return currentGame;
+    public void setInitialEventInfoView(@NonNull EventInfoView eventInfoView) {
+        initialEventInfoView.setValue(eventInfoView);
     }
 
-    public MutableLiveData<String> getCurrentNumberOfPlayers() {
-        return currentNumberOfPlayers;
+    public MutableLiveData<EventInfoView> getInitialEventInfoView() {
+        return initialEventInfoView;
     }
 
-    public MutableLiveData<String> getCurrentPlace() {
-        return currentPlace;
-    }
-
-    public MutableLiveData<String> getCurrentDate() {
-        return currentDate;
-    }
-
-    public MutableLiveData<String> getCurrentTime() {
-        return currentTime;
+    public MutableLiveData<EventInfoView> getCurrentEventInfoView() {
+        return currentEventInfoView;
     }
 }
