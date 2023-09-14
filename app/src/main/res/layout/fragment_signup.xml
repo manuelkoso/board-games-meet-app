@@ -19,7 +19,7 @@
             android:layout_height="wrap_content">
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/materialCardView"
+                android:id="@+id/login_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="10dp"
@@ -143,7 +143,7 @@
                 app:layout_constraintBottom_toTopOf="@+id/goto_signup_button"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/materialCardView" />
+                app:layout_constraintTop_toBottomOf="@+id/login_card" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/goto_signup_button"

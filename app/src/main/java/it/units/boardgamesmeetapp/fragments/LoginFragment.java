@@ -67,7 +67,7 @@ public class LoginFragment extends Fragment {
             }
         });
 
-        binding.login.setOnClickListener(v -> {
+        binding.loginButton.setOnClickListener(v -> {
             binding.loading.setVisibility(View.VISIBLE);
             removeFieldErrors();
             EditText email = binding.email.getEditText();
