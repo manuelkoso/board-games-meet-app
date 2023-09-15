@@ -58,7 +58,7 @@ public class ProfileFragment extends Fragment {
 
         viewModel.getInitialUserInfo().observe(getViewLifecycleOwner(), initialUserInfo -> {
             if (initialUserInfo == null) return;
-            setTextFieldWith(initialUserInfo);
+            initTextFields(initialUserInfo);
         });
 
 
@@ -98,7 +98,7 @@ public class ProfileFragment extends Fragment {
         favouriteGame.addTextChangedListener(afterTextChangedListener);
     }
 
-    private void setTextFieldWith(@NonNull UserInfoView initialUserInfo) {
+    private void initTextFields(@NonNull UserInfoView initialUserInfo) {
         name.setText(initialUserInfo.getName());
         surname.setText(initialUserInfo.getSurname());
         age.setText(String.valueOf(initialUserInfo.getAge()));

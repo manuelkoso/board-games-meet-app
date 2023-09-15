@@ -15,10 +15,10 @@ public class UserInfoView {
     private final String favouriteGame;
 
     public UserInfoView(@NonNull User user) {
-        name = initialField(user.getName());
-        surname = initialField(user.getSurname());
-        favouritePlace = initialField(user.getFavouritePlace());
-        favouriteGame = initialField(user.getFavouriteGame());
+        name = initField(user.getName());
+        surname = initField(user.getSurname());
+        favouritePlace = initField(user.getFavouritePlace());
+        favouriteGame = initField(user.getFavouriteGame());
         if (user.getAge() == 0) {
             age = "";
         } else {
@@ -26,7 +26,7 @@ public class UserInfoView {
         }
     }
 
-    private String initialField(@Nullable String input) {
+    private String initField(@Nullable String input) {
         if(input == null) {
             return "";
         }
@@ -34,11 +34,11 @@ public class UserInfoView {
     }
 
     public UserInfoView(String name, String surname, String age, String favouritePlace, String favouriteGame) {
-        this.name = initialField(name);
-        this.surname = initialField(surname);
-        this.age = initialField(age);
-        this.favouritePlace = initialField(favouritePlace);
-        this.favouriteGame = initialField(favouriteGame);
+        this.name = initField(name);
+        this.surname = initField(surname);
+        this.age = initField(age);
+        this.favouritePlace = initField(favouritePlace);
+        this.favouriteGame = initField(favouriteGame);
     }
 
     public String getName() {
