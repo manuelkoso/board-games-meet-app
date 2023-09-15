@@ -80,4 +80,6 @@
     <string name="created">Created</string>
     <string name="participated">Participated</string>
     <string name="subscribe">Subscribe</string>
+    <string name="subscribed">Subscribed</string>
+    <string name="done_result">Done!</string>
 </resources>

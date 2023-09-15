@@ -3,26 +3,28 @@ package it.units.boardgamesmeetapp.viewmodels.profile;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Objects;
 
 import it.units.boardgamesmeetapp.database.FirebaseConfig;
 import it.units.boardgamesmeetapp.models.User;
-import it.units.boardgamesmeetapp.models.UserInfo;
+import it.units.boardgamesmeetapp.models.UserInfoView;
 
 public class ProfileViewModel extends ViewModel {
     @NonNull
     private final FirebaseFirestore firebaseFirestore;
     @NonNull
     private final FirebaseAuth firebaseAuth;
-    private final MutableLiveData<UserInfo> initialUserInfo = new MutableLiveData<>();
-    private final MutableLiveData<UserInfo> currentUserInfo = new MutableLiveData<>();
+    private final MutableLiveData<UserInfoView> initialUserInfo = new MutableLiveData<>();
+    private final MutableLiveData<UserInfoView> currentUserInfo = new MutableLiveData<>();
     private final MutableLiveData<Integer> userCreatedEvents = new MutableLiveData<>();
     private final MutableLiveData<Integer> userParticipatedEvents = new MutableLiveData<>();
 
@@ -41,22 +43,21 @@ public class ProfileViewModel extends ViewModel {
                     if (value != null && value.exists()) {
                         Log.d(FirebaseConfig.TAG, "Data: " + value.getData());
                         User user = value.toObject(User.class);
-                        initialUserInfo.setValue(Objects.requireNonNull(user).getInfo());
+                        initialUserInfo.setValue(new UserInfoView(user));
                     } else {
                         Log.w(FirebaseConfig.TAG, "Data: null");
                     }
                 }
         );
-        firebaseFirestore.collection(FirebaseConfig.EVENTS_REFERENCE).whereArrayContains("players", Objects.requireNonNull(firebaseAuth.getUid())).get().addOnCompleteListener(task -> {
-            if(task.isSuccessful()) {
-                int lol = task.getResult().size();
+        firebaseFirestore.collection(FirebaseConfig.EVENTS_REFERENCE).where(Filter.notEqualTo(FirebaseConfig.OWNER_ID_REFERENCE, firebaseAuth.getUid())).whereArrayContains(FirebaseConfig.PLAYERS_REFERENCE, Objects.requireNonNull(firebaseAuth.getUid())).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
                 userParticipatedEvents.setValue(task.getResult().size());
             } else {
                 userParticipatedEvents.setValue(0);
             }
         });
-        firebaseFirestore.collection(FirebaseConfig.EVENTS_REFERENCE).whereEqualTo("ownerId", firebaseAuth.getUid()).get().addOnCompleteListener(task -> {
-            if(task.isSuccessful()) {
+        firebaseFirestore.collection(FirebaseConfig.EVENTS_REFERENCE).whereEqualTo(FirebaseConfig.OWNER_ID_REFERENCE, firebaseAuth.getUid()).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
                 userCreatedEvents.setValue(task.getResult().size());
             } else {
                 userCreatedEvents.setValue(0);
@@ -72,30 +73,38 @@ public class ProfileViewModel extends ViewModel {
         return userParticipatedEvents;
     }
 
-    public MutableLiveData<UserInfo> getCurrentUserInfo() {
+    public MutableLiveData<UserInfoView> getCurrentUserInfo() {
         return currentUserInfo;
     }
 
     public void modifyUserInformation() {
-        DocumentReference reference = firebaseFirestore.collection(FirebaseConfig.USERS_REFERENCE).document(Objects.requireNonNull(firebaseAuth.getUid()));
-        reference.update("info", Objects.requireNonNull(currentUserInfo.getValue()).toMap()).addOnCompleteListener(task -> {
+        String name = Objects.requireNonNull(currentUserInfo.getValue()).getName();
+        String surname = currentUserInfo.getValue().getSurname();
+        int age = getAgeFromString(currentUserInfo.getValue().getAge());
+        String place = currentUserInfo.getValue().getFavouritePlace();
+        String game = currentUserInfo.getValue().getFavouriteGame();
+        User user = new User(firebaseAuth.getUid(), name, surname, age, place, game);
+        firebaseFirestore.collection(FirebaseConfig.USERS_REFERENCE).document(user.getId()).set(user).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                Log.d(FirebaseConfig.TAG, "User information modified correctly");
+                Log.d(FirebaseConfig.TAG, FirebaseConfig.DATA_MODIFIED_SUCCESS);
             } else {
                 Log.w(FirebaseConfig.TAG, task.getException());
             }
         });
     }
 
-    public void updateCurrentInfoUser(UserInfo userInfo) {
+    private static int getAgeFromString(@Nullable String inputString) {
+        if (inputString == null || inputString.isEmpty())
+            return 0;
+        return Integer.parseInt(inputString);
+    }
+
+    public void updateCurrentInfoUser(UserInfoView userInfo) {
         this.currentUserInfo.setValue(userInfo);
     }
 
-    public MutableLiveData<UserInfo> getInitialUserInfo() {
+    public MutableLiveData<UserInfoView> getInitialUserInfo() {
         return initialUserInfo;
     }
 
-    public void logout() {
-        firebaseAuth.signOut();
-    }
 }

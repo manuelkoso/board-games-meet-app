@@ -93,7 +93,7 @@ public class SubmitEventViewModel extends ViewModel {
                 Log.w(FirebaseConfig.TAG, task.getException());
             }
         });
-        submissionResult.setValue(new SubmissionResult(Result.SUCCESS, R.string.new_event_success));
+        submissionResult.setValue(new SubmissionResult(Result.SUCCESS, R.string.done_result));
     }
 
     public MutableLiveData<SubmissionResult> getSubmissionResult() {

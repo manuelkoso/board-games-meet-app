@@ -63,8 +63,8 @@ public class HistoryFragment extends Fragment {
 
         }
 
-        Query query = FirebaseFirestore.getInstance().collection(FirebaseConfig.EVENTS_REFERENCE).whereArrayContains(FirebaseConfig.PLAYERS_FIELD_REFERENCE, Objects.requireNonNull(FirebaseAuth.getInstance().getUid()));
-        query = query.where(Filter.lessThan(FirebaseConfig.TIMESTAMP_FIELD_REFERENCE, new Date().getTime()));
+        Query query = FirebaseFirestore.getInstance().collection(FirebaseConfig.EVENTS_REFERENCE).whereArrayContains(FirebaseConfig.PLAYERS_REFERENCE, Objects.requireNonNull(FirebaseAuth.getInstance().getUid()));
+        query = query.where(Filter.lessThan(FirebaseConfig.TIMESTAMP_REFERENCE, new Date().getTime()));
         FirestoreRecyclerOptions<Event> options = new FirestoreRecyclerOptions.Builder<Event>().setQuery(query, Event.class).build();
         FirestoreRecyclerAdapter<Event, EventViewHolder> adapter = getEventEventViewHolderFirestoreRecyclerAdapter(options);
 

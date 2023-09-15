@@ -1,7 +1,6 @@
 package it.units.boardgamesmeetapp.models;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;

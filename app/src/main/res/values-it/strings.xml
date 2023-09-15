@@ -45,7 +45,7 @@
     <string name="logout">Logout</string>
     <string name="go_back_to_profile">Vai indietro al profilo</string>
     <string name="event_canceled">Evento cancellato</string>
-    <string name="event_unsubscribed">Iscrizione all\'evento annullata</string>
+    <string name="event_unsubscribed">Iscrizione annullata</string>
     <string name="search">Cerca</string>
     <string name="place">Luogo</string>
     <string name="filter_dialog_title">Campo del filtro</string>
@@ -81,4 +81,6 @@
     <string name="created">Creati</string>
     <string name="participated">Partecipati</string>
     <string name="subscribe">Iscriviti</string>
+    <string name="subscribed">Iscritto</string>
+    <string name="done_result">Fatto!</string>
 </resources>

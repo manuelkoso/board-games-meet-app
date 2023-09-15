@@ -71,7 +71,7 @@ public class HomeFragment extends Fragment {
 
         RecyclerView recyclerView = binding.mainRecycler;
         Query query = FirebaseFirestore.getInstance().collection(FirebaseConfig.EVENTS_REFERENCE);
-        query = query.where(Filter.greaterThan(FirebaseConfig.TIMESTAMP_FIELD_REFERENCE, new Date().getTime()));
+        query = query.where(Filter.greaterThan(FirebaseConfig.TIMESTAMP_REFERENCE, new Date().getTime()));
         FirestoreRecyclerOptions<Event> options = new FirestoreRecyclerOptions.Builder<Event>().setQuery(query, Event.class).build();
         FirestoreRecyclerAdapter<Event, EventViewHolder> adapter = getFilteredAdapter(options);
 
@@ -133,13 +133,13 @@ public class HomeFragment extends Fragment {
     private static Query getFilterQuery(@NonNull Integer buttonId, @NonNull String inputString) {
         Query query = FirebaseFirestore.getInstance().collection(FirebaseConfig.EVENTS_REFERENCE);
         if (buttonId == R.id.radio_button_game)
-            query = query.orderBy(FirebaseConfig.GAME_FIELD_REFERENCE).
-                    orderBy(FirebaseConfig.TIMESTAMP_FIELD_REFERENCE, Query.Direction.DESCENDING).
+            query = query.orderBy(FirebaseConfig.GAME_REFERENCE).
+                    orderBy(FirebaseConfig.TIMESTAMP_REFERENCE, Query.Direction.DESCENDING).
                     startAt(inputString.toUpperCase()).endAt(inputString.toUpperCase() + "\uf8ff").
                     limit(MAX_NUMBER_FILTERED_EVENTS);
         if (buttonId == R.id.radio_button_place)
-            query = query.orderBy(FirebaseConfig.PLACE_FIELD_REFERENCE).
-                    orderBy(FirebaseConfig.TIMESTAMP_FIELD_REFERENCE, Query.Direction.DESCENDING).
+            query = query.orderBy(FirebaseConfig.PLACE_REFERENCE).
+                    orderBy(FirebaseConfig.TIMESTAMP_REFERENCE, Query.Direction.DESCENDING).
                     startAt(inputString.toUpperCase()).endAt(inputString.toUpperCase() + "\uf8ff").
                     limit(MAX_NUMBER_FILTERED_EVENTS);
         return query;
@@ -165,11 +165,18 @@ public class HomeFragment extends Fragment {
                 activityBinding.people.setText(eventInfoView.getNumberOfPlayersOverMaxNumber());
                 activityBinding.eventButton.setText(R.string.subscribe);
 
+                activityBinding.card.setOnClickListener(v -> {
+                    homeViewModel.updateCurrentEventShown(model);
+                    playersDialog = PlayersDialog.getInstance(HomeFragment.this, model);
+                    playersDialog.show();
+                });
+
                 if (model.getTimestamp() < new Date().getTime()) {
                     activityBinding.eventButton.setText(R.string.done);
                     activityBinding.eventButton.setEnabled(false);
                     return;
                 }
+
                 if (model.getPlayers().contains(FirebaseAuth.getInstance().getUid()) || model.getMaxNumberOfPlayers() == model.getPlayers().size())
                     activityBinding.eventButton.setEnabled(false);
                 activityBinding.eventButton.setOnClickListener(v ->
@@ -178,14 +185,9 @@ public class HomeFragment extends Fragment {
                                 .setPositiveButton(R.string.yes, (dialogInterface, i) -> {
                                     homeViewModel.submit(model);
                                     activityBinding.eventButton.setEnabled(false);
-                                    showResult(R.string.submit);
+                                    showResult(R.string.subscribed);
                                 }).setNegativeButton(R.string.no, ((dialogInterface, i) -> {
                                 })).show());
-                activityBinding.card.setOnClickListener(v -> {
-                    homeViewModel.updateCurrentEventShown(model);
-                    playersDialog = PlayersDialog.getInstance(HomeFragment.this, model);
-                    playersDialog.show();
-                });
             }
         };
     }

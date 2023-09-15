@@ -10,25 +10,32 @@ import java.util.Map;
 
 @IgnoreExtraProperties
 public class User {
-
-    @NonNull
-    private final String id;
-    @NonNull
-    private UserInfo info;
+    private String id;
+    private String name;
+    private String surname;
+    private int age;
+    private String favouritePlace;
+    private String favouriteGame;
 
     public User() {
-        this.id = "";
-        info = new UserInfo();
     }
 
     public User(@NonNull String id) {
         this.id = id;
-        info = new UserInfo();
+        this.name = null;
+        this.surname = null;
+        this.age = 0;
+        this.favouritePlace = null;
+        this.favouriteGame = null;
     }
 
-    public User(@NonNull String id, @NonNull UserInfo info) {
+    public User(String id, String name, String surname, int age, String favouritePlace, String favouriteGame) {
         this.id = id;
-        this.info = info;
+        this.name = name;
+        this.surname = surname;
+        this.age = age;
+        this.favouritePlace = favouritePlace;
+        this.favouriteGame = favouriteGame;
     }
 
     @NonNull
@@ -36,20 +43,35 @@ public class User {
         return id;
     }
 
-    @NonNull
-    public UserInfo getInfo() {
-        return info;
+    public String getName() {
+        return name;
     }
 
-    public void setInfo(@NonNull UserInfo info) {
-        this.info = info;
+    public String getSurname() {
+        return surname;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public String getFavouritePlace() {
+        return favouritePlace;
+    }
+
+    public String getFavouriteGame() {
+        return favouriteGame;
     }
 
     @Exclude
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
         result.put("id", id);
-        result.put("info", info.toMap());
+        result.put("name", name);
+        result.put("surname", surname);
+        result.put("age", age);
+        result.put("favouritePlace", favouritePlace);
+        result.put("favouriteGame", favouriteGame);
         return result;
     }
 

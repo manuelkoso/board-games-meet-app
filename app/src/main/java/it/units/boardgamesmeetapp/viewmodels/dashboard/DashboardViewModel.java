@@ -34,7 +34,7 @@ public class DashboardViewModel extends ViewModel {
     }
 
     public void unsubscribe(@NonNull Event event) {
-        database.collection(FirebaseConfig.EVENTS_REFERENCE).document(event.getKey()).update(FirebaseConfig.PLAYERS_FIELD_REFERENCE, FieldValue.arrayRemove(FirebaseAuth.getInstance().getUid())).addOnCompleteListener(task -> {
+        database.collection(FirebaseConfig.EVENTS_REFERENCE).document(event.getKey()).update(FirebaseConfig.PLAYERS_REFERENCE, FieldValue.arrayRemove(FirebaseAuth.getInstance().getUid())).addOnCompleteListener(task -> {
             if(task.isSuccessful()) {
                 Log.d(FirebaseConfig.TAG, FirebaseConfig.EVENT_UNSUBSCRIBED);
             } else {

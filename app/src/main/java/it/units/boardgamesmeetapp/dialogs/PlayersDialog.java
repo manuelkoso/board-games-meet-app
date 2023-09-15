@@ -20,10 +20,10 @@ import it.units.boardgamesmeetapp.R;
 import it.units.boardgamesmeetapp.database.FirebaseConfig;
 import it.units.boardgamesmeetapp.databinding.DialogEventPlayersBinding;
 import it.units.boardgamesmeetapp.databinding.SinglePlayerBinding;
+import it.units.boardgamesmeetapp.models.UserInfoView;
 import it.units.boardgamesmeetapp.viewholders.PlayersViewHolder;
 import it.units.boardgamesmeetapp.models.Event;
 import it.units.boardgamesmeetapp.models.User;
-import it.units.boardgamesmeetapp.models.UserInfo;
 
 public class PlayersDialog {
 
@@ -48,11 +48,12 @@ public class PlayersDialog {
             @Override
             protected void onBindViewHolder(@NonNull PlayersViewHolder holder, int position, @NonNull User model) {
                 SinglePlayerBinding binding = holder.getBinding();
-                UserInfo userInfo = model.getInfo();
-                binding.name.append(userInfo.getName() + " " + userInfo.getSurname());
-                binding.age.append(String.valueOf(userInfo.getAge()));
-                binding.game.append(userInfo.getFavouriteGame());
-                binding.place.append(userInfo.getFavouritePlace());
+                UserInfoView userInfoView = new UserInfoView(model);
+
+                binding.name.append(userInfoView.getNameAndSurname());
+                binding.age.append(userInfoView.getAge());
+                binding.game.append(userInfoView.getFavouriteGame());
+                binding.place.append(userInfoView.getFavouritePlace());
                 if (model.getId().equals(event.getOwnerId())) {
                     binding.ownerBadge.setVisibility(View.VISIBLE);
                 } else {
@@ -61,7 +62,7 @@ public class PlayersDialog {
             }
         };
         recyclerView.setAdapter(adapter);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(fragment.requireContext(), LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(fragment.requireContext(), LinearLayoutManager.VERTICAL, false);
         
         recyclerView.setLayoutManager(layoutManager);
         adapter.startListening();
