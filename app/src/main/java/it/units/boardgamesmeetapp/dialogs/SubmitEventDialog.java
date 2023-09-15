@@ -63,7 +63,7 @@ public class SubmitEventDialog {
 
         initDialog(fragment);
 
-        binding.dialogClose.setOnClickListener(v -> dialog.hide());
+        binding.dialogClose.setOnClickListener(v -> dialog.dismiss());
         binding.submitEventButton.setOnClickListener(v -> {
             binding.loading.setVisibility(View.VISIBLE);
             viewModel.submit();
@@ -90,7 +90,7 @@ public class SubmitEventDialog {
                     return;
                 default:
                     showResult(fragment.requireContext(), submissionResult.getMessage());
-                    dialog.hide();
+                    dialog.dismiss();
             }
         });
 

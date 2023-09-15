@@ -25,7 +25,7 @@ public class FilterDialog {
 
         binding.radioGroup.setOnCheckedChangeListener((radioGroup, radioButtonId) -> viewModel.updateFilterField(radioButtonId));
         viewModel.getRadioButtonIdMutableLiveData().observe(fragment.getViewLifecycleOwner(), buttonId -> ((RadioButton) binding.getRoot().findViewById(buttonId)).setChecked(true));
-        binding.dialogClose.setOnClickListener(v -> dialog.hide());
+        binding.dialogClose.setOnClickListener(v -> dialog.dismiss());
         dialog.setView(binding.getRoot());
     }
 
