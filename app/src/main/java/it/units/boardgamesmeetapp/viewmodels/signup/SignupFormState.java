@@ -2,20 +2,20 @@ package it.units.boardgamesmeetapp.viewmodels.signup;
 
 import androidx.annotation.Nullable;
 
-public class LoginState {
+public class SignupFormState {
     @Nullable
     private final Integer usernameError;
     @Nullable
     private final Integer passwordError;
     private final boolean isDataValid;
 
-    public LoginState(@Nullable Integer usernameError, @Nullable Integer passwordError) {
+    public SignupFormState(@Nullable Integer usernameError, @Nullable Integer passwordError) {
         this.usernameError = usernameError;
         this.passwordError = passwordError;
         this.isDataValid = false;
     }
 
-    public LoginState(boolean isDataValid) {
+    public SignupFormState(boolean isDataValid) {
         this.usernameError = null;
         this.passwordError = null;
         this.isDataValid = isDataValid;

@@ -20,15 +20,15 @@ import java.util.Objects;
 import it.units.boardgamesmeetapp.R;
 import it.units.boardgamesmeetapp.databinding.FragmentSignupBinding;
 import it.units.boardgamesmeetapp.viewmodels.Result;
-import it.units.boardgamesmeetapp.viewmodels.signup.LoginState;
-import it.units.boardgamesmeetapp.viewmodels.login.LoginViewModel;
-import it.units.boardgamesmeetapp.viewmodels.login.LoginViewModelFactory;
+import it.units.boardgamesmeetapp.viewmodels.signup.SignupFormState;
 import it.units.boardgamesmeetapp.viewmodels.main.MainViewModel;
+import it.units.boardgamesmeetapp.viewmodels.signup.SignupViewModel;
+import it.units.boardgamesmeetapp.viewmodels.signup.SignupViewModelFactory;
 
 public class SignupFragment extends Fragment {
     public static final String EMAIL_KEY = "EMAIL";
     public static final String PASSWORD_KEY = "PASSWORD";
-    private LoginViewModel loginViewModel;
+    private SignupViewModel signupViewModel;
 
     private FragmentSignupBinding binding;
 
@@ -42,8 +42,8 @@ public class SignupFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory())
-                .get(LoginViewModel.class);
+        signupViewModel = new ViewModelProvider(this, new SignupViewModelFactory())
+                .get(SignupViewModel.class);
         MainViewModel mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
         mainViewModel.updateActionBarTitle(getResources().getString(R.string.board_games));
 
@@ -53,15 +53,15 @@ public class SignupFragment extends Fragment {
         }
 
 
-        loginViewModel.getLoginFormState().observe(getViewLifecycleOwner(), loginFormState -> {
-            if (loginFormState == null) {
+        signupViewModel.getSignupFormState().observe(getViewLifecycleOwner(), signupFormState -> {
+            if (signupFormState == null) {
                 return;
             }
-            binding.signup.setEnabled(loginFormState.isDataValid());
-            setFieldErrors(loginFormState);
+            binding.signup.setEnabled(signupFormState.isDataValid());
+            setFieldErrors(signupFormState);
         });
 
-        loginViewModel.getLoginResult().observe(getViewLifecycleOwner(), loginResult -> {
+        signupViewModel.getSignupResult().observe(getViewLifecycleOwner(), loginResult -> {
             if (loginResult == null) {
                 return;
             }
@@ -89,7 +89,7 @@ public class SignupFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                loginViewModel.loginDataChanged(Objects.requireNonNull(binding.email.getEditText()).getText().toString(),
+                signupViewModel.signupDataChanged(Objects.requireNonNull(binding.email.getEditText()).getText().toString(),
                         Objects.requireNonNull(binding.password.getEditText()).getText().toString());
             }
         };
@@ -101,11 +101,9 @@ public class SignupFragment extends Fragment {
 
                 addTextChangedListener(afterTextChangedListener);
 
-        binding.signup.setOnClickListener(v ->
-
-        {
+        binding.signup.setOnClickListener(v -> {
             binding.loading.setVisibility(View.VISIBLE);
-            loginViewModel.signup(binding.email.getEditText().getText().toString(),
+            signupViewModel.signup(binding.email.getEditText().getText().toString(),
                     binding.password.getEditText().getText().toString());
         });
 
@@ -114,7 +112,7 @@ public class SignupFragment extends Fragment {
                 navigate(new ActionOnlyNavDirections(R.id.action_global_loginFragment)));
     }
 
-    private void setFieldErrors(@NonNull LoginState loginFormState) {
+    private void setFieldErrors(@NonNull SignupFormState loginFormState) {
         if (loginFormState.getUsernameError() != null) {
             binding.email.setErrorEnabled(true);
             binding.email.setError(getString(loginFormState.getUsernameError()));
