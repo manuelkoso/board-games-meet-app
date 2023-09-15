@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 
 import java.util.Objects;
 
+import javax.annotation.Nullable;
+
 public class UserInfoView {
 
     private final String name;
@@ -13,10 +15,10 @@ public class UserInfoView {
     private final String favouriteGame;
 
     public UserInfoView(@NonNull User user) {
-        name = user.getName();
-        surname = user.getSurname();
-        favouritePlace = user.getFavouritePlace();
-        favouriteGame = user.getFavouriteGame();
+        name = initialField(user.getName());
+        surname = initialField(user.getSurname());
+        favouritePlace = initialField(user.getFavouritePlace());
+        favouriteGame = initialField(user.getFavouriteGame());
         if (user.getAge() == 0) {
             age = "";
         } else {
@@ -24,12 +26,19 @@ public class UserInfoView {
         }
     }
 
+    private String initialField(@Nullable String input) {
+        if(input == null) {
+            return "";
+        }
+        return input;
+    }
+
     public UserInfoView(String name, String surname, String age, String favouritePlace, String favouriteGame) {
-        this.name = name;
-        this.surname = surname;
-        this.age = age;
-        this.favouritePlace = favouritePlace;
-        this.favouriteGame = favouriteGame;
+        this.name = initialField(name);
+        this.surname = initialField(surname);
+        this.age = initialField(age);
+        this.favouritePlace = initialField(favouritePlace);
+        this.favouriteGame = initialField(favouriteGame);
     }
 
     public String getName() {

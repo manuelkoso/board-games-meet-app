@@ -94,12 +94,8 @@ public class SignupFragment extends Fragment {
             }
         };
 
-        Objects.requireNonNull(binding.email.getEditText()).
-
-                addTextChangedListener(afterTextChangedListener);
-        Objects.requireNonNull(binding.password.getEditText()).
-
-                addTextChangedListener(afterTextChangedListener);
+        Objects.requireNonNull(binding.email.getEditText()).addTextChangedListener(afterTextChangedListener);
+        Objects.requireNonNull(binding.password.getEditText()).addTextChangedListener(afterTextChangedListener);
 
         binding.signup.setOnClickListener(v -> {
             binding.loading.setVisibility(View.VISIBLE);

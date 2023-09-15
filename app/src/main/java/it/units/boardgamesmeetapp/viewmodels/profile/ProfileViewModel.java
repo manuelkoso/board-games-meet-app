@@ -32,8 +32,6 @@ public class ProfileViewModel extends ViewModel {
     public ProfileViewModel(@NonNull FirebaseAuth firebaseAuth, @NonNull FirebaseFirestore firebaseFirestore) {
         this.firebaseFirestore = firebaseFirestore;
         this.firebaseAuth = firebaseAuth;
-        this.userParticipatedEvents.setValue(0);
-        this.userCreatedEvents.setValue(0);
         DocumentReference reference = firebaseFirestore.collection(FirebaseConfig.USERS_REFERENCE).document(Objects.requireNonNull(firebaseAuth.getUid()));
         reference.addSnapshotListener(
                 (value, exception) -> {

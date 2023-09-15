@@ -26,11 +26,6 @@ import it.units.boardgamesmeetapp.viewmodels.profile.ProfileViewModel;
 import it.units.boardgamesmeetapp.viewmodels.profile.ProfileViewModelFactory;
 
 public class ProfileFragment extends Fragment {
-    public static final String NAME_KEY = "NAME";
-    public static final String SURNAME_KEY = "SURNAME";
-    public static final String AGE_KEY = "AGE";
-    public static final String PLACE_KEY = "PLACE";
-    public static final String GAME_KEY = "GAME";
     private FragmentProfileBinding binding;
     private EditText name;
     private EditText surname;
@@ -58,23 +53,15 @@ public class ProfileFragment extends Fragment {
         favouritePlace = Objects.requireNonNull(binding.place.getEditText());
         favouriteGame = Objects.requireNonNull(binding.game.getEditText());
 
-        if (savedInstanceState != null) {
-            UserInfoView userInfo = new UserInfoView(name.getText().toString(), surname.getText().toString(), age.getText().toString(), favouritePlace.getText().toString(), favouriteGame.getText().toString());
-            viewModel.updateCurrentInfoUser(userInfo);
-            name.setText(savedInstanceState.getString(NAME_KEY));
-            surname.setText(savedInstanceState.getString(SURNAME_KEY));
-            age.setText(savedInstanceState.getString(AGE_KEY));
-            favouritePlace.setText(savedInstanceState.getString(PLACE_KEY));
-            favouriteGame.setText(savedInstanceState.getString(GAME_KEY));
-        }
-
         viewModel.getUserParticipatedEvents().observe(getViewLifecycleOwner(), data -> binding.numberParticipatedEvents.setText(String.valueOf(data)));
         viewModel.getUserCreatedEvents().observe(getViewLifecycleOwner(), data -> binding.numberCreatedEvents.setText(String.valueOf(data)));
 
         viewModel.getInitialUserInfo().observe(getViewLifecycleOwner(), initialUserInfo -> {
-            if (initialUserInfo == null || viewModel.getCurrentUserInfo().getValue() != null) return;
+            if (initialUserInfo == null) return;
             setTextFieldWith(initialUserInfo);
         });
+
+
         viewModel.getCurrentUserInfo().observe(getViewLifecycleOwner(), currentUserInfo -> binding.modifyButton.setEnabled(!currentUserInfo.equals(viewModel.getInitialUserInfo().getValue())));
 
         binding.modifyButton.setOnClickListener(v -> {
@@ -117,16 +104,6 @@ public class ProfileFragment extends Fragment {
         age.setText(String.valueOf(initialUserInfo.getAge()));
         favouritePlace.setText(initialUserInfo.getFavouritePlace());
         favouriteGame.setText(initialUserInfo.getFavouriteGame());
-    }
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putString(NAME_KEY, name.getText().toString());
-        outState.putString(SURNAME_KEY, surname.getText().toString());
-        outState.putString(AGE_KEY, age.getText().toString());
-        outState.putString(PLACE_KEY, favouritePlace.getText().toString());
-        outState.putString(GAME_KEY, favouriteGame.getText().toString());
-        super.onSaveInstanceState(outState);
     }
 
     @Override
