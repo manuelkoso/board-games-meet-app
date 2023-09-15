@@ -19,6 +19,7 @@ import it.units.boardgamesmeetapp.models.User;
 import it.units.boardgamesmeetapp.models.UserInfoView;
 
 public class ProfileViewModel extends ViewModel {
+    public static final int INITIAL_COUNTER_VALUE = 0;
     @NonNull
     private final FirebaseFirestore firebaseFirestore;
     @NonNull
@@ -53,14 +54,14 @@ public class ProfileViewModel extends ViewModel {
             if (task.isSuccessful()) {
                 userParticipatedEvents.setValue(task.getResult().size());
             } else {
-                userParticipatedEvents.setValue(0);
+                userParticipatedEvents.setValue(INITIAL_COUNTER_VALUE);
             }
         });
         firebaseFirestore.collection(FirebaseConfig.EVENTS_REFERENCE).whereEqualTo(FirebaseConfig.OWNER_ID_REFERENCE, firebaseAuth.getUid()).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 userCreatedEvents.setValue(task.getResult().size());
             } else {
-                userCreatedEvents.setValue(0);
+                userCreatedEvents.setValue(INITIAL_COUNTER_VALUE);
             }
         });
     }
