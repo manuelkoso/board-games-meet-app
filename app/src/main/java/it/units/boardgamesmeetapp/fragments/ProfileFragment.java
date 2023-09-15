@@ -66,7 +66,7 @@ public class ProfileFragment extends Fragment {
 
         binding.modifyButton.setOnClickListener(v -> {
             viewModel.modifyUserInformation();
-            Stream.of(name, surname, age, favouriteGame, favouriteGame).forEach(View::clearFocus);
+            Stream.of(name, surname, age, favouriteGame, favouriteGame).forEach(field -> field.clearFocus());
         });
 
         TextWatcher afterTextChangedListener = new TextWatcher() {
