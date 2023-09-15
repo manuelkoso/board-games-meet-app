@@ -134,9 +134,15 @@ public class HomeFragment extends Fragment {
     private static Query getFilterQuery(@NonNull Integer buttonId, @NonNull String inputString) {
         Query query = FirebaseFirestore.getInstance().collection(FirebaseConfig.EVENTS_REFERENCE);
         if (buttonId == R.id.radio_button_game)
-            query = query.orderBy(FirebaseConfig.GAME_FIELD_REFERENCE).orderBy(FirebaseConfig.TIMESTAMP_FIELD_REFERENCE, Query.Direction.DESCENDING).startAt(inputString.toUpperCase()).endAt(inputString.toLowerCase() + "\uf8ff").limit(MAX_NUMBER_FILTERED_EVENTS);
+            query = query.orderBy(FirebaseConfig.GAME_FIELD_REFERENCE).
+                    orderBy(FirebaseConfig.TIMESTAMP_FIELD_REFERENCE, Query.Direction.DESCENDING).
+                    startAt(inputString.toUpperCase()).endAt(inputString.toUpperCase() + "\uf8ff").
+                    limit(MAX_NUMBER_FILTERED_EVENTS);
         if (buttonId == R.id.radio_button_place)
-            query = query.orderBy(FirebaseConfig.PLACE_FIELD_REFERENCE).orderBy(FirebaseConfig.TIMESTAMP_FIELD_REFERENCE, Query.Direction.DESCENDING).startAt(inputString.toUpperCase()).endAt(inputString.toLowerCase() + "\uf8ff").limit(MAX_NUMBER_FILTERED_EVENTS);
+            query = query.orderBy(FirebaseConfig.PLACE_FIELD_REFERENCE).
+                    orderBy(FirebaseConfig.TIMESTAMP_FIELD_REFERENCE, Query.Direction.DESCENDING).
+                    startAt(inputString.toUpperCase()).endAt(inputString.toUpperCase() + "\uf8ff").
+                    limit(MAX_NUMBER_FILTERED_EVENTS);
         return query;
     }
 
