@@ -35,7 +35,7 @@ import it.units.boardgamesmeetapp.viewmodels.main.MainViewModelFactory;
 import it.units.boardgamesmeetapp.viewmodels.dashboard.DashboardViewModel;
 import it.units.boardgamesmeetapp.viewmodels.dashboard.DashboardViewModelFactory;
 import it.units.boardgamesmeetapp.dialogs.PlayersDialog;
-import it.units.boardgamesmeetapp.dialogs.NewEventDialog;
+import it.units.boardgamesmeetapp.dialogs.SubmitEventDialog;
 import it.units.boardgamesmeetapp.database.FirebaseConfig;
 import it.units.boardgamesmeetapp.databinding.FragmentDashboardBinding;
 import it.units.boardgamesmeetapp.models.Event;
@@ -65,7 +65,7 @@ public class DashboardFragment extends Fragment {
 
         if (savedInstanceState != null) {
             if (savedInstanceState.getBoolean(ADD_EVENT_KEY)) {
-                addEventDialog = NewEventDialog.getInstance(this, null);
+                addEventDialog = SubmitEventDialog.getInstance(this, viewModel.getCurrentEventShown().getValue());
                 addEventDialog.show();
             }
             if (savedInstanceState.getBoolean(PLAYERS_DIALOG_KEY)) {
@@ -75,7 +75,8 @@ public class DashboardFragment extends Fragment {
         }
 
         binding.newActivityButton.setOnClickListener(v -> {
-            addEventDialog = NewEventDialog.getInstance(this, null);
+            viewModel.updateCurrentEventShown(null);
+            addEventDialog = SubmitEventDialog.getInstance(this, null);
             addEventDialog.show();
         });
 
@@ -146,7 +147,8 @@ public class DashboardFragment extends Fragment {
                                     })).show());
                     activityBinding.modifyButton.setVisibility(View.VISIBLE);
                     activityBinding.modifyButton.setOnClickListener(v -> {
-                        addEventDialog = NewEventDialog.getInstance(DashboardFragment.this, model);
+                        viewModel.updateCurrentEventShown(model);
+                        addEventDialog = SubmitEventDialog.getInstance(DashboardFragment.this, model);
                         addEventDialog.show();
                     });
                 } else {

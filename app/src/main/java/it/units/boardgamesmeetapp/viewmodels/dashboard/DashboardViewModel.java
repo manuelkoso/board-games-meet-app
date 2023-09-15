@@ -3,6 +3,7 @@ package it.units.boardgamesmeetapp.viewmodels.dashboard;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -46,7 +47,7 @@ public class DashboardViewModel extends ViewModel {
         return currentEventShown;
     }
 
-    public void updateCurrentEventShown(@NonNull Event event) {
+    public void updateCurrentEventShown(@Nullable Event event) {
         this.currentEventShown.setValue(event);
     }
 

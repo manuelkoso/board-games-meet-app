@@ -33,32 +33,34 @@ import it.units.boardgamesmeetapp.viewmodels.newevent.NewEventViewModel;
 import it.units.boardgamesmeetapp.viewmodels.newevent.NewEventViewModelFactory;
 import it.units.boardgamesmeetapp.models.Event;
 
-public class NewEventDialog {
+public class SubmitEventDialog {
     @NonNull
     private final AlertDialog dialog;
     @NonNull
     private final DialogNewEventBinding binding;
     @NonNull
     private final NewEventViewModel viewModel;
-    @Nullable
-    private final Event initialEvent;
     private EditText game;
     private EditText numberOfPlayers;
     private EditText place;
     private EditText date;
     private EditText time;
 
-    private NewEventDialog(@NonNull Fragment fragment, @Nullable Event initialEvent) {
+    private SubmitEventDialog(@NonNull Fragment fragment, @Nullable Event initialEvent) {
         dialog = new MaterialAlertDialogBuilder(fragment.requireContext()).create();
         binding = DialogNewEventBinding.inflate(LayoutInflater.from(fragment.requireContext()));
         viewModel = new ViewModelProvider(fragment.getViewModelStore(), new NewEventViewModelFactory()).get(NewEventViewModel.class);
-        this.initialEvent = initialEvent;
 
-        if (initialEvent != null) {
+        if (initialEvent != null && viewModel.isCurrentEventInfoViewNull() && viewModel.isInitialEventInfoViewNull()) {
             viewModel.setInitialEventInfoView(new EventInfoView(initialEvent));
             viewModel.setEventKey(initialEvent.getKey());
             viewModel.updateCurrentEvent(new EventInfoView(initialEvent));
+        } else if (initialEvent == null && !viewModel.isInitialEventInfoViewNull() && !viewModel.isCurrentEventInfoViewNull()) {
+            viewModel.setInitialEventInfoView(null);
+            viewModel.setEventKey(null);
+            viewModel.updateCurrentEvent(null);
         }
+
         initDialog(fragment);
 
         binding.dialogClose.setOnClickListener(v -> dialog.hide());
@@ -92,14 +94,19 @@ public class NewEventDialog {
             }
         });
 
-        viewModel.getInitialEventInfoView().observe(fragment.getViewLifecycleOwner(), eventInfoView -> {
-            if(eventInfoView == null) {
-                binding.submitEventButton.setText(R.string.create);
+        viewModel.getCurrentEventInfoView().observe(fragment.getViewLifecycleOwner(), eventInfoView -> {
+            if (eventInfoView == null) {
+                binding.submitEventButton.setEnabled(viewModel.getInitialEventInfoView() != null);
             } else {
-                binding.submitEventButton.setText(R.string.modify);
+                binding.submitEventButton.setEnabled(!eventInfoView.equals(viewModel.getInitialEventInfoView().getValue()));
             }
         });
-        viewModel.getCurrentEventInfoView().observe(fragment.getViewLifecycleOwner(), eventInfoView -> binding.submitEventButton.setEnabled(!eventInfoView.equals(viewModel.getInitialEventInfoView().getValue())));
+
+        if (initialEvent == null) {
+            binding.submitEventButton.setText(R.string.create);
+        } else {
+            binding.submitEventButton.setText(R.string.modify);
+        }
 
         dialog.setView(binding.getRoot());
     }
@@ -198,7 +205,7 @@ public class NewEventDialog {
     }
 
     public static @NonNull AlertDialog getInstance(@NonNull Fragment fragment, @Nullable Event event) {
-        NewEventDialog newEventDialog = new NewEventDialog(fragment, event);
+        SubmitEventDialog newEventDialog = new SubmitEventDialog(fragment, event);
         return newEventDialog.dialog;
     }
 

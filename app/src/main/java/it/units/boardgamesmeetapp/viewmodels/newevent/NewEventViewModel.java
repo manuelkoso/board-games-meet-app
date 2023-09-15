@@ -3,6 +3,7 @@ package it.units.boardgamesmeetapp.viewmodels.newevent;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -103,7 +104,7 @@ public class NewEventViewModel extends ViewModel {
         this.submissionResult.setValue(new SubmissionResult(Result.NONE));
     }
 
-    public void updateCurrentEvent(@NonNull EventInfoView eventInfoView) {
+    public void updateCurrentEvent(@Nullable EventInfoView eventInfoView) {
         currentEventInfoView.setValue(eventInfoView);
     }
 
@@ -111,7 +112,7 @@ public class NewEventViewModel extends ViewModel {
         currentEventKey.setValue(eventKey);
     }
 
-    public void setInitialEventInfoView(@NonNull EventInfoView eventInfoView) {
+    public void setInitialEventInfoView(@Nullable EventInfoView eventInfoView) {
         initialEventInfoView.setValue(eventInfoView);
     }
 
@@ -122,4 +123,13 @@ public class NewEventViewModel extends ViewModel {
     public MutableLiveData<EventInfoView> getCurrentEventInfoView() {
         return currentEventInfoView;
     }
+
+    public boolean isInitialEventInfoViewNull() {
+        return initialEventInfoView.getValue() == null;
+    }
+
+    public boolean isCurrentEventInfoViewNull() {
+        return currentEventInfoView.getValue() == null;
+    }
+
 }
