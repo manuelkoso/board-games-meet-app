@@ -66,7 +66,7 @@ public class PlayersDialog {
         
         recyclerView.setLayoutManager(layoutManager);
         adapter.startListening();
-        dialog.setTitle(R.string.players);
+        dialogEventPlayersBinding.dialogClose.setOnClickListener(v -> dialog.dismiss());
         dialog.setView(dialogEventPlayersBinding.getRoot());
     }
 
