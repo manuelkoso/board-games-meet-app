@@ -37,7 +37,6 @@ import it.units.boardgamesmeetapp.databinding.FragmentHomeBinding;
 import it.units.boardgamesmeetapp.databinding.SingleEventBinding;
 import it.units.boardgamesmeetapp.dialogs.FilterDialog;
 import it.units.boardgamesmeetapp.viewmodels.main.MainViewModel;
-import it.units.boardgamesmeetapp.viewmodels.main.MainViewModelFactory;
 import it.units.boardgamesmeetapp.viewmodels.home.HomeViewModel;
 import it.units.boardgamesmeetapp.viewmodels.home.HomeViewModelFactory;
 import it.units.boardgamesmeetapp.models.Event;
@@ -61,7 +60,7 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         homeViewModel = new ViewModelProvider(this, new HomeViewModelFactory()).get(HomeViewModel.class);
-        MainViewModel mainViewModel = new ViewModelProvider(requireActivity(), new MainViewModelFactory()).get(MainViewModel.class);
+        MainViewModel mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
         mainViewModel.updateActionBarTitle(getString(R.string.find_events));
         mainViewModel.updateActionBarBackButtonState(false);
         if (savedInstanceState != null && (savedInstanceState.getBoolean(EVENT_DIALOG_SHOWN))) {

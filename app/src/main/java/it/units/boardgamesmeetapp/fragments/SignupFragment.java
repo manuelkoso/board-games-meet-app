@@ -24,7 +24,6 @@ import it.units.boardgamesmeetapp.viewmodels.signup.LoginState;
 import it.units.boardgamesmeetapp.viewmodels.login.LoginViewModel;
 import it.units.boardgamesmeetapp.viewmodels.login.LoginViewModelFactory;
 import it.units.boardgamesmeetapp.viewmodels.main.MainViewModel;
-import it.units.boardgamesmeetapp.viewmodels.main.MainViewModelFactory;
 
 public class SignupFragment extends Fragment {
     public static final String EMAIL_KEY = "EMAIL";
@@ -45,7 +44,7 @@ public class SignupFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory())
                 .get(LoginViewModel.class);
-        MainViewModel mainViewModel = new ViewModelProvider(requireActivity(), new MainViewModelFactory()).get(MainViewModel.class);
+        MainViewModel mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
         mainViewModel.updateActionBarTitle(getResources().getString(R.string.board_games));
 
         if (savedInstanceState != null) {

@@ -31,7 +31,6 @@ import it.units.boardgamesmeetapp.databinding.DashboardEventBinding;
 import it.units.boardgamesmeetapp.models.EventInfoView;
 import it.units.boardgamesmeetapp.viewholders.DashboardEventViewHolder;
 import it.units.boardgamesmeetapp.viewmodels.main.MainViewModel;
-import it.units.boardgamesmeetapp.viewmodels.main.MainViewModelFactory;
 import it.units.boardgamesmeetapp.viewmodels.dashboard.DashboardViewModel;
 import it.units.boardgamesmeetapp.viewmodels.dashboard.DashboardViewModelFactory;
 import it.units.boardgamesmeetapp.dialogs.PlayersDialog;
@@ -60,7 +59,7 @@ public class DashboardFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         viewModel = new ViewModelProvider(this, new DashboardViewModelFactory()).get(DashboardViewModel.class);
-        MainViewModel mainViewModel = new ViewModelProvider(requireActivity(), new MainViewModelFactory()).get(MainViewModel.class);
+        MainViewModel mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
         mainViewModel.updateActionBarTitle(getString(R.string.my_events));
 
         if (savedInstanceState != null) {

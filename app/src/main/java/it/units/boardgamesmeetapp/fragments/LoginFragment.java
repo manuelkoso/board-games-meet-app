@@ -22,7 +22,6 @@ import it.units.boardgamesmeetapp.databinding.FragmentLoginBinding;
 import it.units.boardgamesmeetapp.R;
 import it.units.boardgamesmeetapp.viewmodels.Result;
 import it.units.boardgamesmeetapp.viewmodels.main.MainViewModel;
-import it.units.boardgamesmeetapp.viewmodels.main.MainViewModelFactory;
 import it.units.boardgamesmeetapp.viewmodels.SubmissionResult;
 import it.units.boardgamesmeetapp.viewmodels.login.LoginViewModel;
 import it.units.boardgamesmeetapp.viewmodels.login.LoginViewModelFactory;
@@ -47,7 +46,7 @@ public class LoginFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         LoginViewModel loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory())
                 .get(LoginViewModel.class);
-        MainViewModel mainViewModel = new ViewModelProvider(requireActivity(), new MainViewModelFactory()).get(MainViewModel.class);
+        MainViewModel mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
         mainViewModel.updateActionBarTitle(getResources().getString(R.string.board_games));
 
         if (savedInstanceState != null) {

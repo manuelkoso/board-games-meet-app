@@ -19,7 +19,6 @@ import java.util.Objects;
 
 import it.units.boardgamesmeetapp.databinding.ActivityMainBinding;
 import it.units.boardgamesmeetapp.viewmodels.main.MainViewModel;
-import it.units.boardgamesmeetapp.viewmodels.main.MainViewModelFactory;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        MainViewModel viewModel = new ViewModelProvider(this, new MainViewModelFactory()).get(MainViewModel.class);
+        MainViewModel viewModel = new ViewModelProvider(this).get(MainViewModel.class);
         viewModel.updateActionBarTitle(getString(R.string.board_games));
 
         viewModel.getActionBarTitle().observe(this, Objects.requireNonNull(binding.topAppBar)::setTitle);
