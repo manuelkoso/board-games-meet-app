@@ -62,7 +62,7 @@ public class HomeFragment extends Fragment {
         homeViewModel = new ViewModelProvider(this, new HomeViewModelFactory()).get(HomeViewModel.class);
         MainViewModel mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
         mainViewModel.updateActionBarTitle(getString(R.string.find_events));
-        mainViewModel.updateActionBarBackButtonState(false);
+
         if (savedInstanceState != null && (savedInstanceState.getBoolean(EVENT_DIALOG_SHOWN))) {
             playersDialog = PlayersDialog.getInstance(this, Objects.requireNonNull(homeViewModel.getCurrentEventShown().getValue()));
             playersDialog.show();
@@ -163,7 +163,7 @@ public class HomeFragment extends Fragment {
                 activityBinding.date.setText(eventInfoView.getDateTime());
                 activityBinding.gameTitle.setText(eventInfoView.getGame());
                 activityBinding.people.setText(eventInfoView.getNumberOfPlayersOverMaxNumber());
-                activityBinding.eventButton.setText(R.string.submit);
+                activityBinding.eventButton.setText(R.string.subscribe);
 
                 if (model.getTimestamp() < new Date().getTime()) {
                     activityBinding.eventButton.setText(R.string.done);
