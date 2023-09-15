@@ -2,6 +2,7 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="5dp">
@@ -75,7 +76,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/players_counter_background"
             android:fontFamily="@font/yantramanav_medium"
-            android:text="Owner"
+            android:text="@string/owner"
             android:textAppearance="?attr/textAppearanceBodyLarge"
             android:textColor="?attr/colorOnPrimary"
             app:layout_constraintEnd_toEndOf="parent"

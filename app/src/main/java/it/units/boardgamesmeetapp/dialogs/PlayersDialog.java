@@ -16,7 +16,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
-import it.units.boardgamesmeetapp.R;
 import it.units.boardgamesmeetapp.database.FirebaseConfig;
 import it.units.boardgamesmeetapp.databinding.DialogEventPlayersBinding;
 import it.units.boardgamesmeetapp.databinding.SinglePlayerBinding;

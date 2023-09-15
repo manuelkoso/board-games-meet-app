@@ -12,7 +12,7 @@
         style="?attr/materialIconButtonFilledTonalStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:icon="@drawable/ic_baseline_keyboard_arrow_down_24"
+        app:icon="@drawable/arrow_down"
         app:layout_constraintBottom_toTopOf="@+id/filter_dialog_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"

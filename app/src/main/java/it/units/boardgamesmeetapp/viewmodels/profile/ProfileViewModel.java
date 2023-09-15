@@ -42,7 +42,7 @@ public class ProfileViewModel extends ViewModel {
                     if (value != null && value.exists()) {
                         Log.d(FirebaseConfig.TAG, "Data: " + value.getData());
                         User user = value.toObject(User.class);
-                        initialUserInfo.setValue(new UserInfoView(user));
+                        initialUserInfo.setValue(new UserInfoView(Objects.requireNonNull(user)));
                     } else {
                         Log.w(FirebaseConfig.TAG, "Data: null");
                     }

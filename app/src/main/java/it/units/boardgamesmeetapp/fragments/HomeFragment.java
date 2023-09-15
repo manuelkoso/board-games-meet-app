@@ -180,7 +180,7 @@ public class HomeFragment extends Fragment {
                 if (model.getPlayers().contains(FirebaseAuth.getInstance().getUid()) || model.getMaxNumberOfPlayers() == model.getPlayers().size())
                     activityBinding.eventButton.setEnabled(false);
                 activityBinding.eventButton.setOnClickListener(v ->
-                        new MaterialAlertDialogBuilder(requireContext()).setTitle(R.string.subscribtion)
+                        new MaterialAlertDialogBuilder(requireContext()).setTitle(R.string.subscription)
                                 .setMessage(R.string.event_subscribe_dialog_title)
                                 .setPositiveButton(R.string.yes, (dialogInterface, i) -> {
                                     homeViewModel.submit(model);
