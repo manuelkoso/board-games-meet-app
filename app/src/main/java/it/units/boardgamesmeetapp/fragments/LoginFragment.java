@@ -20,7 +20,7 @@ import java.util.Objects;
 import it.units.boardgamesmeetapp.databinding.FragmentLoginBinding;
 
 import it.units.boardgamesmeetapp.R;
-import it.units.boardgamesmeetapp.utils.Result;
+import it.units.boardgamesmeetapp.viewmodels.Result;
 import it.units.boardgamesmeetapp.viewmodels.main.MainViewModel;
 import it.units.boardgamesmeetapp.viewmodels.main.MainViewModelFactory;
 import it.units.boardgamesmeetapp.viewmodels.SubmissionResult;

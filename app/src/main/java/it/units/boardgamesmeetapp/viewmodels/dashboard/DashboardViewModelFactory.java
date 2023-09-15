@@ -6,8 +6,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import it.units.boardgamesmeetapp.viewmodels.dashboard.DashboardViewModel;
-
 public class DashboardViewModelFactory implements ViewModelProvider.Factory {
 
     @NonNull

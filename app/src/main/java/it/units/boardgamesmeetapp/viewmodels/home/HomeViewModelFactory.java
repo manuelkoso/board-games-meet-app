@@ -7,8 +7,6 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import it.units.boardgamesmeetapp.viewmodels.home.HomeViewModel;
-
 public class HomeViewModelFactory implements ViewModelProvider.Factory {
 
     @NonNull

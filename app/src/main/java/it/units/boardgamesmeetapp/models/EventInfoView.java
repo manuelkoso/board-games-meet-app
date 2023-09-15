@@ -63,6 +63,14 @@ public class EventInfoView {
         return numberOfPlayers;
     }
 
+    public String getDateTime() {
+        return date + " - " + time;
+    }
+
+    public String getNumberOfPlayersOverMaxNumber() {
+        return numberOfPlayers + "/" + maxNumberOfPlayers;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

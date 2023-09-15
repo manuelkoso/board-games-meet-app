@@ -3,8 +3,6 @@ package it.units.boardgamesmeetapp.viewmodels;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import it.units.boardgamesmeetapp.utils.Result;
-
 public class SubmissionResult {
     @Nullable
     private final Integer message;

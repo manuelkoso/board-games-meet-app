@@ -1,8 +1,8 @@
 package it.units.boardgamesmeetapp.viewmodels.login;
 
-import static it.units.boardgamesmeetapp.utils.Result.FAILURE;
-import static it.units.boardgamesmeetapp.utils.Result.NETWORK_FAILURE;
-import static it.units.boardgamesmeetapp.utils.Result.SUCCESS;
+import static it.units.boardgamesmeetapp.viewmodels.Result.FAILURE;
+import static it.units.boardgamesmeetapp.viewmodels.Result.NETWORK_FAILURE;
+import static it.units.boardgamesmeetapp.viewmodels.Result.SUCCESS;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,6 +24,7 @@ import it.units.boardgamesmeetapp.R;
 import it.units.boardgamesmeetapp.database.FirebaseConfig;
 import it.units.boardgamesmeetapp.models.User;
 import it.units.boardgamesmeetapp.viewmodels.SubmissionResult;
+import it.units.boardgamesmeetapp.viewmodels.signup.LoginState;
 
 public class LoginViewModel extends ViewModel {
     private static final String LOGIN_FAILED_MESSAGE = "Login failed!";

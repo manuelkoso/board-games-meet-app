@@ -48,7 +48,7 @@ public class HomeFragment extends Fragment {
     public static final int MAX_NUMBER_FILTERED_EVENTS = 20;
     private FragmentHomeBinding binding;
     private HomeViewModel homeViewModel;
-    private AlertDialog eventDialog;
+    private AlertDialog playersDialog;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -65,8 +65,8 @@ public class HomeFragment extends Fragment {
         mainViewModel.updateActionBarTitle(getString(R.string.find_events));
         mainViewModel.updateActionBarBackButtonState(false);
         if (savedInstanceState != null && (savedInstanceState.getBoolean(EVENT_DIALOG_SHOWN))) {
-            eventDialog = PlayersDialog.getInstance(this, Objects.requireNonNull(homeViewModel.getCurrentEventShown().getValue()));
-            eventDialog.show();
+            playersDialog = PlayersDialog.getInstance(this, Objects.requireNonNull(homeViewModel.getCurrentEventShown().getValue()));
+            playersDialog.show();
         }
 
 
@@ -123,8 +123,8 @@ public class HomeFragment extends Fragment {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (eventDialog != null) {
-            outState.putBoolean(EVENT_DIALOG_SHOWN, eventDialog.isShowing());
+        if (playersDialog != null) {
+            outState.putBoolean(EVENT_DIALOG_SHOWN, playersDialog.isShowing());
         } else {
             outState.putBoolean(EVENT_DIALOG_SHOWN, false);
         }
@@ -161,9 +161,9 @@ public class HomeFragment extends Fragment {
                 EventInfoView eventInfoView = new EventInfoView(model);
 
                 activityBinding.place.setText(eventInfoView.getPlace());
-                activityBinding.date.setText(eventInfoView.getDate());
+                activityBinding.date.setText(eventInfoView.getDateTime());
                 activityBinding.gameTitle.setText(eventInfoView.getGame());
-                activityBinding.people.setText(String.valueOf(eventInfoView.getNumberOfPlayers() + "/" + eventInfoView.getMaxNumberOfPlayers()));
+                activityBinding.people.setText(eventInfoView.getNumberOfPlayersOverMaxNumber());
                 activityBinding.eventButton.setText(R.string.submit);
 
                 if (model.getTimestamp() < new Date().getTime()) {
@@ -184,8 +184,8 @@ public class HomeFragment extends Fragment {
                                 })).show());
                 activityBinding.card.setOnClickListener(v -> {
                     homeViewModel.updateCurrentEventShown(model);
-                    eventDialog = PlayersDialog.getInstance(HomeFragment.this, model);
-                    eventDialog.show();
+                    playersDialog = PlayersDialog.getInstance(HomeFragment.this, model);
+                    playersDialog.show();
                 });
             }
         };

@@ -19,8 +19,8 @@ import java.util.Objects;
 
 import it.units.boardgamesmeetapp.R;
 import it.units.boardgamesmeetapp.databinding.FragmentSignupBinding;
-import it.units.boardgamesmeetapp.utils.Result;
-import it.units.boardgamesmeetapp.viewmodels.login.LoginState;
+import it.units.boardgamesmeetapp.viewmodels.Result;
+import it.units.boardgamesmeetapp.viewmodels.signup.LoginState;
 import it.units.boardgamesmeetapp.viewmodels.login.LoginViewModel;
 import it.units.boardgamesmeetapp.viewmodels.login.LoginViewModelFactory;
 import it.units.boardgamesmeetapp.viewmodels.main.MainViewModel;

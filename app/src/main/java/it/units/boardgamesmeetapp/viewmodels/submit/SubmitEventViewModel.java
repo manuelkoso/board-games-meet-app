@@ -20,7 +20,7 @@ import it.units.boardgamesmeetapp.R;
 import it.units.boardgamesmeetapp.database.FirebaseConfig;
 import it.units.boardgamesmeetapp.models.Event;
 import it.units.boardgamesmeetapp.models.EventInfoView;
-import it.units.boardgamesmeetapp.utils.Result;
+import it.units.boardgamesmeetapp.viewmodels.Result;
 import it.units.boardgamesmeetapp.viewmodels.SubmissionResult;
 
 public class SubmitEventViewModel extends ViewModel {

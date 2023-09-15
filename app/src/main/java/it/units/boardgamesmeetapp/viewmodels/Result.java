@@ -1,4 +1,4 @@
-package it.units.boardgamesmeetapp.utils;
+package it.units.boardgamesmeetapp.viewmodels;
 
 public enum Result {
     SUCCESS,

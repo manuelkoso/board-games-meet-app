@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -24,18 +25,23 @@ import java.util.Date;
 import java.util.Objects;
 
 import it.units.boardgamesmeetapp.R;
+import it.units.boardgamesmeetapp.dialogs.PlayersDialog;
 import it.units.boardgamesmeetapp.models.EventInfoView;
 import it.units.boardgamesmeetapp.viewholders.EventViewHolder;
 import it.units.boardgamesmeetapp.database.FirebaseConfig;
 import it.units.boardgamesmeetapp.databinding.FragmentHistoryBinding;
 import it.units.boardgamesmeetapp.databinding.SingleEventBinding;
 import it.units.boardgamesmeetapp.models.Event;
+import it.units.boardgamesmeetapp.viewmodels.history.HistoryViewModel;
 import it.units.boardgamesmeetapp.viewmodels.main.MainViewModel;
 import it.units.boardgamesmeetapp.viewmodels.main.MainViewModelFactory;
 
 public class HistoryFragment extends Fragment {
 
+    private static final String PLAYERS_DIALOG_KEY = "PLAYERS_DIALOG";
+    private HistoryViewModel viewModel;
     private FragmentHistoryBinding binding;
+    private AlertDialog playersDialog;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -50,6 +56,14 @@ public class HistoryFragment extends Fragment {
         MainViewModel mainViewModel = new ViewModelProvider(requireActivity(), new MainViewModelFactory()).get(MainViewModel.class);
         mainViewModel.updateActionBarTitle(getString(R.string.history));
 
+        viewModel = new ViewModelProvider(requireActivity()).get(HistoryViewModel.class);
+
+        if (savedInstanceState != null && (savedInstanceState.getBoolean(PLAYERS_DIALOG_KEY))) {
+                playersDialog = PlayersDialog.getInstance(this, Objects.requireNonNull(viewModel.getEventShown().getValue()));
+                playersDialog.show();
+
+        }
+
         Query query = FirebaseFirestore.getInstance().collection(FirebaseConfig.EVENTS_REFERENCE).whereArrayContains(FirebaseConfig.PLAYERS_FIELD_REFERENCE, Objects.requireNonNull(FirebaseAuth.getInstance().getUid()));
         query = query.where(Filter.lessThan(FirebaseConfig.TIMESTAMP_FIELD_REFERENCE, new Date().getTime()));
         FirestoreRecyclerOptions<Event> options = new FirestoreRecyclerOptions.Builder<Event>().setQuery(query, Event.class).build();
@@ -60,6 +74,16 @@ public class HistoryFragment extends Fragment {
         adapter.startListening();
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (playersDialog != null) {
+            outState.putBoolean(PLAYERS_DIALOG_KEY, playersDialog.isShowing());
+        } else {
+            outState.putBoolean(PLAYERS_DIALOG_KEY, false);
+        }
     }
 
     @NonNull
@@ -77,11 +101,16 @@ public class HistoryFragment extends Fragment {
                 EventInfoView eventInfoView = new EventInfoView(model);
 
                 activityBinding.place.setText(eventInfoView.getPlace());
-                activityBinding.date.setText(eventInfoView.getDate());
+                activityBinding.date.setText(eventInfoView.getDateTime());
                 activityBinding.gameTitle.setText(eventInfoView.getGame());
-                activityBinding.people.setText(String.valueOf(eventInfoView.getNumberOfPlayers() + "/" + eventInfoView.getMaxNumberOfPlayers()));
+                activityBinding.people.setText(eventInfoView.getNumberOfPlayersOverMaxNumber());
                 activityBinding.eventButton.setText(R.string.done);
                 activityBinding.eventButton.setEnabled(false);
+                activityBinding.card.setOnClickListener(v -> {
+                    viewModel.setEventShown(model);
+                    playersDialog = PlayersDialog.getInstance(HistoryFragment.this, model);
+                    playersDialog.show();
+                });
             }
         };
     }

@@ -126,9 +126,9 @@ public class DashboardFragment extends Fragment {
                 EventInfoView eventInfoView = new EventInfoView(model);
 
                 activityBinding.place.setText(eventInfoView.getPlace());
-                activityBinding.date.setText(eventInfoView.getDate());
+                activityBinding.date.setText(eventInfoView.getDateTime());
                 activityBinding.gameTitle.setText(eventInfoView.getGame());
-                activityBinding.people.setText(String.valueOf(eventInfoView.getNumberOfPlayers() + "/" + eventInfoView.getMaxNumberOfPlayers()));
+                activityBinding.people.setText(eventInfoView.getNumberOfPlayersOverMaxNumber());
                 activityBinding.card.setOnClickListener(v -> {
                     viewModel.updateCurrentEventShown(model);
                     playersDialog = PlayersDialog.getInstance(DashboardFragment.this, model);
