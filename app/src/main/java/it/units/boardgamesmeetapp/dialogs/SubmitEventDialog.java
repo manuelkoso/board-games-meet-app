@@ -29,8 +29,8 @@ import java.util.stream.Stream;
 import it.units.boardgamesmeetapp.R;
 import it.units.boardgamesmeetapp.databinding.DialogNewEventBinding;
 import it.units.boardgamesmeetapp.models.EventInfoView;
-import it.units.boardgamesmeetapp.viewmodels.newevent.NewEventViewModel;
-import it.units.boardgamesmeetapp.viewmodels.newevent.NewEventViewModelFactory;
+import it.units.boardgamesmeetapp.viewmodels.submit.SubmitEventViewModel;
+import it.units.boardgamesmeetapp.viewmodels.submit.SubmitEventViewModelFactory;
 import it.units.boardgamesmeetapp.models.Event;
 
 public class SubmitEventDialog {
@@ -39,7 +39,7 @@ public class SubmitEventDialog {
     @NonNull
     private final DialogNewEventBinding binding;
     @NonNull
-    private final NewEventViewModel viewModel;
+    private final SubmitEventViewModel viewModel;
     private EditText game;
     private EditText numberOfPlayers;
     private EditText place;
@@ -49,7 +49,7 @@ public class SubmitEventDialog {
     private SubmitEventDialog(@NonNull Fragment fragment, @Nullable Event initialEvent) {
         dialog = new MaterialAlertDialogBuilder(fragment.requireContext()).create();
         binding = DialogNewEventBinding.inflate(LayoutInflater.from(fragment.requireContext()));
-        viewModel = new ViewModelProvider(fragment.getViewModelStore(), new NewEventViewModelFactory()).get(NewEventViewModel.class);
+        viewModel = new ViewModelProvider(fragment.getViewModelStore(), new SubmitEventViewModelFactory()).get(SubmitEventViewModel.class);
 
         if (initialEvent != null && viewModel.isCurrentEventInfoViewNull() && viewModel.isInitialEventInfoViewNull()) {
             viewModel.setInitialEventInfoView(new EventInfoView(initialEvent));

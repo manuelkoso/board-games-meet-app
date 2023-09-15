@@ -1,4 +1,4 @@
-package it.units.boardgamesmeetapp.viewmodels.newevent;
+package it.units.boardgamesmeetapp.viewmodels.submit;
 
 import android.util.Log;
 
@@ -23,7 +23,7 @@ import it.units.boardgamesmeetapp.models.EventInfoView;
 import it.units.boardgamesmeetapp.utils.Result;
 import it.units.boardgamesmeetapp.viewmodels.SubmissionResult;
 
-public class NewEventViewModel extends ViewModel {
+public class SubmitEventViewModel extends ViewModel {
 
     public static final int MIN_NUMBER_OF_PLAYERS = 2;
     @NonNull
@@ -35,7 +35,7 @@ public class NewEventViewModel extends ViewModel {
     private final MutableLiveData<EventInfoView> currentEventInfoView = new MutableLiveData<>();
     private final MutableLiveData<EventInfoView> initialEventInfoView = new MutableLiveData<>();
 
-    public NewEventViewModel(@NonNull FirebaseFirestore firebaseFirestore, @NonNull FirebaseAuth firebaseAuth) {
+    public SubmitEventViewModel(@NonNull FirebaseFirestore firebaseFirestore, @NonNull FirebaseAuth firebaseAuth) {
         this.firebaseAuth = firebaseAuth;
         this.firebaseFirestore = firebaseFirestore;
         resetSubmissionResult();

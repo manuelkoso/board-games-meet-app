@@ -78,4 +78,6 @@
     <string name="event_subscribe_dialog_title">Vuoi iscriverti a questo evento?</string>
     <string name="sign_in">Sign in</string>
     <string name="app_logo">App logo</string>
+    <string name="created">Creati</string>
+    <string name="participated">Partecipati</string>
 </resources>

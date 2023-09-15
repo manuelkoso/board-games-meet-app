@@ -77,4 +77,6 @@
     <string name="subscribtion">Subscrbtion</string>
     <string name="event_subscribe_dialog_title">Do you want to subscribe to this event?</string>
     <string name="app_logo">App logo</string>
+    <string name="created">Created</string>
+    <string name="participated">Participated</string>
 </resources>
